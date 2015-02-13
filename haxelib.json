@@ -1,0 +1,13 @@
+{
+  "name": "sugoi",
+  "url" : "https://github.com/bablukid/sugoi/",
+  "license": "GNU GPL",
+  "tags": ["web", "neko","mysql","templo"],
+  "description": "A simple MVC web framework for Haxe and Neko",
+  "version": "1.0.0",
+  "releasenote": "",
+  "contributors": ["bablukid","ncannasse","tarwin","tonypee"],
+  "dependencies": {
+  
+  }
+}
