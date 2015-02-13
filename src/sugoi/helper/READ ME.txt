@@ -1,0 +1,8 @@
+C'est quoi un helper ( ou view helper ? )
+
+C'est un petit composant qui permet de rendre en html des éléments complexes, difficiles à rendre en macro templo.
+
+Utiliser Helper.init() avec le Context d'une application et une liste de helpers pour les rendres disponible dans le Context de l'application web.
+
+
+Inspiré de http://framework.zend.com/manual/1.12/en/zend.view.helpers.html

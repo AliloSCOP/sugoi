@@ -1,0 +1,334 @@
+package sugoi;
+
+class BaseApp {
+
+	public var cnx			: sys.db.Connection;
+	public var template		: templo.Loader;
+	public var maintain		: Bool;
+	public var session		: sugoi.db.Session;
+	public var view 		: View;
+	public var user    		: db.User;
+	public var params 		: Map<String,String>;
+	public var cookieName	: String;
+	public var cookieDomain	: String;
+	
+	public static var config: Config;
+
+	public function new() {
+		
+		if (config == null) {
+			loadConfig();
+		}
+		
+		cookieName = "sid";
+		cookieDomain = "." + App.config.HOST;
+	}
+	
+	public function loadConfig() {
+		App.config = BaseApp.config = new sugoi.Config();		
+	}
+
+	public function loadTemplate( t : String ) {
+		templo.Loader.OPTIMIZED = App.config.DEBUG == false;
+		templo.Loader.BASE_DIR = App.config.TPL;
+		templo.Loader.TMP_DIR = App.config.TPL_TMP;
+		if( t == null ) return null;		
+		return new templo.Loader(t, App.config.getBool("cachetpl"));		
+	}
+
+	public function setTemplate( t : String ) {
+		template = t == null ? null : loadTemplate(t);
+	}
+
+	public function initLang( lang : String ) {
+		if( !Lambda.has(App.config.LANGS,lang) )
+			return false;
+		session.lang = lang;
+		if( lang == App.config.LANG )
+			return false;
+		App.config.LANG = lang;
+		var path = neko.Web.getCwd() + "../lang/" + lang + "/";
+		App.config.TPL = path + "tpl/";
+		App.config.TPL_TMP = path + "tmp/";
+		
+		initLocale();
+		return true;
+	}
+
+	public function initLocale() {
+		
+		if ( !Sys.setTimeLocale("en_US.UTF-8") ) {			
+			Sys.setTimeLocale("en");
+		}
+	}
+
+	function saveAndClose() {
+		if( cnx == null ) return;
+		if( session.sid != null )
+			session.update();
+		
+		cnx.commit();
+		cnx.close();
+		untyped cnx.close = function() {}
+		untyped cnx.request = function(s) return null;
+	}
+
+	function executeTemplate( ?save ) {
+		view.init();
+		var result = template.execute(view);
+		if( save ) saveAndClose();
+		neko.Lib.print(result);
+	}
+
+	function onMeta( m : String, args : Array<Dynamic> ) {
+		switch( m ) {
+		case "tpl":
+			setTemplate(args[0]);
+		case "logged":
+			if( user == null )
+				throw sugoi.BaseController.ControllerAction.RedirectAction("/");
+		case "admin":
+			if( user == null || !user.isAdmin() )
+				throw sugoi.BaseController.ControllerAction.RedirectAction("/");
+		default:
+		}
+	}
+
+	function detectLang() {
+		var l = neko.Web.getClientHeader("Accept-Language");
+		if( l != null )
+			for( l in l.split(",") ) {
+				l = l.split(";")[0];
+				l = l.split("-")[0];
+				l = StringTools.trim(l);
+				for( a in App.config.LANGS )
+					if( a == l )
+						return a;
+			}
+		return App.config.LANGS[App.config.LANGS.length - 1];
+	}
+
+	function setupLang() {
+		if( session.lang == null )
+			session.lang = user == null ? detectLang() : user.lang;
+		var lang = params.get("lang");
+		if( lang != null && Lambda.has(App.config.LANGS, lang) )
+			session.lang = lang;
+		initLang(session.lang);
+	}
+
+
+	public function rollback() {
+		if( cnx != null ) cnx.rollback();
+		sys.db.Manager.cleanup();
+		if( user != null && session != null )
+			user = session.user;
+		// does not reset session
+	}
+
+	public function setCookie( oldCookie : String ){
+		if( session != null && session.sid != null && session.sid != oldCookie ) {
+			neko.Web.setHeader("Set-Cookie", cookieName+"=" + session.sid + "; path=/;");
+		}
+	}
+
+	function mainLoop() {
+		params = neko.Web.getParams();
+		
+		//Get session
+		var sids = [];
+		var cookieSid = neko.Web.getCookies().get(cookieName);
+		if( params.exists("sid") ) sids.push(params.get("sid"));
+		if( cookieSid != null ) sids.push(cookieSid);
+		session = sugoi.db.Session.init(sids);
+		
+		//Check for maintenance
+		maintain = sugoi.db.Variable.getInt("maintain") != 0;
+		user = session.user;
+		
+		setupLang();
+		if( maintain && ((user != null && user.isAdmin()) ) )
+			maintain = false;
+		
+		setCookie(cookieSid);
+		
+		if( maintain ) {
+			setTemplate("maintain.mtt");
+			executeTemplate();
+			return;
+		}
+		
+		//dispatching
+		try {
+			var url = neko.Web.getURI();
+			if( StringTools.endsWith(url, "/index.n") )
+				url = url.substr(0, -8);
+			var d = new haxe.web.Dispatch(url, params);
+			d.onMeta = onMeta;
+			d.dispatch(new controller.Main());
+		} catch( e : haxe.web.Dispatch.DispatchError ) {
+			if( App.config.DEBUG )
+				neko.Lib.rethrow(e);
+			cnx.rollback();
+			neko.Web.redirect("/");
+			return;
+		} catch( e : sugoi.BaseController.ControllerAction) {
+			switch( e ) {
+			case RedirectAction(url):
+				neko.Web.redirect(url);
+				template = null;
+			case ErrorAction(url, text), OkAction(url,text):
+				if( text == null ) {
+					text = url;
+					url = neko.Web.getURI();
+				}
+				neko.Web.redirect(url);
+				var error = switch(e) { case ErrorAction(_): true; default: false; };
+				if( error ) rollback();
+				if ( error ) {					
+					session.addMessage(text,true);
+				}else {					
+					session.addMessage(text);
+				}
+				template = null;
+			}
+		}
+		
+		//Render template
+		if ( template == null ) {			
+			saveAndClose();
+		} else {			
+			executeTemplate(true); // will saveAndClose
+		}
+	}
+
+	public function logError( e : Dynamic, ?stack ) {
+		var stack = if( stack != null ) stack else haxe.CallStack.toString(haxe.CallStack.exceptionStack());
+		var message = new StringBuf();
+		message.add(Std.string(e));
+		message.add("\n");
+		message.add(stack);
+		message.add("\n");
+		var e = new sugoi.db.Error();
+		e.url = neko.Web.getURI();
+		e.ip = neko.Web.getClientIP();
+		e.uid = if( user != null ) user.id else null;
+		e.date = Date.now();
+		e.error = message.toString();
+		e.insert();
+	}
+
+	function errorHandler( e:Dynamic ) {
+		try {
+			var stack = haxe.CallStack.toString(haxe.CallStack.exceptionStack());
+			// ROLLBACK and LOG
+			if( cnx != null ) {
+				cnx.rollback();
+				logError(e,stack);
+			}
+			maintain = true;
+			view = new View();
+			view.message = Std.string(e);
+			if ( App.config.DEBUG || (user != null && user.isAdmin()) ) {				
+				view.stack = stack;
+			}
+				
+			setTemplate("error.mtt");
+			executeTemplate(false);
+			
+		} catch( e : Dynamic ) {
+			neko.Lib.print("<pre>");
+			neko.Lib.println("Error : "+try Std.string(e) catch( e : Dynamic ) "???");
+			neko.Lib.println(haxe.CallStack.toString(haxe.CallStack.exceptionStack()));
+			try {
+				if( cnx != null )
+					sugoi.db.Error.manager.get(0,false);
+			} catch( e : Dynamic ) {
+				neko.Lib.println("Initializing Database...");
+				sys.db.Admin.initializeDatabase();
+				neko.Lib.println("Done");
+			}
+			neko.Lib.print("</pre>");
+		}
+	}
+
+	/**
+	 * init template engine
+	 * and db connexion
+	 */
+	function init() {
+		maintain = App.config.getBool("maintain");
+		if( maintain ) {
+			view = new View();
+			setTemplate("maintain.mtt");
+			executeTemplate(false);
+			return false;
+		}
+		try {
+			var dbstr = App.config.get("database");
+			var dbreg = ~/([^:]+):\/\/([^:]+):([^@]*?)@([^:]+)(:[0-9]+)?\/(.*?)$/;
+			if( !dbreg.match(dbstr) )
+				throw "Configuration requires a valid database attribute, format is : mysql://user:password@host:port/dbname";
+			var port = dbreg.matched(5);
+			var dbparams = {
+				user:dbreg.matched(2),
+				pass:dbreg.matched(3),
+				host:dbreg.matched(4),
+				port:port == null ? 3306 : Std.parseInt(port.substr(1)),
+				database:dbreg.matched(6),
+				socket:null
+			};
+			cnx = sys.db.Mysql.connect(dbparams);
+		} catch( e : Dynamic ) {
+			errorHandler(e);
+			return false;
+		}
+		if( App.config.SQL_LOG )
+			cnx = new sugoi.tools.DebugConnection(cnx);
+		return true;
+	}
+
+	function cloneApp() {
+		// ensure that we have no variable initialized in app loop
+		var app = new App();
+		var bapp : BaseApp = app;
+		bapp.cnx = cnx;
+		bapp.view = new View();
+		App.current = app;
+		bapp.mainLoop();
+	}
+
+	function run() {
+
+		// Will close the connection
+		sys.db.Transaction.main(cnx, cloneApp, function(e) { var b : BaseApp = App.current; b.errorHandler(e); });
+		App.current = null;
+	}
+
+	function sendHeaders(){
+		neko.Web.setHeader("Cache-Control", "no-store, no-cache, must-revalidate");
+		neko.Web.setHeader("Pragma", "no-cache");
+		neko.Web.setHeader("Expires", "-1");
+		neko.Web.setHeader("P3P", "CP=\"ALL DSP COR NID CURa OUR STP PUR\"");
+		neko.Web.setHeader("Content-Type", "text/html; Charset=UTF-8");
+		neko.Web.setHeader("Expires", "Mon, 26 Jul 1997 05:00:00 GMT");
+	}
+
+	static function main() {
+		
+		App.current = new App();
+		var a : BaseApp = App.current;
+		
+		a.sendHeaders();
+
+		if( !a.init() ) {
+			a = null;
+			return;
+		}
+		a.run();
+		a = null;
+		if ( App.config.getInt("cache", 0) == 1 ) {			
+			neko.Web.cacheModule(App.main);
+		}
+	}
+}
