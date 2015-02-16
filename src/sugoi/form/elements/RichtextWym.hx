@@ -2,10 +2,10 @@
  *	WYMEditor ( XHTML wysiwig editor )
  * 	http://files.wymeditor.org/wymeditor-1.0.0b2/examples/
  */
-package sugoi.form.elements;
+package form.elements;
 
-import sugoi.form.Form;
-import sugoi.form.FormElement;
+import form.Form;
+import form.FormElement;
 
 class RichtextWym extends FormElement
 {

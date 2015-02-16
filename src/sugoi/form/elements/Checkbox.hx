@@ -1,5 +1,3 @@
-
-
 package sugoi.form.elements;
 
 import sugoi.form.Form;

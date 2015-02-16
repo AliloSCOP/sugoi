@@ -42,6 +42,14 @@ class BaseView implements Dynamic {
 		return StringTools.urlEncode(str);
 	}
 	
+	/**
+	 * To safely print a string in javascript
+	 * @param	str
+	 */
+	public function escapeJS( str : String ) {
+		return str.split("\\").join("\\\\").split("'").join("\\'").split("\r").join("\\r").split("\n").join("\\n");
+	}
+	
 	function getVariable( file : String ) {
 		
 		var v = _vcache.get(file);

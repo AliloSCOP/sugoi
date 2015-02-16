@@ -26,7 +26,7 @@
  */
 
 
-package sugoi.form;
+package form;
 
 class Label 
 {

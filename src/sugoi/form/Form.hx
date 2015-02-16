@@ -69,11 +69,6 @@ class Form
 		submittedButtonName = null;
 
 		addElement(new CSRFProtection());
-
-		//if (translator == null) {
-			//translator = new mt.i18n.translator.TArray(App.getTranslationArray(),"fr");
-		//}
-
 	}
 
 	/**

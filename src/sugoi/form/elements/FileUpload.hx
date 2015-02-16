@@ -1,8 +1,8 @@
-package sugoi.form.elements;
+package form.elements;
 import haxe.crypto.Md5;
 import haxe.Timer;
-import sugoi.form.Form;
-import sugoi.form.FormElement;
+import form.Form;
+import form.FormElement;
 import sys.io.File;
 
 class FileUpload extends FormElement
@@ -17,7 +17,7 @@ class FileUpload extends FormElement
 		this.label = label;
 		this.value = value;
 		this.required = required;
-		//this.toFolder = toFolder != null ? toFolder : Poko.instance.App.config.applicationPath + "/tmp/";
+		//this.toFolder = toFolder != null ? toFolder : Poko.instance.config.applicationPath + "/tmp/";
 		this.toFolder = toFolder;
 		this.keepFullFileName = keepFullFileName;
 	}
@@ -35,7 +35,7 @@ class FileUpload extends FormElement
 		//var oldfile = keepFullFileName ? previous : toFolder + previous;
 
 
-		var request = sugoi.tools.Utils.getMultipart(1024 * 1024 * 4);
+		var request = tools.Utils.getMultipart(1024 * 1024 * 4);
 
 		if (request.get(parentForm.name + "_" + name) == null) throw parentForm.name + "_" + name+" is empty";
 

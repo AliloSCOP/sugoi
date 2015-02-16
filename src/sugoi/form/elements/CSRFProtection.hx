@@ -15,7 +15,7 @@ class CSRFProtection extends FormElement
 	public function new()
 	{
 		super();
-		value = haxe.crypto.Md5.encode(App.current.session.sid + App.App.config.get("database")).substr(0, 5);
+		value = haxe.crypto.Md5.encode(App.current.session.sid + App.config.KEY.substr(0, 5));
 		name = "token";
 	}
 

@@ -25,7 +25,7 @@ class BaseController {
 
 	
 	function checkToken():Bool {
-		var token = haxe.crypto.Md5.encode(app.session.sid + App.config.get("database"));
+		var token = haxe.crypto.Md5.encode(app.session.sid + App.config.KEY.substr(0,6));
 		view.token = token;
 		return app.params.get("token") == token;
 	}
@@ -45,6 +45,8 @@ class BaseController {
 	public function Ok( url : String, ?text : String ) {
 		return OkAction(url, text);
 	}
+	
+	
 	
 	/**
 	 * Generate files from db.File

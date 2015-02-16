@@ -1,12 +1,13 @@
 package sugoi.form.elements;
 import sugoi.form.Form;
 import sugoi.form.FormElement;
+import sugoi.form.Formatter;
 #if php
 import php.Web;
 #else
 import neko.Web;
 #end
-import sugoi.form.Formatter;
+
 
 enum FakeFlag {
 	Flag1;

@@ -1,11 +1,11 @@
-package sugoi.form.elements;
+package form.elements;
 /*
  * TinyMCE rich text editor
  *
  */
 
-import sugoi.form.Form;
-import sugoi.form.FormElement;
+import form.Form;
+import form.FormElement;
 
 class Richtext extends FormElement
 {

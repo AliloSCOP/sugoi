@@ -1,7 +1,7 @@
 package sugoi.form.elements;
 
-import sugoi.form.Form;
-import sugoi.form.FormElement;
+import form.Form;
+import form.FormElement;
 
 
 class Button extends FormElement

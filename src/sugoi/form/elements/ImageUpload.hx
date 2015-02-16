@@ -26,13 +26,13 @@
  */
 
 
-package sugoi.form.elements;
+package form.elements;
 import haxe.Md5;
 import haxe.Timer;
 import php.FileSystem;
 import poko.Poko;
-import sugoi.form.Form;
-import sugoi.form.FormElement;
+import form.Form;
+import form.FormElement;
 import poko.utils.PhpTools;
 
 class ImageUpload extends FileUpload
@@ -51,7 +51,7 @@ class ImageUpload extends FileUpload
 	override public function render():String
 	{
 		var n = form.name + "_" +name;
-		var path = toFolder.substr((Poko.instance.App.config.applicationPath + "res/").length);
+		var path = toFolder.substr((Poko.instance.config.applicationPath + "res/").length);
 		
 		var str:String = "";
 		str += '<img src="'+imageServiceUrl+'&preset='+imageServicePreset+'&src='+getFileName()+'" id="' + n + '__image" /><br/>';

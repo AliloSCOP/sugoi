@@ -1,5 +1,5 @@
-
 package sugoi.form.elements;
+
 import sugoi.form.Form;
 import sugoi.form.FormElement;
 import sugoi.form.Validator;

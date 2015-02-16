@@ -3,7 +3,7 @@
  * @author Tonypee
  */
 
-package sugoi.form.elements;
+package form.elements;
 
 typedef KeyVal = {
 	var key:String;

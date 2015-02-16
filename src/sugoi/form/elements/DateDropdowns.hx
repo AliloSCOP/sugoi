@@ -1,5 +1,5 @@
-
 package sugoi.form.elements;
+
 #if neko
 import neko.Web;
 #else

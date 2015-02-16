@@ -6,7 +6,7 @@ package sugoi.form.elements;
  * 
  * @author fbarbut<francois.barbut@gmail.com>
  */
-class Html extends FormElement
+class Html extends sugoi.form.FormElement
 {
 
 	var html : String;
