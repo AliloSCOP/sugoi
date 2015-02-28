@@ -58,51 +58,43 @@ class Enum extends FormElement
 
 		var array = Type.allEnums(Type.resolveEnum(enumName));
 
-			var rowsPerColumn = Math.ceil(array.length / columns);
-			s = "<table style='margin-bottom:8px;'><tr>";
-			for (i in 0...columns)
+		var rowsPerColumn = Math.ceil(array.length / columns);
+		s = "<table style='margin-bottom:8px;'><tr>";
+		for (i in 0...columns)
+		{
+			s += "<td valign=\"top\">\n";
+			s += "<table>\n";
+
+			for (j in 0...rowsPerColumn)
 			{
-				s += "<td valign=\"top\">\n";
-				s += "<table>\n";
+				if (c >= array.length) break;
 
-				for (j in 0...rowsPerColumn)
+				s += "<tr>";
+
+				var row:Dynamic = array[c];
+				var checkbox = "<input type=\"radio\" class=\"" + tagCss + "\" name=\""+n+"\" id=\""+n+row+"\" value=\""+Type.enumIndex(row)+"\" " + ((value==Type.enumIndex(row))? "checked":"") +" ></input>\n";
+				var label;
+
+				var t = Form.translator;
+
+				label = "<label for=\"" + n + c + "\" class=\"" + labelCss + "\" >" + t._(Std.string(row))  +"</label>\n";
+
+				if (labelRight)
 				{
-					if (c >= array.length) break;
-
-					s += "<tr>";
-
-					var row:Dynamic = array[c];
-					//App.log(Std.string(value)+"=="+row);
-					var checkbox = "<input type=\"radio\" class=\"" + tagCss + "\" name=\""+n+"\" id=\""+n+row+"\" value=\""+Type.enumIndex(row)+"\" " + ((value==Type.enumIndex(row))? "checked":"") +" ></input>\n";
-					var label;
-
-					var t = Form.translator;
-
-					label = "<label for=\"" + n + c + "\" class=\"" + labelCss + "\" >" + t._(row)  +"</label>\n";
-
-
-					//if (verticle) {
-
-						if (labelRight)
-						{
-							s += "<td style='vertical-align:middle;'>" + checkbox + "</td>\n";
-							s += "<td style='vertical-align:middle;'>" + label + "</td>\n";
-						} else {
-							s += "<td style='vertical-align:middle;'>" + label + "</td>\n";
-							s += "<td style='vertical-align:middle;'>" + checkbox + "</td>\n";
-						}
-					//}else {
-						//s += "<td>";
-						//s += "</td>";
-					//}
-
-					s += "</tr>";
-					c++;
+					s += "<td style='vertical-align:middle;'>" + checkbox + "</td>\n";
+					s += "<td style='vertical-align:middle;'>" + label + "</td>\n";
+				} else {
+					s += "<td style='vertical-align:middle;'>" + label + "</td>\n";
+					s += "<td style='vertical-align:middle;'>" + checkbox + "</td>\n";
 				}
-				s += "</table>";
-				s += "</td>";
+
+				s += "</tr>";
+				c++;
 			}
-			s += "</tr></table>\n";
+			s += "</table>";
+			s += "</td>";
+		}
+		s += "</tr></table>\n";
 
 
 
