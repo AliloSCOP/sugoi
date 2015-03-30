@@ -24,7 +24,7 @@ class Hidden extends FormElement
 		return '<input type="' + type + '" name="' + n + '" id="' + n + '" value="' +value + '"/>';
 	}
 	
-	override public function getPreview():String
+	override public function getFullRow():String
 	{
 		return this.render();
 	}	

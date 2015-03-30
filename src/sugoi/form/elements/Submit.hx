@@ -31,9 +31,9 @@ class Submit extends FormElement
 		return render();
 	}
 	
-	override public function getPreview():String
+	override public function getFullRow():String
 	{
-		return "<tr><td></td><td>" + this.render() + "<td></tr>";
+		return "<div class='col-sm-4'></div><div class='col-sm-8'>" + this.render() + "</div>";
 	}
 	
 	override public function populate():Void

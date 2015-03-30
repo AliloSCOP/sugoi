@@ -2,7 +2,7 @@ package sugoi;
 
 class Config {
 
-	var PATH :String;
+	public var PATH :String;
 	//public var json : Dynamic;	
 	public var xml : Xml;
 	public var LANG 		:String;

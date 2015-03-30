@@ -86,9 +86,9 @@ class CheckboxGroup extends FormElement
 					
 					if (formatter != null)
 					{
-						label = "<label for=\"" + n + c + "\" class=\""+labelCss+"\" >" + formatter.format(row.value)  +"</label>\n";
+						label = "<label for=\"" + n + c + "\" class=\""+''/*labelCss*/+"\" >" + formatter.format(row.value)  +"</label>\n";
 					} else {
-						label = "<label for=\"" + n + c + "\" class=\""+labelCss+"\" >" + Form.translator._(row.value)  +"</label>\n";
+						label = "<label for=\"" + n + c + "\" class=\""+''/*labelCss*/+"\" >" + Form.translator._(row.value)  +"</label>\n";
 					}
 					
 					if (labelRight)

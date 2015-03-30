@@ -30,8 +30,8 @@ class CSRFProtection extends FormElement
 	}
 
 
-	override public function getPreview() {
-		return "<tr><td></td><td>"+render()+"</td></tr>";
+	override public function getFullRow() {
+		return render();
 	}
 
 	override public function render() {

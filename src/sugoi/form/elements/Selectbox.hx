@@ -23,6 +23,7 @@ class Selectbox extends FormElement
 		size = 1;
 		multiple = false;
 		onChange = "";
+		if(Form.USE_TWITTER_BOOTSTRAP) cssClass = "form-control";
 	}
 	
 	override public function render():String

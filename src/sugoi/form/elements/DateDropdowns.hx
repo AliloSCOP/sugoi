@@ -10,7 +10,7 @@ import sugoi.form.Validator;
 import sugoi.form.ListData;
 
 /**
- * makes a list of selectBox for day + month + year
+ * A list of selectBox for day + month + year
  */
 class DateDropdowns extends FormElement
 {
@@ -66,9 +66,9 @@ class DateDropdowns extends FormElement
 
 		daySelector.internal = monthSelector.internal = yearSelector.internal = true;
 
-		if (Form.USE_TWITTER_BOOTSTRAP) {
-			daySelector.cssClass = "input-mini";
-		}
+		//if (Form.USE_TWITTER_BOOTSTRAP) {
+			//daySelector.cssClass = "input-mini";
+		//}
 		//trace("date : " + date);
 	}
 	public function shortLabels()
@@ -126,9 +126,7 @@ class DateDropdowns extends FormElement
 	override public function render():String
 	{
 		super.render();
-
-		var s = "";
-
+		
 		if (value != "" && value != null && value != "null")
 		{
 			try{
@@ -138,14 +136,12 @@ class DateDropdowns extends FormElement
 			yearSelector.value = v.getFullYear();
 			}catch(e:Dynamic){}
 		}
-
-		s += daySelector.render();
-		s += " / ";
-		s += monthSelector.render();
-		s += " / ";
-		s += yearSelector.render();
-
-		return s;
+		
+		return '<div class="row">
+		  <div class="col-xs-2">'+daySelector.render()+'</div>
+		  <div class="col-xs-6">'+monthSelector.render()+'</div>
+		  <div class="col-xs-4">'+yearSelector.render()+'</div>
+		</div>';
 	}
 
 

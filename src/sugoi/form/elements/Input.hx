@@ -33,7 +33,7 @@ class Input extends FormElement
 		showLabelAsDefaultValue = false;
 		useSizeValues = false;
 		printRequired = false;
-		
+		if(Form.USE_TWITTER_BOOTSTRAP) cssClass = "form-control";
 		width = 180;
 	}
 	

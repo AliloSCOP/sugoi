@@ -19,6 +19,21 @@ class Macros {
 						case EConst(c):
 							switch(c) {
 							case CString(s):
+								/*
+								 * //look for the template in the filesystem in all the paths
+								var found = false;
+								var cp = Context.getClassPath();
+								cp.reverse();
+								for ( path in cp) {
+									Context.warning(path + "lang/fr/tpl/" + s,m.pos);
+									if ( sys.FileSystem.exists(path + "lang/fr/tpl/" + s) ) {
+										found = true;	
+										break;
+									}
+									
+								}
+								if( !found ) Context.error("File not found '"+s+"'", m.params[0].pos);*/
+								
 								if( !sys.FileSystem.exists("lang/fr/tpl/"+s) )
 									Context.error("File not found '"+s+"'", m.params[0].pos);
 							default:
@@ -37,6 +52,16 @@ class Macros {
 						Context.error("Unknown metadata", m.pos);
 				}
 		return changed ? fields : null;
+	}
+	
+	macro public static function getCompileDate() {
+		return haxe.macro.Context.makeExpr(Date.now().toString(), haxe.macro.Context.currentPos());
+	}
+	
+	macro public static function getFilePath(){
+		var p = Context.getPosInfos(Context.currentPos());
+		//voir Context.resolvePath()
+		return haxe.macro.Context.makeExpr(p.file, Context.currentPos());
 	}
 	
 }

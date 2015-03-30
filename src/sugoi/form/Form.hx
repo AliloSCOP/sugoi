@@ -393,8 +393,8 @@ class Form
 		//for ( e in elements) {
 			//if (Std.is(e,FileUpload)) multipart == true;
 		//}
-		//
-		return '<form id="' + id + '" name="' + name + '" method="' + method +'" action="' + action +'" ' + (multipart?'enctype="multipart/form-data"':'') + ' >';
+		
+		return '<form id="' + id + '" class="'+(Form.USE_TWITTER_BOOTSTRAP?"form-horizontal":"")+'" name="' + name + '" method="' + method +'" action="' + action +'" ' + (multipart?'enctype="multipart/form-data"':'') + ' >';
 
 	}
 
@@ -492,17 +492,24 @@ class Form
 
 	public function toString()
 	{
+		/* <div class="form-group">
+			<label for="inputEmail3" class="col-sm-2 control-label">Email</label>
+				<div class="col-sm-10">
+				  <input type="email" class="form-control" id="inputEmail3" placeholder="Email">
+			</div>
+		</div>*/
+		
 		var s:StringBuf = new StringBuf();
 		s.add(getOpenTag());
 
 		if (isSubmitted())
 			s.add(getErrors());
 
-		s.add('<table cellspacing="0" cellspacing="0" border="0" >\n');
+		
 
 		for (element in getElements())
 			if (element != submitButton && element.internal == false)
-				s.add("\t"+element.getPreview()+"\n");
+				s.add("\t"+element.getFullRow()+"\n");
 
 		//submit button
 		if (submitButton != null) {
@@ -511,9 +518,9 @@ class Form
 			submitButton = new Submit('submit', 'OK');
 			submitButton.parentForm = this;
 		}
-		s.add(submitButton.getPreview());
+		s.add(submitButton.getFullRow());
 
-		s.add("</table>\n");
+		
 		s.add(getCloseTag());
 
 		return s.toString();

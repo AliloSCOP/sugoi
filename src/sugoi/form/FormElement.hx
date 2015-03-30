@@ -31,8 +31,7 @@ class FormElement
 		active = true;
 		errors = new List();
 		validators = new List();
-		filters = new List();
-
+		filters = new List();		
 		inited = false;
 		internal = false;
 	}
@@ -92,11 +91,6 @@ class FormElement
 		filters.add(filter);
 	}
 
-	public function bindEvent(event:String, method:String, params:Array<Dynamic>, ?isMethodGlobal:Bool=false)
-	{
-		//Poko.instance.request.jsBindings.add(new JsBinding(form.name + "_" + name, event, method, params, isMethodGlobal));
-	}
-
 	public function populate():Void
 	{
 		if (!inited) init();
@@ -135,8 +129,13 @@ class FormElement
 	/**
 	 * renders the element with label+tr+td...
 	 */
-	public function getPreview():String{
-		return "<tr><td>" + getLabel() + "</td><td>" + this.render() + "<td></tr>";
+	public function getFullRow():String {
+		var s = new StringBuf();
+		if(Form.USE_TWITTER_BOOTSTRAP) s.add('<div class="form-group">\n');
+		s.add(getLabel());
+		s.add("<div class='col-sm-8'>" + this.render() + "</div>");
+		if (Form.USE_TWITTER_BOOTSTRAP) s.add('</div>\n');
+		return s.toString();
 	}
 
 	public function getType():String
@@ -147,20 +146,22 @@ class FormElement
 	public function getLabelClasses() : String
 	{
 		var css = "";
+		if (Form.USE_TWITTER_BOOTSTRAP) css = "col-sm-4 control-label";
+		
 		var requiredSet = false;
 		if (required) {
-			css = parentForm.requiredClass;
+			css += " "+parentForm.requiredClass;
 			if (parentForm.isSubmitted() && required && value == "") {
-				css = parentForm.requiredErrorClass;
+				css += " "+parentForm.requiredErrorClass;
 				requiredSet = true;
 			}
 		}
 		if(!requiredSet && parentForm.isSubmitted() && !isValid()){
-			css = parentForm.invalidErrorClass;
+			css += " "+parentForm.invalidErrorClass;
 		}
 
-		if ( cssClass != null )
-			css += ( css == "" ) ? cssClass : " " + cssClass;
+		//if ( cssClass != null )
+			//css += ( css == "" ) ? cssClass : " " + cssClass;
 
 		return css;
 	}
@@ -168,7 +169,6 @@ class FormElement
 	public function getLabel():String
 	{
 		var n = parentForm.name + "_" + name;
-
 		return "<label for=\"" + n + "\" class=\""+getLabelClasses()+"\" id=\"" + n + "__Label\">" + label +(required?parentForm.labelRequiredIndicator:'') +"</label>";
 	}
 

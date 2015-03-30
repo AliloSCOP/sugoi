@@ -92,7 +92,7 @@ class Flags extends FormElement
 		value = 0;
 		
 		if (v != null) {
-			App.log("flags populate : " + v );
+			//App.log("flags populate : " + v );
 			var val = new haxe.EnumFlags<FakeFlag>();
 			//var i = 0;
 			for (vv in v) {
@@ -144,7 +144,7 @@ class Flags extends FormElement
 					
 					var t = Form.translator;
 					
-					label = "<label for=\"" + n + c + "\" class=\""+labelCss+"\" >" + t._(row)  +"</label>\n";
+					label = "<label for=\"" + n + c + "\" class=\""+''/*labelCss*/+"\" > " + t._(row)  +"</label>\n";
 					
 					
 					if (labelRight)
