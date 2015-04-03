@@ -1,5 +1,5 @@
 package sugoi.mail;
-
+using Lambda;
 /**
  * abstract class to extend
  */
@@ -16,6 +16,10 @@ class BaseMail implements IMail
 	public function new() {
 		recipients = [];
 		headers = new Map();
+	}
+	
+	public function getRecipients() {
+		return Lambda.map(recipients, function(c) return c.email).array();
 	}
 	
 	public function setSender(email, ?name) {
