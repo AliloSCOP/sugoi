@@ -1,5 +1,9 @@
 package sugoi;
-
+#if neko
+import neko.Web;
+#else
+import php.Web;
+#end
 class Config {
 
 	public var PATH :String;
@@ -17,7 +21,7 @@ class Config {
 	public var SQL_LOG 		:Bool;
 
 	public function new() {
-		PATH = neko.Web.getCwd() + "../";
+		PATH = Web.getCwd() + "../";
 		//json = haxe.Json.parse(sys.io.File.getContent(PATH + "config.json"));	
 		xml = Xml.parse(sys.io.File.getContent(PATH + "config.xml")).firstElement();
 		

@@ -1,6 +1,11 @@
 package sugoi.db;
 import sys.db.Types;
 import db.User;
+#if neko
+import neko.Web;
+#else
+import php.Web;
+#end
 
 @:id(sid)
 @:index(uid,unique)
@@ -13,12 +18,17 @@ class Session extends sys.db.Object {
 	public var lastTime : SDateTime;
 	public var createTime : SDateTime;
 	
+	#if neko
 	public var sdata : SNekoSerialized;
+	#else
+	public var sdata : SText;
+	#end
+	
 	@:skip public var data : Dynamic;
 
-	@:relation(uid)
-	public var user : SNull<db.User>;
-	public var uid : SNull<SInt>;
+	//public var uid : SNull<SInt>;
+	@:relation(uid) public var user : SNull<db.User>;
+	
 	
 
 	public function new() {
@@ -37,16 +47,20 @@ class Session extends sys.db.Object {
 	
 	
 	public function setUser( u : User ):Void {		
-		if ( uid != u.id ) {
+		if ( this.user!=null && this.user.id != u.id ) {
 			//remove any previous session for this user
-			manager.delete({ uid : u.id });
+			manager.delete({ user : u });
 		}
 		lang = u.lang;
 		user = u;
 	}
 
 	public override function update() {
+		#if neko
 		sdata = neko.Lib.serialize(data);
+		#else
+		sdata = haxe.Serializer.run(data);
+		#end
 		lastTime = Date.now();
 		super.update();
 	}
@@ -56,8 +70,12 @@ class Session extends sys.db.Object {
 				
 		var s = manager.get(sid,true);
 		if ( s == null ) return null;
-		try{
+		try {
+			#if neko
 			s.data = neko.Lib.localUnserialize(s.sdata);
+			#else
+			s.data = haxe.Unserializer.run(s.sdata);
+			#end
 		}catch (e:Dynamic) {
 			s.data = null;
 		}
@@ -71,7 +89,7 @@ class Session extends sys.db.Object {
 			var s = get(sid);
 			if( s != null ) return s;
 		}
-		var ip = neko.Web.getClientIP();
+		var ip = Web.getClientIP();
 		var s = new Session();
 		s.ip = ip;
 		s.createTime = Date.now();

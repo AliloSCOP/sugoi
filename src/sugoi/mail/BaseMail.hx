@@ -79,11 +79,10 @@ class BaseMail implements IMail
 	 * @param	ctx 	Vars to send to template
 	 */
 	public function setHtmlBody(tpl, ctx:Dynamic) {
-		#if twinBase
 		var app = App.current;
 		var tpl = app.loadTemplate(tpl);
 		if( ctx == null ) ctx = { };
-		ctx.HOST = App.App.config.HOST;
+		ctx.HOST = App.config.HOST;
 		ctx.key = getKey();
 		ctx.senderName = senderName;
 		ctx.senderEmail = senderEmail;
@@ -92,22 +91,16 @@ class BaseMail implements IMail
 		ctx.recipients = recipients;
 		CSSInlining(ctx);
 		htmlBody = tpl.execute(ctx);
-		#else
-		throw "cannot use this method";
-		#end
+		
 	}
 	
-	public function setTextBody(tpl, ctx:Dynamic) {
-		#if twinBase
+	public function setTextBody(tpl, ctx:Dynamic) {		
 		var app = App.current;
 		var tpl = app.loadTemplate(tpl);
 		if( ctx == null ) ctx = { };
 		ctx.HOST = App.config.HOST;
 		ctx.key = getKey();
-		textBody = tpl.execute(ctx);
-		#else
-		throw "cannot use this method";
-		#end
+		textBody = tpl.execute(ctx);		
 	}
 	
 	

@@ -2,6 +2,13 @@ package sugoi;
 
 import sugoi.db.File;
 
+#if neko
+import neko.Web;
+#else
+import php.Web;
+#end
+
+
 enum ControllerAction {
 	RedirectAction( url : String );
 	ErrorAction( url : String, ?text : String );
@@ -58,17 +65,17 @@ class BaseController {
 		var f = File.manager.get(fid, false);
 		var ext = fname.substr(fname.length - 4);//.png
 		if( f == null || fname != File.makeSign(fid)+ext ) {
-			neko.Lib.print("404 - File not found '"+StringTools.htmlEscape(fname)+"'");
+			Sys.print("404 - File not found '"+StringTools.htmlEscape(fname)+"'");
 			return;
 		}
 		var path;
 		var ch;
 		try {
-			path = neko.Web.getCwd()+"/file/"+File.makeSign(f.id)+ext;
+			path = Web.getCwd()+"/file/"+File.makeSign(f.id)+ext;
 			ch = sys.io.File.write(path,true);
 		} catch( e : Dynamic ) {
 			Sys.sleep(0.1); // wait for another process to write ?
-			neko.Web.redirect(neko.Web.getURI()+"?retry=1");
+			Web.redirect(Web.getURI()+"?retry=1");
 			return;
 		}
 		ch.write(f.data);
@@ -76,7 +83,7 @@ class BaseController {
 
 		try {
 			// get mtime of current index.n
-			var s = sys.FileSystem.stat(neko.Web.getCwd()+"index.n");
+			var s = sys.FileSystem.stat(Web.getCwd()+"index.n");
 			var mtime = s.mtime.toString();
 
 			// set mtime of new file
@@ -85,7 +92,7 @@ class BaseController {
 		}catch( e : Dynamic ){
 		}
 
-		neko.Web.redirect(neko.Web.getURI()+"?reload=1");
+		Web.redirect(Web.getURI()+"?reload=1");
 	}
 
 }

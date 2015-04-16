@@ -9,7 +9,7 @@ class Error extends sys.db.Object {
 	
 	@:relation(uid)
 	public var user : SNull<db.User>;
-	public var uid : SNull<SInt>;
+	//public var uid : SNull<SInt>;
 	
 	
 	public var url : STinyText;

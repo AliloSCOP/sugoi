@@ -1,4 +1,11 @@
 package sugoi;
+#if neko
+import neko.Web;
+import neko.Lib;
+#else
+import php.Web;
+import php.Lib;
+#end
 
 class BaseApp {
 
@@ -32,8 +39,12 @@ class BaseApp {
 		templo.Loader.OPTIMIZED = App.config.DEBUG == false;
 		templo.Loader.BASE_DIR = App.config.TPL;
 		templo.Loader.TMP_DIR = App.config.TPL_TMP;
-		if( t == null ) return null;		
+		if ( t == null ) return null;		
+		#if neko
 		return new templo.Loader(t, App.config.getBool("cachetpl"));		
+		#else
+		return new templo.Loader(t);		
+		#end
 	}
 
 	public function setTemplate( t : String ) {
@@ -47,7 +58,7 @@ class BaseApp {
 		if( lang == App.config.LANG )
 			return false;
 		App.config.LANG = lang;
-		var path = neko.Web.getCwd() + "../lang/" + lang + "/";
+		var path = Web.getCwd() + "../lang/" + lang + "/";
 		App.config.TPL = path + "tpl/";
 		App.config.TPL_TMP = path + "tmp/";
 		
@@ -77,7 +88,7 @@ class BaseApp {
 		view.init();
 		var result = template.execute(view);
 		if( save ) saveAndClose();
-		neko.Lib.print(result);
+		Sys.print(result);
 	}
 
 	function onMeta( m : String, args : Array<Dynamic> ) {
@@ -95,7 +106,7 @@ class BaseApp {
 	}
 
 	function detectLang() {
-		var l = neko.Web.getClientHeader("Accept-Language");
+		var l = Web.getClientHeader("Accept-Language");
 		if( l != null )
 			for( l in l.split(",") ) {
 				l = l.split(";")[0];
@@ -128,16 +139,16 @@ class BaseApp {
 
 	public function setCookie( oldCookie : String ){
 		if( session != null && session.sid != null && session.sid != oldCookie ) {
-			neko.Web.setHeader("Set-Cookie", cookieName+"=" + session.sid + "; path=/;");
+			Web.setHeader("Set-Cookie", cookieName+"=" + session.sid + "; path=/;");
 		}
 	}
 
 	function mainLoop() {
-		params = neko.Web.getParams();
+		params = Web.getParams();
 		
 		//Get session
 		var sids = [];
-		var cookieSid = neko.Web.getCookies().get(cookieName);
+		var cookieSid = Web.getCookies().get(cookieName);
 		if( params.exists("sid") ) sids.push(params.get("sid"));
 		if( cookieSid != null ) sids.push(cookieSid);
 		session = sugoi.db.Session.init(sids);
@@ -160,7 +171,7 @@ class BaseApp {
 		
 		//dispatching
 		try {
-			var url = neko.Web.getURI();
+			var url = Web.getURI();
 			if( StringTools.endsWith(url, "/index.n") )
 				url = url.substr(0, -8);
 			var d = new haxe.web.Dispatch(url, params);
@@ -168,21 +179,21 @@ class BaseApp {
 			d.dispatch(new controller.Main());
 		} catch( e : haxe.web.Dispatch.DispatchError ) {
 			if( App.config.DEBUG )
-				neko.Lib.rethrow(e);
+				Lib.rethrow(e);
 			cnx.rollback();
-			neko.Web.redirect("/");
+			Web.redirect("/");
 			return;
 		} catch( e : sugoi.BaseController.ControllerAction) {
 			switch( e ) {
 			case RedirectAction(url):
-				neko.Web.redirect(url);
+				Web.redirect(url);
 				template = null;
 			case ErrorAction(url, text), OkAction(url,text):
 				if( text == null ) {
 					text = url;
-					url = neko.Web.getURI();
+					url = Web.getURI();
 				}
-				neko.Web.redirect(url);
+				Web.redirect(url);
 				var error = switch(e) { case ErrorAction(_): true; default: false; };
 				if( error ) rollback();
 				if ( error ) {					
@@ -210,9 +221,9 @@ class BaseApp {
 		message.add(stack);
 		message.add("\n");
 		var e = new sugoi.db.Error();
-		e.url = neko.Web.getURI();
-		e.ip = neko.Web.getClientIP();
-		e.uid = if( user != null ) user.id else null;
+		e.url = Web.getURI();
+		e.ip = Web.getClientIP();
+		e.user = if( user != null ) user else null;
 		e.date = Date.now();
 		e.error = message.toString();
 		e.insert();
@@ -237,18 +248,18 @@ class BaseApp {
 			executeTemplate(false);
 			
 		} catch( e : Dynamic ) {
-			neko.Lib.print("<pre>");
-			neko.Lib.println("Error : "+try Std.string(e) catch( e : Dynamic ) "???");
-			neko.Lib.println(haxe.CallStack.toString(haxe.CallStack.exceptionStack()));
+			Sys.print("<pre>");
+			Sys.println("Error : "+try Std.string(e) catch( e : Dynamic ) "???");
+			Sys.println(haxe.CallStack.toString(haxe.CallStack.exceptionStack()));
 			try {
 				if( cnx != null )
 					sugoi.db.Error.manager.get(0,false);
 			} catch( e : Dynamic ) {
-				neko.Lib.println("Initializing Database...");
+				Sys.println("Initializing Database...");
 				sys.db.Admin.initializeDatabase();
-				neko.Lib.println("Done");
+				Sys.println("Done");
 			}
-			neko.Lib.print("</pre>");
+			Sys.print("</pre>");
 		}
 	}
 
@@ -306,12 +317,12 @@ class BaseApp {
 	}
 
 	function sendHeaders(){
-		neko.Web.setHeader("Cache-Control", "no-store, no-cache, must-revalidate");
-		neko.Web.setHeader("Pragma", "no-cache");
-		neko.Web.setHeader("Expires", "-1");
-		neko.Web.setHeader("P3P", "CP=\"ALL DSP COR NID CURa OUR STP PUR\"");
-		neko.Web.setHeader("Content-Type", "text/html; Charset=UTF-8");
-		neko.Web.setHeader("Expires", "Mon, 26 Jul 1997 05:00:00 GMT");
+		Web.setHeader("Cache-Control", "no-store, no-cache, must-revalidate");
+		Web.setHeader("Pragma", "no-cache");
+		Web.setHeader("Expires", "-1");
+		Web.setHeader("P3P", "CP=\"ALL DSP COR NID CURa OUR STP PUR\"");
+		Web.setHeader("Content-Type", "text/html; Charset=UTF-8");
+		Web.setHeader("Expires", "Mon, 26 Jul 1997 05:00:00 GMT");
 	}
 
 	static function main() {
@@ -327,8 +338,10 @@ class BaseApp {
 		}
 		a.run();
 		a = null;
+		#if neko
 		if ( App.config.getInt("cache", 0) == 1 ) {			
 			neko.Web.cacheModule(App.main);
 		}
+		#end
 	}
 }

@@ -19,8 +19,8 @@ class DateInput extends DateDropdowns
 		minuteSelector 	= new Selectbox(name+"_minute", t._("minute"), ListData.getDateElement(0, 59), Std.string(date.getMinutes()), true, "-", 'title="Minute"');		
 		
 		if (Form.USE_TWITTER_BOOTSTRAP) {
-			hourSelector.cssClass = "input-mini";
-			minuteSelector.cssClass = "input-mini";
+			hourSelector.cssClass = "form-control";
+			minuteSelector.cssClass = "form-control";
 		}
 		
 	}

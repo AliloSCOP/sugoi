@@ -36,9 +36,9 @@ class Form
 	var wymEditorCount:Int;
 	public static var translator : ITranslator;
 
-	//conf
-	//public static var HTML5 = App.config.getBool('form.Form.HTML5', true);
+	//conf	
 	public static var USE_TWITTER_BOOTSTRAP = true;// App.config.getBool('form.Form.USE_TWITTER_BOOTSTRAP', true);
+	public static var USE_DATEPICKER = true; //http://eonasdan.github.io/bootstrap-datetimepicker/
 
 	public function new(name:String, ?action:String, ?method:FormMethod)
 	{
@@ -181,11 +181,7 @@ class Form
 				//Reflect.setField(data, element.name, cast( element, Checkbox ).checked );
 			//else
 				Reflect.setField(data, element.name, element.value);
-			if ( Std.is(element, DateSelector) )
-			{
-				var ds = cast(element, DateSelector);
-				//trace("ds.value = " + ds.value);
-			}
+			
 		}
 		return data;
 	}
@@ -249,11 +245,12 @@ class Form
 	 * @param	obj
 	 */
 	public static function fromObject(obj:Dynamic) {
-		//TODO
-
-		var f = new Form('fromObj');
-		f.populateElements(obj);
-		return f;
+		var form = new Form('fromObj');
+		for (f in Reflect.fields(obj)) {
+			form.addElement(new sugoi.form.elements.Input(f, f, Reflect.field(obj, f)));
+		}
+		form.populateElements(obj);
+		return form;
 	}
 
 	/*
@@ -261,13 +258,8 @@ class Form
 	 */
 	public static function fromSpod(obj:sys.db.Object) {
 
-		//generate a unique form name
-		var name = "";
-		try {
-			name = obj.toString();
-		}catch(e:Dynamic) {
-			name = Type.getClassName(Type.getClass(obj));
-		}
+		//generate a form name
+		var name = Type.getClassName(Type.getClass(obj));
 
 		var form = new Form("form"+Md5.encode(name));
 		var ti = new TableInfos(Type.getClassName(Type.getClass(obj)));
@@ -316,53 +308,49 @@ class Form
 					e = new Input(f.name,t._(f.name), v, !isNull);
 
 				case DId, DUId:
-					//e = new Input(f.name, f.name, v, null,null,null,true);
 					e = new Hidden(t._(f.name), v);
 
 				case DEncoded:
-					e = new Input(f.name,t._(f.name), v);
+					e = new Input(f.name, t._(f.name), v);
+					
 				case DFlags(fl, auto):
-					//App.log("flag data : "+fl);
 					e = new Flags(f.name,t._(f.name), Lambda.array(fl), Std.parseInt(v), false);
 
 				case DTinyInt, DUInt, DSingle, DFloat:
 					e = new Input(f.name, t._(f.name), v);
+					
 				case DBool :
-					e = new Checkbox(f.name, t._(f.name), Std.string(v)=='true');
+					e = new Checkbox(f.name, t._(f.name), Std.string(v) == 'true');
+					
 				case DString(n):
 					e = new Input(f.name,t._(f.name), v, !isNull ,null,"lenght="+n);
-					/*
-					case DDate: "DATE";
-					case DDateTime: "DATETIME";
-					case DTimeStamp: "TIMESTAMP"+(nulls.exists(f.name) ? " NULL DEFAULT NULL" : " DEFAULT 0");*/
+		
 				case DTinyText, DSmallText, DText, DSerialized:
 					e = new TextArea(f.name, t._(f.name), v,!isNull);
-					/*case DSmallBinary: "BLOB";
-					case DBinary, DNekoSerialized: "MEDIUMBLOB";
-					case DData: "MEDIUMBLOB";
-					case DEnum(_): "TINYINT UNSIGNED";
-					case DLongBinary: "LONGBLOB";
-					case DBigInt: "BIGINT";
-					case DBigId: "BIGINT AUTO_INCREMENT";
-					case DBytes(n): "BINARY(" + n + ")";
-					case DTinyUInt: "TINYINT UNSIGNED";
-					case DSmallInt: "SMALLINT";
-					case DSmallUInt: "SMALLINT UNSIGNED";
-					case DMediumInt: "MEDIUMINT";
-					case DMediumUInt: "MEDIUMINT UNSIGNED";
-					case DNull, DInterval: throw "assert";*/
+
 				case DTimeStamp, DDateTime:
 					var d = Date.now();
 					try{
 						d = Date.fromString(Std.string(v));
-					}catch (e:Dynamic) {}
-					e = new DateInput(f.name, t._(f.name), d);
+					}catch (e:Dynamic) { }
+					
+					if (USE_DATEPICKER) {
+						e = new DatePicker(f.name, t._(f.name), d);
+					}else {
+						e = new DateInput(f.name, t._(f.name), d);	
+					}
+					
 				case DDate :
 					var d = Date.now();
 					try{
 						d = Date.fromString(Std.string(v));
-					}catch (e:Dynamic) {}
-					e = new DateDropdowns(f.name, t._(f.name), d);
+					}catch (e:Dynamic) { }
+					if (USE_DATEPICKER) {
+						e = new DatePicker(f.name, t._(f.name), d);	
+					}else {
+						e = new DateDropdowns(f.name, t._(f.name), d);	
+					}
+					
 
 				case DEnum(name):
 					e = new Enum(f.name, t._(f.name), name, Std.parseInt(v) );
