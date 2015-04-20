@@ -17,6 +17,23 @@ class ListData
 		return data;
 	}
 	
+	public static function getMinutes() {
+		var data = [];
+		for ( i in 0...12) {			
+			var x = i * 5;
+			data.push( {key:Std.string(x),value:Std.string( x<10?"0"+x:x ) } );
+		}
+		return data;
+	}
+	
+	public static function fromArray(arr:Array<Dynamic>) {
+		var data = [];
+		for (a in arr) {
+			data.push( {key:Std.string(a),value:Std.string(a) } );
+		}
+		return data;
+	}
+	
 	public static function getDays(?reverse = true):Array<{key:String,value:String}>
 	{
 		var data= [];

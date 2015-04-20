@@ -42,14 +42,14 @@ class HourDropDowns extends FormElement
 
 		var t = sugoi.form.Form.translator;
 
-		hourSelector 	= new Selectbox(name+"_hour", t._("hour"),ListData.getDateElement(0,23), Std.string(date.getHours()),true,"-",'title="Hour"');
-		minuteSelector 	= new Selectbox(name+"_minute", t._("minute"), ListData.getDateElement(0, 59), Std.string(date.getMinutes()), true, "-", 'title="Minute"');
+		hourSelector 	= new Selectbox(name+"_hour", t._("hour"), ListData.getDateElement(0, 23), Std.string(date.getHours()), true, "-", 'title="Hour"');		
+		minuteSelector 	= new Selectbox(name+"_minute", t._("minute"), ListData.getMinutes(), Std.string(date.getMinutes()), true, "-", 'title="Minute"');
 
 		hourSelector.internal = minuteSelector.internal = true;
 
 		if (Form.USE_TWITTER_BOOTSTRAP) {
-			minuteSelector.cssClass = "input-mini";
-			hourSelector.cssClass = "input-mini";
+			minuteSelector.cssClass = "form-control";
+			hourSelector.cssClass = "form-control";
 		}
 
 	}
@@ -79,30 +79,12 @@ class HourDropDowns extends FormElement
 
 	override public function isValid():Bool
 	{
-		/*var valid = super.isValid();
-
-		if ( required && valid )
-		{
-			var n = form.name + "_" + name;
-			var day = Std.parseInt(App.current.params.get(n));
-			var month = Std.parseInt(App.current.params.get(n));
-			var year = Std.parseInt(App.current.params.get(n));
-
-			if (day == null || month == null || year == null )
-			{
-				errors.add("<span class=\"formErrorsField\">" + ((label != null && label != "") ? label : name) + "</span> is an invalid date.");
-				return false;
-			}
-			return true;
-		}
-
-		return valid;*/
 		return true;
 	}
 
 	override public function render():String{
 		super.render();
-		var s = "";
+		var s = "<span class='form-inline'>";
 		if (value != "" && value != null && value != "null"){
 			try{
 				var v:Date = cast value;
@@ -115,7 +97,7 @@ class HourDropDowns extends FormElement
 		s += " : ";
 		s += minuteSelector.render();
 
-		return s;
+		return s+"</span>";
 	}
 
 

@@ -28,12 +28,15 @@ class DatePicker extends FormElement
 	private var daySelector:Selectbox;
 	private var monthSelector:Selectbox;
 	private var yearSelector:Selectbox;
+	
+	public var format : String; //moment.js format
 
 	public function new(name:String, label:String, ?_value:Date, ?required:Bool=false, yearMin:Int=1950, yearMax:Int=null, ?validators:Array<Validator>, ?attibutes:String="")
 	{
 		super();
 		this.name = name;
 		this.label = label;
+		format = 'LLLL';
 
 		if (_value == null) {
 			value = Date.now();
@@ -91,21 +94,21 @@ class DatePicker extends FormElement
 			}catch(e:Dynamic){}
 		}*/
 		var defaultDate = (date.getMonth() + 1) + "/" + date.getDate() + "/" + date.getFullYear()+" "+date.getHours()+":"+date.getMinutes();
-		return "<div class='form-group'>
+		return "<!--<div class='form-group'>-->
 				<div class='input-group date' id='datetimepicker-"+name+"'>       
-					<input type='text' class='form-control' />
 					<span class='input-group-addon'>
 						<span class='glyphicon glyphicon-calendar'></span>
 					</span>
+					<input type='text' class='form-control' />
 				</div>
-			</div>
-			<input type='hidden' name='"+parentForm.name+"_"+name+"' id='datetimepickerdata-"+name+"' />
+			<!--</div>-->
+			<input type='hidden' name='"+parentForm.name+"_"+name+"' id='datetimepickerdata-"+name+"' value='"+this.date.getTime()+"'/>
 			<script type='text/javascript'>
 				$(function () {
 					$('#datetimepicker-"+name+"').datetimepicker(
 						{
 							locale:'fr',
-							format:'LLLL',
+							format:'"+this.format+"',
 							defaultDate:'"+defaultDate+"'
 						}
 					);
@@ -117,10 +120,6 @@ class DatePicker extends FormElement
 				});
 			</script>";
 		
-		
-		
-		
 	}
-
 
 }

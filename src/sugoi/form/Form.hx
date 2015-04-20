@@ -143,14 +143,13 @@ class Form
 		return getElement( elementName ).getLabel();
 	}
 
-	public function getElement(name:String):FormElement{
-		for (element in elements)
-		{
-			if (element.name == name)
-				return element;
+	public function getElement(name:String):FormElement {
+		if (name == null || name=='') throw "Element name is null";
+		for (element in elements){
+			if (element.name == name) return element;
 		}
 
-		throw "Cannot access Form Element: '" + name + "'";
+		throw "Cannot access form element: '" + name + "'";
 		return null;
 	}
 	
@@ -172,16 +171,14 @@ class Form
 	 * return datas contained in current form elements
 	 * @return
 	 */
-	public function getData():Dynamic
+	public function getData():Map<String,Dynamic>
 	{
-		var data:Dynamic = {};
+		var data = new Map<String,Dynamic>();
 		for (element in getElements())
 		{
-			//if ( Std.is( element, Checkbox ) )
-				//Reflect.setField(data, element.name, cast( element, Checkbox ).checked );
-			//else
-				Reflect.setField(data, element.name, element.value);
-			
+			//Reflect.setField(data, element.name, element.value);
+			//trace(element.name);
+			data.set(element.name, element.value);
 		}
 		return data;
 	}
@@ -218,18 +215,17 @@ class Form
 		var data = getData();
 
 		//if not new object, lock it
-		var id = Std.parseInt(Reflect.field(data, "id"));
+		var id = Std.parseInt(data.get("id"));
 		if (id == 0) id = null;
 		if (id != null) {
 			obj.lock();
 		}
 
-		for (f in Reflect.fields(data)) {
+		for (f in data.keys()) {
 			//check if field was in the original form
 			if (this.getElement(f) == null) throw "field '"+f+"' was not in the original form";
-			var v = Reflect.field(data, f);
+			var v = data.get(f);
 			if (v != null && f!="id") {
-				//App.log("toSpod set "+f+" = "+v);
 				if (Std.is(v, String)) {
 					v = StringTools.trim(v);
 					if (v == "") v = null;
@@ -336,6 +332,7 @@ class Form
 					
 					if (USE_DATEPICKER) {
 						e = new DatePicker(f.name, t._(f.name), d);
+						untyped e.format = "LLLL";
 					}else {
 						e = new DateInput(f.name, t._(f.name), d);	
 					}
@@ -347,6 +344,7 @@ class Form
 					}catch (e:Dynamic) { }
 					if (USE_DATEPICKER) {
 						e = new DatePicker(f.name, t._(f.name), d);	
+						untyped e.format = "LL";
 					}else {
 						e = new DateDropdowns(f.name, t._(f.name), d);	
 					}

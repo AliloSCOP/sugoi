@@ -47,12 +47,13 @@ class Session extends sys.db.Object {
 	
 	
 	public function setUser( u : User ):Void {		
-		if ( this.user!=null && this.user.id != u.id ) {
-			//remove any previous session for this user
-			manager.delete({ user : u });
-		}
+		
+		//remove any previous session for this user
+		manager.delete($uid==u.id);
+		
 		lang = u.lang;
 		user = u;
+		update();
 	}
 
 	public override function update() {
