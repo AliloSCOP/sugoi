@@ -59,6 +59,7 @@ class BaseController {
 	 * Generate files from db.File
 	 * @param	fname
 	 */
+	#if neko
 	function doFile( fname : String ) {
  		var fid = Std.parseInt(fname);
 		
@@ -94,5 +95,6 @@ class BaseController {
 
 		Web.redirect(Web.getURI()+"?reload=1");
 	}
+	#end
 
 }

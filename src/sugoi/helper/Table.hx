@@ -1,4 +1,4 @@
-package mt.net.helper;
+package sugoi.helper;
 
 /**
  * Simple class to print a HTML table

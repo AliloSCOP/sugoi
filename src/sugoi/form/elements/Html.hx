@@ -11,10 +11,10 @@ class Html extends sugoi.form.FormElement
 
 	var html : String;
 	
-	public function new(html:String) 
+	public function new(html:String,?label="") 
 	{
 		this.html = html;
-		this.label = "";
+		this.label = label;
 		super();
 	}
 	

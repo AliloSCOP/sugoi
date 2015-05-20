@@ -4,8 +4,9 @@ import sys.db.Types;
 /**
  * Store files in DB
  */
+#if neko
 class File extends sys.db.Object {
-
+	
 	public var id : SId;
 	public var name : STinyText;
 	public var comment : STinyText;
@@ -46,3 +47,4 @@ class File extends sys.db.Object {
 	}
 	
 }
+#end

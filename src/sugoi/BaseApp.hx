@@ -87,7 +87,11 @@ class BaseApp {
 	function executeTemplate( ?save ) {
 		view.init();
 		var result = template.execute(view);
-		if( save ) saveAndClose();
+		if ( save ) saveAndClose();
+		#if php
+		//strange bug with templo in PHP
+		if (result.substr(0, 4) == "null") result = result.substr(4);
+		#end
 		Sys.print(result);
 	}
 

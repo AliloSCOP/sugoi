@@ -31,11 +31,10 @@ class Form
 	public var defaultClass : String;
 	public var multipart:Bool;
 
-	// Submitted button's name
-	public var submittedButtonName : String;
-	var wymEditorCount:Int;
 	public static var translator : ITranslator;
 
+	public var submitButtonLabel:String;
+	
 	//conf	
 	public static var USE_TWITTER_BOOTSTRAP = true;// App.config.getBool('form.Form.USE_TWITTER_BOOTSTRAP', true);
 	public static var USE_DATEPICKER = true; //http://eonasdan.github.io/bootstrap-datetimepicker/
@@ -63,10 +62,6 @@ class Form
 		extraErrors = new List();
 		fieldsets = new Map();
 		addFieldset("__default", new FieldSet("__default", "Default", false));
-
-		wymEditorCount = 0;
-
-		submittedButtonName = null;
 
 		addElement(new CSRFProtection());
 	}
@@ -176,9 +171,16 @@ class Form
 		var data = new Map<String,Dynamic>();
 		for (element in getElements())
 		{
-			//Reflect.setField(data, element.name, element.value);
-			//trace(element.name);
-			data.set(element.name, element.value);
+			
+			if(Std.is(element.value,String)) {
+				//trace(element.name+" "+element.value);
+				var val = StringTools.trim(element.value);
+				if (val == "") val = null;
+				data.set(element.name, val );	
+			}else {
+				data.set(element.name, element.value );	
+			}
+			
 		}
 		return data;
 	}
@@ -187,7 +189,7 @@ class Form
 	 * populate Form from anonymous object or if null from web params.
 	 * @param	custom
 	 */
-	public function populateElements(custom:Dynamic=null){
+	public function populate(custom:Dynamic=null){
 		if (custom != null)
 		{
 			for (element in getElements()) {
@@ -243,9 +245,11 @@ class Form
 	public static function fromObject(obj:Dynamic) {
 		var form = new Form('fromObj');
 		for (f in Reflect.fields(obj)) {
-			form.addElement(new sugoi.form.elements.Input(f, f, Reflect.field(obj, f)));
+			var val = StringTools.trim(Reflect.field(obj, f));
+			if (val == "") val = null;
+			form.addElement(new sugoi.form.elements.Input(f, f, val));
 		}
-		form.populateElements(obj);
+		form.populate(obj);
 		return form;
 	}
 
@@ -396,7 +400,7 @@ class Form
 	{
 		if (!isSubmitted()) return false;
 
-		populateElements();
+		populate();
 
 		var valid = true;
 
@@ -501,7 +505,7 @@ class Form
 		if (submitButton != null) {
 			submitButton.parentForm = this;
 		}else {
-			submitButton = new Submit('submit', 'OK');
+			submitButton = new Submit('submit', submitButtonLabel != null ? submitButtonLabel : 'OK');
 			submitButton.parentForm = this;
 		}
 		s.add(submitButton.getFullRow());

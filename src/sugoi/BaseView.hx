@@ -16,13 +16,13 @@ class BaseView implements Dynamic {
 		
 		this.user = app.user;
 		this.session = app.session;
-		this.LANG = App.App.config.LANG;
-		this.HOST = App.App.config.HOST;
-		this.DATA_HOST = App.App.config.DATA_HOST;
-		this.DEBUG = App.App.config.DEBUG;
-		this.NAME = App.App.config.NAME;
+		this.LANG = App.config.LANG;
+		this.HOST = App.config.HOST;
+		this.DATA_HOST = App.config.DATA_HOST;
+		this.DEBUG = App.config.DEBUG;
+		this.NAME = App.config.NAME;
 		this.isAdmin = app.user != null && app.user.isAdmin();
-		if ( App.App.config.SQL_LOG  ) {			
+		if ( App.config.SQL_LOG  ) {			
 			this.sqlLog = untyped app.cnx == null ? null : app.cnx.log;
 		}
 	}
@@ -50,6 +50,10 @@ class BaseView implements Dynamic {
 		return str.split("\\").join("\\\\").split("'").join("\\'").split("\r").join("\\r").split("\n").join("\\n");
 	}
 	
+	/**
+	 * Get a value from the Variable table
+	 * @param	file
+	 */
 	function getVariable( file : String ) {
 		
 		var v = _vcache.get(file);
@@ -70,8 +74,18 @@ class BaseView implements Dynamic {
 	/**
 	 * Return the filename of db.File record
 	 */
+	#if neko
 	function file( id : Int ) {
 		return File.makeSign(id);
+	}
+	#end
+	
+	/**
+	 * Try to print an HTML table from any kind of object
+	 * @param	data
+	 */
+	function table(data:Dynamic) {
+		return new sugoi.helper.Table("table").toString(data);
 	}
 	
 	
