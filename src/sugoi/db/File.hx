@@ -4,14 +4,14 @@ import sys.db.Types;
 /**
  * Store files in DB
  */
-#if neko
+
 class File extends sys.db.Object {
 	
 	public var id : SId;
-	public var name : STinyText;
-	public var comment : STinyText;
+	public var name : STinyText; //filename
 	public var data : SBinary;
 	
+	@:skip
 	static var CACHE = [];
 	
 	/**
@@ -23,7 +23,7 @@ class File extends sys.db.Object {
 			return "";
 		var s = CACHE[id];
 		if( s != null ) return s;
-		s = id+"_"+haxe.crypto.Md5.encode(id + App.App.config.get('key'));
+		s = id+"_"+haxe.crypto.Md5.encode(id + App.config.get('key'));
 		CACHE[id] = s;
 		return s;
 	}
@@ -39,12 +39,17 @@ class File extends sys.db.Object {
 	public static function create(stringData:String, ?fileName=""):File {
 		
 		var f = new File();
-		f.name = fileName;
+		f.name = fileName;		
 		f.data = new haxe.io.StringInput(stringData).readAll();
 		f.insert();
 		return f;
 		
 	}
 	
+	public function getExtension():String {
+		if (name == null || name=="") return "jpg";
+		
+		return name.split(".")[1];
+	}
+	
 }
-#end

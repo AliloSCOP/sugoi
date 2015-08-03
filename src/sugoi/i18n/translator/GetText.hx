@@ -1,11 +1,11 @@
-package mt.i18n.translator;
+package sugoi.i18n.translator;
 
 /**
- * ...
+ * GetText (*.po/*.mo) translator
+ * @doc https://www.gnu.org/software/gettext/manual/html_node/MO-Files.html
  * @author fbarbut
  */
-class GetText implements mt.i18n.translator.ITranslator
-{
+class GetText implements sugoi.i18n.translator.ITranslator{
 
 	public var texts : Map<String,String>;
 
@@ -44,7 +44,7 @@ class GetText implements mt.i18n.translator.ITranslator
 	}
 
 	/**
-	 * parse tout le projet pour générer le fichier POT
+	 * parse all the project source code and generate the *.pot file
 	 */
 	macro public static function parse(codePath:String, potFilePath:String) {
 		Sys.println(codePath);
@@ -53,13 +53,15 @@ class GetText implements mt.i18n.translator.ITranslator
 		var data = new Map<String,{path:String}>();
 		explore(path, data);
 		writePotFile(data,potFilePath);
-		return macro { }; //renvoie une expression vide
+		return macro { }; //returns an empty expression
 	}
+	
+
 
 	#if macro
 
 	/**
-	 * Génère le fichier POT ( PO template ) contenant toutes les clés
+	 * Generates the POT (PO template) file which contains all the keys to translate
 	 */
 	static function writePotFile(data:Map<String,{path:String}>, potFilePath:String ) {
 		var pot = new StringBuf();
@@ -108,7 +110,6 @@ class GetText implements mt.i18n.translator.ITranslator
 
 /**
  * GNU GetText MO file reader
- * @doc https://www.gnu.org/software/gettext/manual/html_node/MO-Files.html
  */
 class MoReader
 {

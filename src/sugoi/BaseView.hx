@@ -72,11 +72,12 @@ class BaseView implements Dynamic {
 	}
 	
 	/**
-	 * Return the filename of db.File record
+	 * Return the url of a db.File record
 	 */
 	#if neko
-	function file( id : Int ) {
-		return File.makeSign(id);
+	public function file( file : sugoi.db.File) {
+		
+		return "/file/"+File.makeSign(file.id)+"."+file.getExtension();
 	}
 	#end
 	

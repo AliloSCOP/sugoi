@@ -51,7 +51,17 @@ class MandrillApiMail extends BaseMail implements IMail
 	}
 
 	function onData(s:String) {
+		
+		if (s == null) throw "return is null";
+		if (s == "") throw "return is empty";
+		
 		apiResult = haxe.Json.parse(s);
+		
+		//result should be like this:  [{"email":"francois.barbut@gmail.com","status":"sent","_id":"419808d760134e3ab51bb65a482c3dbd","reject_reason":null},{"email":"elodie.heritier@laposte.net","status":"sent","_id":"483ab840c8ef40779ec8815720a06961","reject_reason":null}]
+		//trace(s);
+		
+		if (Reflect.hasField(apiResult, "status")) throw "Mailchimp Api sendmail error : "+s;
+		
 		#if neko
 		if(!neko.Web.isModNeko && App.App.config.DEBUG) neko.Lib.println("api res : " + apiResult + "\n" + s);
 		#end
