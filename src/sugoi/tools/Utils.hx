@@ -9,12 +9,13 @@ class Utils {
 		var curfname = null;	//file name
 		neko.Web.parseMultipart(
 		function(p, n) {
-			//if( curname != null ){
-				//h.set(curname,buf.toString());
-				//if( curfname != null )
-					//h.set(curname+"_filename",curfname);
-				//curfname = null;
-			//}
+			if( curname != null ){
+				h.set(curname,buf.toString());
+				if( curfname != null )
+					h.set(curname+"_filename",curfname);
+				curfname = null;
+			}
+			//trace("onPart");
 			curname = p;
 			curfname = n;
 			
@@ -24,6 +25,7 @@ class Utils {
 				throw "multipart_maximum_size_reached";
 		},
 		function(str, pos, len) {
+			//trace("onData "+str);
 			maxSize -= len;
 			if( maxSize < 0 )
 				throw "multipart_maximum_size_reached";
