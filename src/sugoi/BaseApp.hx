@@ -74,6 +74,7 @@ class BaseApp {
 	}
 
 	function saveAndClose() {
+		
 		if( cnx == null ) return;
 		if( session.sid != null )
 			session.update();
@@ -143,7 +144,7 @@ class BaseApp {
 
 	public function setCookie( oldCookie : String ){
 		if( session != null && session.sid != null && session.sid != oldCookie ) {
-			Web.setHeader("Set-Cookie", cookieName+"=" + session.sid + "; path=/;");
+			Web.setHeader("Set-Cookie", cookieName+"=" + session.sid + "; Domain="+cookieDomain+"; path=/;");
 		}
 	}
 
@@ -236,8 +237,10 @@ class BaseApp {
 	function errorHandler( e:Dynamic ) {
 		try {
 			var stack = haxe.CallStack.toString(haxe.CallStack.exceptionStack());
+			//trace("ERROR : "+e);
+			//trace("stack : "+stack);
 			// ROLLBACK and LOG
-			if( cnx != null ) {
+			if ( cnx != null ) {
 				cnx.rollback();
 				logError(e,stack);
 			}

@@ -1,8 +1,15 @@
 package sugoi.apis.linux;
 
 /**
- * ...
- * @author fbarbut
+ * cURL
+ * 
+ * @doc https://en.wikipedia.org/wiki/CURL
+ * 
+ * Call cURL as an external process.
+ * It's an easy way to call HTTPS services from neko and php.
+ * Be sure to have cURL installed on your system
+ * 
+ * @author fbarbut<francois.barbut@gmail.com>
  */
 class Curl
 {

@@ -54,7 +54,7 @@ class Config {
 		if( v == null )
 			v = def;
 		if( v == null )
-			throw "Missing config attribute : "+val;
+			throw "Missing config attribute : '"+val+"'";
 		return v;
 	}
 
