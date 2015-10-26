@@ -144,7 +144,7 @@ class BaseApp {
 
 	public function setCookie( oldCookie : String ){
 		if( session != null && session.sid != null && session.sid != oldCookie ) {
-			Web.setHeader("Set-Cookie", cookieName+"=" + session.sid + "; Domain="+cookieDomain+"; path=/;");
+			Web.setHeader("Set-Cookie", cookieName+"=" + session.sid + "; path=/;");
 		}
 	}
 
@@ -154,6 +154,7 @@ class BaseApp {
 		//Get session
 		var sids = [];
 		var cookieSid = Web.getCookies().get(cookieName);
+		//trace(Web.getCookies());
 		if( params.exists("sid") ) sids.push(params.get("sid"));
 		if( cookieSid != null ) sids.push(cookieSid);
 		session = sugoi.db.Session.init(sids);
@@ -237,8 +238,6 @@ class BaseApp {
 	function errorHandler( e:Dynamic ) {
 		try {
 			var stack = haxe.CallStack.toString(haxe.CallStack.exceptionStack());
-			//trace("ERROR : "+e);
-			//trace("stack : "+stack);
 			// ROLLBACK and LOG
 			if ( cnx != null ) {
 				cnx.rollback();

@@ -70,7 +70,7 @@ class BaseMail implements IMail
 	 * generate a custom key for transactionnal emails, valid during the current day
 	 */
 	public function getKey() {
-		return haxe.crypto.Md5.encode(App.App.config.get("key")+recipients[0].email+(Date.now().getDate())).substr(0,12);
+		return haxe.crypto.Md5.encode(App.config.get("key")+recipients[0].email+(Date.now().getDate())).substr(0,12);
 	}
 	
 	/**

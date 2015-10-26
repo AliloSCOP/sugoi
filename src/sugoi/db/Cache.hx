@@ -7,7 +7,7 @@ import sys.db.Types;
 @:id(name)
 class Cache extends sys.db.Object
 {
-	public var name : SString<32>;
+	public var name : SString<128>;
 	public var value : SText;
 	public var expire : SDateTime;
 	

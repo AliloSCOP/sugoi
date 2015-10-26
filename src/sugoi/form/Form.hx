@@ -178,7 +178,7 @@ class Form
 				if (val == "") val = null;
 				data.set(element.name, val );	
 			}else {
-				data.set(element.name, element.value );	
+				data.set(element.name, element.getTypedValue() );	
 			}
 			
 		}
@@ -227,13 +227,15 @@ class Form
 			//check if field was in the original form
 			if (this.getElement(f) == null) throw "field '"+f+"' was not in the original form";
 			var v = data.get(f);
-			if (v != null && f!="id") {
-				if (Std.is(v, String)) {
-					v = StringTools.trim(v);
-					if (v == "") v = null;
-				}
-				Reflect.setField(obj, f, v);
+			if (f == "id") continue;
+			
+			if (Std.is(v, String)) {
+				v = StringTools.trim(v);
+				if (v == "") v = null;
 			}
+			//trace(f + " -> " + v);
+			Reflect.setProperty(obj, f, v);
+			
 
 		}
 	}

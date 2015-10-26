@@ -45,6 +45,14 @@ class FormElement
 		}
 		return value;
 	}
+	
+	/**
+	 * Return typed value of the element
+	 * @return
+	 */
+	public function getTypedValue():Dynamic {
+		return value;
+	}
 
 	public function isValid():Bool
 	{

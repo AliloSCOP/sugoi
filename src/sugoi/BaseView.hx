@@ -27,14 +27,28 @@ class BaseView implements Dynamic {
 		}
 	}
 	
-
-	function getMessages() {
+	function getMessage() {
 		var session = App.current.session;
 		if ( session == null ) return null;
 		if (session.messages == null) return null;
 		var n = session.messages.pop();
 		if( n == null ) return null;
 		return { text : n.text, error : n.error, next : session.messages.length > 0 };
+	}
+	
+
+	function getMessages() {
+		var out = [];
+		var session = App.current.session;
+		if ( session == null ) return [];
+		if (session.messages == null) return [];
+		
+		for ( m in session.messages) {
+			if( m == null ) continue;
+			out.push( { text : m.text, error : m.error } );
+		}
+		session.messages = [];
+		return out;
 	}
 	
 
@@ -76,8 +90,8 @@ class BaseView implements Dynamic {
 	 */
 	#if neko
 	public function file( file : sugoi.db.File) {
-		
-		return "/file/"+File.makeSign(file.id)+"."+file.getExtension();
+		if (file == null) throw "file is null";
+		return "/file/"+sugoi.db.File.makeSign(file.id)+"."+file.getExtension();
 	}
 	#end
 	

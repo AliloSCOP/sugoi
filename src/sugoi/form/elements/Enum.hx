@@ -12,6 +12,7 @@ class Enum extends FormElement
 	public var verticle:Bool;
 	public var labelRight:Bool;
 	var checked : Array<Bool>;
+	
 
 	public var columns:Int;
 
@@ -30,7 +31,8 @@ class Enum extends FormElement
 		this.name = name;
 		this.label = label;
 		this.enumName = enumName;
-		this.value = /*Type.resolveEnum(enumName).createByIndex(value)*/ value;
+		this.value = value;
+		
 		this.verticle = verticle;
 		this.labelRight = labelRight;
 
@@ -44,6 +46,10 @@ class Enum extends FormElement
 		value = Std.parseInt(App.current.params.get(parentForm.name + "_" + name));
 		//App.log(form.name + "_" + name+" : "+value);
 
+	}
+	
+	override function getTypedValue():Dynamic {
+		return Type.resolveEnum(enumName).createByIndex(value);
 	}
 
 	override public function render():String

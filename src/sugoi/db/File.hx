@@ -46,6 +46,17 @@ class File extends sys.db.Object {
 		
 	}
 	
+	
+	public static function createFromBytes(data:haxe.io.Bytes, ?fileName=""):File {
+		
+		var f = new File();
+		f.name = fileName;		
+		f.data = data;
+		f.insert();
+		return f;
+		
+	}
+	
 	public function getExtension():String {
 		if (name == null || name=="") return "jpg";
 		
