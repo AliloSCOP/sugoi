@@ -35,8 +35,14 @@ class Csv
 	 * @return
 	 */
 	public function importDatas(d:String):Array<Array<String>> {
+		//trace("<pre>D:"+d+"</pre>");
+		d = StringTools.replace(d, "\r", ""); //vire les \r
+		
 		var data = d.split("\n");
-		var out = [];
+		var out = new Array<Array<String>>();
+		
+		var rowLen = null;
+		if (headers != null && headers.length > 0) rowLen = headers.length;
 		
 		//fix quoted fields with comas inside : "23 allée des Taupes, 46100 Camboulis"
 		for (d in data) {				
@@ -45,15 +51,36 @@ class Csv
 			if (i % 2 == 1) x[i] = StringTools.replace(x[i], separator, "|");
 			}
 			d = x.join("");
+			var row = d.split(separator);
+			if (rowLen != null) row = row.splice(0, rowLen); //no extra columns
 			
-			out.push(d.split(separator));
-			
-			for (u in out) {
-				for (i in 0...u.length) {
-			u[i] = StringTools.replace(u[i], "|", separator);
-				}
+			out.push(row);
+		}
+		
+		for (u in out) {
+			for (i in 0...u.length) {
+				u[i] = StringTools.replace(u[i], "|", separator);
 			}
 		}
+		//for( o in out)	trace(o);
+		
+		//removing extra fields
+		/*var out2 = [];
+		for (o in out.copy()) {
+			out2.push(o.copy());
+		}
+		out = [];
+		if (headers != null && headers.length > 0) {
+			
+			var l = headers.length;
+			for ( o in out) {
+				out2.push( o.slice(0, l) );
+				
+			}
+			
+		}
+		out = out2;*/
+		
 			
 		//cleaning
 		for ( o in out.copy() ) {
@@ -84,8 +111,7 @@ class Csv
 		out.shift(); 
 			
 		//utf-8 check
-		for ( row in out.copy()) {
-			
+		for ( row in out.copy()) {			
 			for ( i in 0...row.length) {
 				var t = row[i];
 				if (t != "" && t != null) {

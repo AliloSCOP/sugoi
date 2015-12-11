@@ -10,7 +10,7 @@ class RadioGroup extends FormElement
 	public var labelRight:Bool;
 	public var vertical:Bool;
 	
-	public function new(name:String, label:String, ?data:Array<{key:String,value:String}>, ?selected:String, ?defaultValue:String, ?vertical:Bool=true, ?labelRight:Bool=true) 
+	public function new(name:String, label:String, ?data:Array<{key:String,value:String}>, ?selected:String, ?defaultValue:String, ?vertical:Bool=true, ?labelRight:Bool=true,?required=false) 
 	{
 		super();
 		this.name = name;
@@ -19,6 +19,7 @@ class RadioGroup extends FormElement
 		this.value = selected != null ? selected : defaultValue;
 		this.vertical = vertical;
 		this.labelRight = labelRight;
+		this.required = required;
 	}
 	
 	public function addOption(key:String, value:String)

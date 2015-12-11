@@ -84,12 +84,15 @@ class CheckboxGroup extends FormElement
 					var checkbox = "<input type=\"checkbox\" class=\"" + tagCss + "\" name=\""+n+"[]\" id=\""+n+c+"\" value=\"" + row.key + "\" " + (value != null ? Lambda.has(value, row.key+"") ? "checked":"":"") +" ></input>\n";
 					var label;
 					
-					if (formatter != null)
-					{
+					if (formatter != null){
 						label = "<label for=\"" + n + c + "\" class=\""+''/*labelCss*/+"\" >" + formatter.format(row.value)  +"</label>\n";
-					} else {
-						label = "<label for=\"" + n + c + "\" class=\""+''/*labelCss*/+"\" >" + Form.translator._(row.value)  +"</label>\n";
+					}else if(Form.translator!=null){
+						label = "<label for=\"" + n + c + "\" class=\"" + ''/*labelCss*/+"\" >" + Form.translator._(row.value)  +"</label>\n";
+					}else {
+						label = "<label for=\"" + n + c + "\" class=\"" + ''/*labelCss*/+"\" >" + row.value  +"</label>\n";
 					}
+					
+					
 					
 					if (labelRight)
 					{

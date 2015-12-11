@@ -79,7 +79,7 @@ class HourDropDowns extends FormElement
 
 	override public function isValid():Bool
 	{
-		return true;
+		return super.isValid();
 	}
 
 	override public function render():String{

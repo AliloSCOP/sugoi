@@ -61,6 +61,7 @@ class BaseView implements Dynamic {
 	 * @param	str
 	 */
 	public function escapeJS( str : String ) {
+		if (str == null) return "";
 		return str.split("\\").join("\\\\").split("'").join("\\'").split("\r").join("\\r").split("\n").join("\\n");
 	}
 	

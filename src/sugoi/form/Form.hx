@@ -153,8 +153,15 @@ class Form
 		if (e != null) removeElement(e);
 	}
 
-	public function getValueOf(elementName:String):String{
-		return StringTools.trim(getElement(elementName).value);
+	/**
+	 * Get the value of a form element 
+	 * @param	elementName
+	 * @return
+	 */
+	public function getValueOf(elementName:String):String {
+		var v = getElement(elementName).value;
+		if (v == null) return null;
+		return StringTools.trim(v);
 	}
 
 	public function getElementTyped<T>(name:String, type:Class<T>):T{
@@ -178,11 +185,25 @@ class Form
 				if (val == "") val = null;
 				data.set(element.name, val );	
 			}else {
-				data.set(element.name, element.getTypedValue() );	
+				data.set(element.name,element.value);	
 			}
 			
 		}
 		return data;
+	}
+	
+	/**
+	 * return datas in an anonymous object
+	 * @return
+	 */
+	public function getDatasAsObject():Dynamic {
+	
+		var data = { };
+		for ( el in elements) {
+			Reflect.setField(data, el.name, el.value);
+		}
+		return data;
+		
 	}
 
 	/**
@@ -270,26 +291,49 @@ class Form
 		var t = Form.translator;
 		if(t == null) t = Form.translator = new sugoi.i18n.translator.TMap(new Map<String,String>(), App.current.session.lang);
 
-		for(f in ti.fields) {
+		//get metas of this object
+		var metas = haxe.rtti.Meta.getFields(Type.getClass(obj));
+		
+		//loop on db object fields to create form elements
+		for (f in ti.fields) {
+			
 			var e : FormElement;
 			//field value
 			var v = Reflect.field(obj, f.name);
 
+			//meta of this field						
+			var meta :Dynamic = Reflect.field(metas, f.name);
+			//trace(f.name+"=>" + meta + "<br/>");
+			
+			//hide this field in forms
+			if (meta!=null && Reflect.hasField(meta,'hideInForms')) {
+				continue;
+			}
+			
 			//check if its a foreign key
 			var rl = Lambda.filter(ti.relations, function(r) return r.key == f.name );
 			var isNull = ti.nulls.get(f.name);
+			
+			//foreign keys
 			if (rl.length > 0 ) {
-				//foreign key
-
+				
 				var r = rl.first();
-				//Sys.print(f.name + ' is a key for ' + r.key + "/"+r.prop);
+				//trace(f.name + ' is a key for ' + r.key + "/"+r.prop);
 				var objects = new List();
-				var meta = haxe.rtti.Meta.getFields(Type.getClass(obj));
-				var objMeta :Dynamic = Reflect.field(meta, r.prop);
-				//trace("field "+ r.prop + " de "+meta+" = "+objMeta );
-				if (objMeta != null && objMeta.formPopulate != null) {
-					//populate customisé avec @formPopulate()
-					objects = Reflect.callMethod(obj, Reflect.field(obj,Std.string(objMeta.formPopulate[0])) , []);
+				
+				meta = Reflect.field(metas, r.prop);
+				if (meta != null) {
+					//trace(r.prop+"=>" + meta + "<br/>");
+					if (meta.formPopulate != null) {
+						//populate customisé avec @formPopulate()
+						objects = Reflect.callMethod(obj, Reflect.field(obj,Std.string(meta.formPopulate[0])) , []);	
+					}
+					
+					if (meta!=null && Reflect.hasField(meta,'hideInForms')) {
+						continue;
+					}
+					
+					
 				}else {
 					//choppe toute les valeurs possibles
 					objects = r.manager.all(false).map(function(d) {

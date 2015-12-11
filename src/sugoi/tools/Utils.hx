@@ -1,5 +1,9 @@
 package sugoi.tools;
-
+#if neko
+import neko.Web;
+#else
+import php.Web;
+#end
 class Utils {
 
 	public static function getMultipart(maxSize) : Map<String,String> {
@@ -7,7 +11,7 @@ class Utils {
 		var buf : StringBuf = null;
 		var curname = null; 	//form field name
 		var curfname = null;	//file name
-		neko.Web.parseMultipart(
+		Web.parseMultipart(
 		function(p, n) {
 			if( curname != null ){
 				h.set(curname,buf.toString());
@@ -29,7 +33,11 @@ class Utils {
 			maxSize -= len;
 			if( maxSize < 0 )
 				throw "multipart_maximum_size_reached";
+			#if neko
 			buf.addSub(neko.Lib.stringReference(str), pos, len);
+			#else
+			buf.addSub(str.toString(), pos, len);
+			#end
 		}		
 		);
 		
