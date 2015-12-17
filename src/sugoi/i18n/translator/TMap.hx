@@ -23,7 +23,7 @@ class TMap implements ITranslator{
 		var str = texts.get(key);
 
 		if(str == null) {
-			App.log("key \""+key+"\" not found in "+texts);
+			//App.log("key \""+key+"\" not found in "+texts);
 			str = key;
 		}
 

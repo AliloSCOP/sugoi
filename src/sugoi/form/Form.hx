@@ -354,7 +354,7 @@ class Form
 					e = new Input(f.name,t._(f.name), v, !isNull);
 
 				case DId, DUId:
-					e = new Hidden(t._(f.name), v);
+					e = new Hidden(f.name, v);
 
 				case DEncoded:
 					e = new Input(f.name, t._(f.name), v);

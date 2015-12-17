@@ -9,14 +9,20 @@ package sugoi.apis.facebook.server;
 class FB
 {
 
+	var app_id : String;
+	var app_secret : String;
 	var token : String;
 	
-	public function new(fbToken:String) {
-		token = fbToken;
+	public function new(fbToken, ?app_id, ?app_secret) {
+		
+		this.token = fbToken;
+		this.app_id = app_id;
+		this.app_secret = app_secret;
+		
 	}
 	
-	public static function init(fbToken) {
-		return new FB(fbToken);
+	public static function init(fbToken, ?app_id, ?app_secret) {
+		return new FB(fbToken, app_id, app_secret);
 	}
 	
 	/**
@@ -67,8 +73,17 @@ class FB
 	 */
 	public function getLongLivedToken():String {
 		
-		var r = call("curl -X GET https://graph.facebook.com/oauth/access_token?grant_type=fb_exchange_token&amp;client_id=" + App.config.get("fb_app_id") + "&amp;client_secret=" + App.config.get("fb_app_secret") + "&amp;fb_exchange_token = " + this.token);
-		return r.access_token;
+		//WTF the result is not JSON but like "access_token=XXX&expires=5179521"
+		var req = 'curl -X GET "https://graph.facebook.com/oauth/access_token?grant_type=fb_exchange_token&client_id=$app_id&client_secret=$app_secret&fb_exchange_token=$token&redirect_uri=https://' + App.config.HOST + '"';
+		var r = call(req, false);
+		
+		if (r.substr(0, 13) != "access_token=") throw r;
+		
+		var r2 = r.split("&")[0].split("=")[1];
+		
+		if (r == null) throw 'error while parsing $r';
+		
+		return r2;
 		
 	}
 	
@@ -76,7 +91,7 @@ class FB
 	/**
 	 * call via cURL
 	 */
-	function call(cmd:String):Dynamic {
+	function call(cmd:String,?isJson=true):Dynamic {
 		var c = new sys.io.Process(cmd,[]);
 		#if neko
 		var r = neko.Lib.stringReference(p.stdout.readAll());
@@ -93,11 +108,12 @@ class FB
 		}
 		c.exitCode();
 		
-		if (r == null) {
-			throw "cUrl answer is null";
-		}
+		if (r == null) throw "cUrl answer is null";
 		
+		if (!isJson) return r;
+
 		var json:Dynamic = haxe.Json.parse(r);
+		if ( json == null ) throw "json result is null";
 		
 		if (json.error==1 || json.error || json.error=="1") {
 			throw r;
