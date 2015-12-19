@@ -13,7 +13,7 @@ class FormElement
 	public var name:String;
 	public var label:String;
 	public var description:String;
-	public var value:Dynamic;
+	public var value:Dynamic;	//value can be any type : Int, Float, Enum... 
 	public var required:Bool;
 	public var errors:List<String>;
 	public var attributes:String;
@@ -46,14 +46,6 @@ class FormElement
 		return value;
 	}
 	
-	/**
-	 * Return typed value of the element
-	 * @return
-	 */
-	public function getTypedValue():Dynamic {
-		return value;
-	}
-
 	public function isValid():Bool
 	{
 		errors.clear();
@@ -212,5 +204,13 @@ class FormElement
 
 	private inline function safeString(s:Dynamic) {
 		return s == null ? "" : Std.string(s).htmlEscape().split('"').join("&quot;");
+	}
+	
+	/**
+	 * Renders the element in HTML
+	 */
+	public function toString() :String
+	{
+		return render();
 	}
 }

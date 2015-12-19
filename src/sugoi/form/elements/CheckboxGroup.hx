@@ -116,8 +116,4 @@ class CheckboxGroup extends FormElement
 		return s;
 	}
 	
-	public function toString() :String
-	{
-		return render();
-	}
 }

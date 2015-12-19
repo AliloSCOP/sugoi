@@ -64,8 +64,4 @@ class Selectbox extends FormElement
 		data.push(keyVal);
 	}
 	
-	public function toString() :String
-	{
-		return render();
-	}
 }

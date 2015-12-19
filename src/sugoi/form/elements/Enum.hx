@@ -42,15 +42,17 @@ class Enum extends FormElement
 
 	override public function populate()
 	{
-		//au runtime, l'enum est un INT !
-		value = Std.parseInt(App.current.params.get(parentForm.name + "_" + name));
+		//at runtime, enum is an int
+		var index = Std.parseInt(App.current.params.get(parentForm.name + "_" + name));
+		value = Type.resolveEnum(enumName).createByIndex(index);
+		
 		//App.log(form.name + "_" + name+" : "+value);
 
 	}
 	
-	override function getTypedValue():Dynamic {
-		return Type.resolveEnum(enumName).createByIndex(value);
-	}
+	//override function getTypedValue():Dynamic {
+		//return Type.resolveEnum(enumName).createByIndex(value);
+	//}
 
 	override public function render():String
 	{
@@ -107,8 +109,5 @@ class Enum extends FormElement
 		return s;
 	}
 
-	public function toString() :String
-	{
-		return render();
-	}
+	
 }

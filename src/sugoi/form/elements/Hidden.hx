@@ -29,8 +29,5 @@ class Hidden extends FormElement
 		return this.render();
 	}	
 	
-	public function toString() :String
-	{
-		return render();
-	}
+
 }

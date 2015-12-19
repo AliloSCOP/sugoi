@@ -254,7 +254,7 @@ class Form
 				v = StringTools.trim(v);
 				if (v == "") v = null;
 			}
-			//trace(f + " -> " + v);
+			//trace(f + " -> " + v+"<br>");
 			Reflect.setProperty(obj, f, v);
 			
 
@@ -375,28 +375,29 @@ class Form
 					e = new TextArea(f.name, t._(f.name), v,!isNull);
 
 				case DTimeStamp, DDateTime:
-					var d = Date.now();
-					try{
-						d = Date.fromString(Std.string(v));
-					}catch (e:Dynamic) { }
 					
 					if (USE_DATEPICKER) {
-						e = new DatePicker(f.name, t._(f.name), d);
+						 
+						//WTF bugfix : the type is correct (Date) but is null when traced in DatePicker
+						var d :Date = cast v;
+						e = new DatePicker(f.name, t._(f.name), d);	
 						untyped e.format = "LLLL";
 					}else {
-						e = new DateInput(f.name, t._(f.name), d);	
+						e = new DateInput(f.name, t._(f.name), v);	
 					}
 					
 				case DDate :
-					var d = Date.now();
-					try{
-						d = Date.fromString(Std.string(v));
-					}catch (e:Dynamic) { }
+
 					if (USE_DATEPICKER) {
+						//trace(f.name+" => " + v);
+						//trace(Type.getClassName(Type.getClass(v)));
+						
+						//WTF bugfix : the type is correct (Date) but is null when traced in DatePicker
+						var d :Date = cast v;
 						e = new DatePicker(f.name, t._(f.name), d);	
 						untyped e.format = "LL";
 					}else {
-						e = new DateDropdowns(f.name, t._(f.name), d);	
+						e = new DateDropdowns(f.name, t._(f.name), v);	
 					}
 					
 

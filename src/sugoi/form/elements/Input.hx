@@ -54,8 +54,4 @@ class Input extends FormElement
 		return "<input "+style+" class=\""+ getClasses() +"\" type=\""+tType+"\" name=\""+n+"\" id=\""+n+"\" value=\"" +safeString(value)+ "\"  "+attributes+" "+ (disabled?"disabled":"")+"/>" + ((required && parentForm.isSubmitted() && printRequired)?" required":"") ;
 	}
 	
-	public function toString() :String
-	{
-		return render();
-	}
 }

@@ -20,8 +20,6 @@ class DatePicker extends FormElement
 	public var maxOffset:Int;
 	public var minOffset:Int;
 
-	public var date : Date; //typed value, not like $value
-
 	public var yearMin:Int;
 	public var yearMax:Int;
 
@@ -31,20 +29,22 @@ class DatePicker extends FormElement
 	
 	public var format : String; //moment.js format
 
-	public function new(name:String, label:String, ?_value:Date, ?required:Bool=false, yearMin:Int=1950, yearMax:Int=null, ?validators:Array<Validator>, ?attibutes:String="")
+	public function new(name:String, label:String, ?v:Date, ?required:Bool=false, yearMin:Int=1950, yearMax:Int=null, ?validators:Array<Validator>, ?attibutes:String="")
 	{
+		
+		//trace(v);
 		super();
 		this.name = name;
 		this.label = label;
 		format = 'LLLL';
 
-		if (_value == null) {
-			value = Date.now();
-			date = Date.now();
+		if (v == null) {
+			this.value = Date.now();
 		}else {
-			value = _value;
-			date = _value;
+			this.value = v;
 		}
+		
+		//trace(value);
 
 		this.required = required;
 		this.attributes = attibutes;
@@ -58,21 +58,22 @@ class DatePicker extends FormElement
 		var month = "";
 		var year = "";
 
-		if (date != null)
+		if (value != null)
 		{
-			day = 	""+date.getDate();
-			month = ""+(date.getMonth()+1);
-			year = 	""+date.getFullYear();
+			day = 	""+value.getDate();
+			month = ""+(value.getMonth()+1);
+			year = 	""+value.getFullYear();
 		}
 
 	}
 
 	override public function populate()
 	{
+		//data is stored as float in the html form element
 		var d = App.current.params.get(parentForm.name + "_" + name);
-		value = date = Date.fromTime(Std.parseFloat(d));
-
-		//value = (day != null && month != null && year != null ) ? new Date(year, month - 1, day, 0, 0, 0) : null;
+		//trace(parentForm.name + "_" + name+"="+d);
+		//value = Date.fromTime(Std.parseFloat(d));
+		value = Date.fromString(d);
 	}
 
 	override public function isValid():Bool
@@ -82,40 +83,35 @@ class DatePicker extends FormElement
 
 	override public function render():String
 	{
-		super.render();
+
+		//component init date
+		//var d = value.getFullYear() +"-" + (value.getMonth() + 1) + "-" + value.getDate() + " " + value.getHours() + ":" + value.getMinutes()+":00";
+		var d = value.toString();
+		var defaultDate = 'moment("' + d + '", "YYYY-MM-DD HH:mm:ss")';
 		
-		/*if (value != "" && value != null && value != "null")
-		{
-			try{
-			var v:Date = cast value;
-			daySelector.value = v.getDate();
-			monthSelector.value = v.getMonth()+1;
-			yearSelector.value = v.getFullYear();
-			}catch(e:Dynamic){}
-		}*/
-		var defaultDate = (date.getMonth() + 1) + "/" + date.getDate() + "/" + date.getFullYear()+" "+date.getHours()+":"+date.getMinutes();
-		return "<!--<div class='form-group'>-->
+		return "
 				<div class='input-group date' id='datetimepicker-"+name+"'>       
 					<span class='input-group-addon'>
 						<span class='glyphicon glyphicon-calendar'></span>
 					</span>
 					<input type='text' class='form-control' />
 				</div>
-			<!--</div>-->
-			<input type='hidden' name='"+parentForm.name+"_"+name+"' id='datetimepickerdata-"+name+"' value='"+this.date.getTime()+"'/>
+			
+			<input type='hidden' name='"+parentForm.name+"_"+name+"' id='datetimepickerdata-"+name+"' value='"+d+"'/>
 			<script type='text/javascript'>
 				$(function () {
 					$('#datetimepicker-"+name+"').datetimepicker(
 						{
 							locale:'fr',
 							format:'"+this.format+"',
-							defaultDate:'"+defaultDate+"'
+							defaultDate:"+defaultDate+"
 						}
 					);
-					//stores the date as timestamp in a hidden input element	
+					//stores the date in mysql format in a hidden input element	
 					$('#datetimepicker-"+name+"').on('dp.change',function(e){
-						var d = $('#datetimepicker-"+name+"').data('DateTimePicker').date()._d;
-						$('#datetimepickerdata-"+name+"').val( d.getTime());
+						var d = $('#datetimepicker-"+name+"').data('DateTimePicker').date();//moment.js obj
+						//console.log(d.toString());
+						$('#datetimepickerdata-"+name+"').val( d.format('YYYY-MM-DD HH:mm:ss'));
 					});
 				});
 			</script>";

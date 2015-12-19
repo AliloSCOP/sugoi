@@ -32,10 +32,6 @@ class Checkbox extends FormElement
 		//return "<input type=\"checkbox\" id=\"" + n + "\" name=\"" + n + "\" class=\"" + getClasses() + "\" value=\"" + value + "\" " + checkedStr + " />";
 	}
 	
-	public function toString() :String
-	{
-		return render();
-	}
 	
 	override public function populate():Void
 	{

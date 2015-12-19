@@ -26,11 +26,7 @@ class Submit extends FormElement
 		return s;
 	}
 	
-	public function toString() :String
-	{
-		return render();
-	}
-	
+
 	override public function getFullRow():String
 	{
 		return "<div class='col-sm-4'></div><div class='col-sm-8'>" + this.render() + "</div>";
