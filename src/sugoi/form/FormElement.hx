@@ -13,7 +13,10 @@ class FormElement
 	public var name:String;
 	public var label:String;
 	public var description:String;
-	public var value:Dynamic;	//value can be any type : Int, Float, Enum... 
+	
+	//public var valueClass:Class;	
+	public var value:Dynamic;		//value can be any type : Int, Float, Enum... 
+	
 	public var required:Bool;
 	public var errors:List<String>;
 	public var attributes:String;

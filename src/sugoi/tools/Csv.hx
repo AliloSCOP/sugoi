@@ -104,6 +104,9 @@ class Csv
 				o[i] = StringTools.replace(o[i], "\t", "");
 				o[i] = StringTools.replace(o[i], "\r", "");
 			}
+			
+			//remove empty lines
+			if (isNullRow(o)) out.remove(o);
 
 		}
 		
@@ -126,6 +129,11 @@ class Csv
 		}
 		
 		return out;
+	}
+	
+	function isNullRow(row:Array<String>):Bool{
+		for (c in row) if (c != null) return false;
+		return true;
 	}
 	
 }

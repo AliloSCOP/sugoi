@@ -1,6 +1,14 @@
 package sugoi.mail;
 import haxe.Http;
 
+
+typedef SendResult = Array <{
+	email:String,
+	status:String,
+	_id:String,
+	reject_reason:String,
+}>;
+
 /**
  * Send an email via Mandrill.com API
  * @author fbarbut
@@ -8,16 +16,18 @@ import haxe.Http;
  */
 class MandrillApiMail extends BaseMail implements IMail
 {
-
 	public var pass :String;
 	public var apiResult : Dynamic;
+	public var curlRq : String;
+	public var images : Array<{type:String,name:String,content:String}>;
 
 	public function new() {
 		super();
-		pass = App.config.get('mt.net.mail.MandrillMail.PASS');
+		pass = App.config.get('smtp_pass');
+		images = [];
 	}
 
-	override public function send() {
+	override public function send():Dynamic {
 		var headersObj = { };
 		for(k in headers.keys()) {
 			Reflect.setField(headersObj, k, headers.get(k));
@@ -33,21 +43,17 @@ class MandrillApiMail extends BaseMail implements IMail
 				from_name : this.senderName,
 				to : [],
 				headers : /*{ Reply-To : this.senderEmail }*/ headersObj,
+				images : images,
 			}
 		};
 		for (r in recipients) {
 			data.message.to.push( { email:r.email, name:r.name, type:"to" } );
 		}
 
-		//var r = new haxe.Http("https://mandrillapp.com/api/1.0//messages/send.json");
-		//r.setPostData();
-		//r.onData = onData;
-		//r.onError = function(s) throw s;
-		//r.onStatus = onStatus;
-		//r.request(true);
-
 		var res = curlRequest("POST", "https://mandrillapp.com/api/1.0/messages/send.json", {}, haxe.Json.stringify(data));
 		onData(res);
+		return apiResult;
+		
 	}
 
 	function onData(s:String) {
@@ -55,15 +61,25 @@ class MandrillApiMail extends BaseMail implements IMail
 		if (s == null) throw "return is null";
 		if (s == "") throw "return is empty";
 		
-		apiResult = haxe.Json.parse(s);
+		try{
+			apiResult = haxe.Json.parse(s);
+		}catch (e:Dynamic){
+			
+			throw "unable to decode : " + s + ", error is "+Std.string(e);
+		}
 		
-		//result should be like this:  [{"email":"francois.barbut@gmail.com","status":"sent","_id":"419808d760134e3ab51bb65a482c3dbd","reject_reason":null},{"email":"elodie.heritier@laposte.net","status":"sent","_id":"483ab840c8ef40779ec8815720a06961","reject_reason":null}]
-		//trace(s);
-		
-		if (Reflect.hasField(apiResult, "status")) throw "Mailchimp Api sendmail error : "+s;
-		
+		/*result should be like this:  [
+			{
+				"email":"francois.barbut@gmail.com",
+				"status":"sent",
+				"_id":"419808d760134e3ab51bb65a482c3dbd",
+				"reject_reason":null
+			}
+		]
+		*/
+
 		#if neko
-		if(!neko.Web.isModNeko && App.App.config.DEBUG) neko.Lib.println("api res : " + apiResult + "\n" + s);
+		//if(!neko.Web.isModNeko && App.App.config.DEBUG) neko.Lib.println("api res : " + apiResult + "\n" + s);
 		#end
 	}
 
@@ -78,7 +94,7 @@ class MandrillApiMail extends BaseMail implements IMail
 		}
 	}
 
-	public static function curlRequest( method: String, url : String, ?headers : Dynamic, postData : String ) : Dynamic {
+	public function curlRequest( method: String, url : String, ?headers : Dynamic, postData : String ) : Dynamic {
 		var cParams = ["-X"+method,"--max-time","5"];
 		for( k in Reflect.fields(headers) ){
 			cParams.push("-H");
@@ -91,11 +107,18 @@ class MandrillApiMail extends BaseMail implements IMail
 		}
 
 		var p = new sys.io.Process("curl", cParams);
+		curlRq = "curl " + cParams.join(" ");
 		#if neko
 		var str = neko.Lib.stringReference(p.stdout.readAll());
 		#else
 		var str = p.stdout.readAll().toString();
 		#end
+		
+		if (str == null || str == "") {
+			str = neko.Lib.stringReference(p.stderr.readAll());
+		}
+		
+		
 		p.exitCode();
 
 		return str;

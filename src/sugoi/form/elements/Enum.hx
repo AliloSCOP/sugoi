@@ -25,16 +25,21 @@ class Enum extends FormElement
 	 * @param	?verticle
 	 * @param	?labelRight
 	 */
-	public function new(name:String, label:String, enumName:String, value:Int, ?verticle:Bool=false, ?labelRight:Bool=true)
+	public function new(name:String, label:String, enumName:String, value:Int, ?required=false, ?verticle:Bool=false, ?labelRight:Bool=true)
 	{
 		super();
 		this.name = name;
 		this.label = label;
-		this.enumName = enumName;
-		this.value = value;
+		this.enumName = enumName;		
 		
 		this.verticle = verticle;
 		this.labelRight = labelRight;
+		
+		if (required && value == null){
+			this.value = 0;
+		}else{
+			this.value = value;
+		}
 
 
 		columns = 1;
@@ -60,7 +65,9 @@ class Enum extends FormElement
 		var n = parentForm.name + "_" +name;
 
 		var tagCss = getClasses();
-		var labelCss = getLabelClasses();
+		//no label css otherwise the style col-sm-4 will be added, and we dont want that
+		// as its for the left column labels
+		//var labelCss = getLabelClasses(); 
 
 		var c = 0;
 
@@ -85,14 +92,14 @@ class Enum extends FormElement
 
 				var t = Form.translator;
 
-				label = "<label for=\"" + n + c + "\" class=\"" + labelCss + "\" >" + t._(Std.string(row))  +"</label>\n";
+				label = "<label for=\"" + n + c + "\" >" + t._(Std.string(row))  +"</label>\n";
 
 				if (labelRight)
 				{
-					s += "<td style='vertical-align:middle;'>" + checkbox + "</td>\n";
+					s += "<td style='vertical-align:middle;'>" + checkbox + "</td> \n";
 					s += "<td style='vertical-align:middle;'>" + label + "</td>\n";
 				} else {
-					s += "<td style='vertical-align:middle;'>" + label + "</td>\n";
+					s += "<td style='vertical-align:middle;'>" + label + "</td> \n";
 					s += "<td style='vertical-align:middle;'>" + checkbox + "</td>\n";
 				}
 

@@ -34,7 +34,7 @@ class Session extends sys.db.Object {
 	public function new() {
 		super();
 		messages = [];
-		data = { };
+		data = {};
 		
 	}
 	
@@ -54,6 +54,8 @@ class Session extends sys.db.Object {
 		lang = u.lang;
 		user = u;
 		update();
+		
+		App.current.user = u; 
 	}
 
 	public override function update() {

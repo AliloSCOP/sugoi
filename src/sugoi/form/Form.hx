@@ -32,11 +32,13 @@ class Form
 	public var multipart:Bool;
 
 	public static var translator : ITranslator;
-
+	
+	//submit button
 	public var submitButtonLabel:String;
+	public var autoGenSubmitButton:Bool;	//add a submit button automatically
 	
 	//conf	
-	public static var USE_TWITTER_BOOTSTRAP = true;// App.config.getBool('form.Form.USE_TWITTER_BOOTSTRAP', true);
+	public static var USE_TWITTER_BOOTSTRAP = true;
 	public static var USE_DATEPICKER = true; //http://eonasdan.github.io/bootstrap-datetimepicker/
 
 	public function new(name:String, ?action:String, ?method:FormMethod)
@@ -48,6 +50,7 @@ class Form
 
 		forcePopulate = true;
 		multipart = false;
+		autoGenSubmitButton = true;
 
 		this.id = this.name = name;
 		if (action == null) {
@@ -154,14 +157,17 @@ class Form
 	}
 
 	/**
-	 * Get the value of a form element 
+	 * Get the value of a form element. 
+	 * The value can be of any type !
+	 * 
 	 * @param	elementName
 	 * @return
 	 */
-	public function getValueOf(elementName:String):String {
+	public function getValueOf(elementName:String):Dynamic {
 		var v = getElement(elementName).value;
-		if (v == null) return null;
-		return StringTools.trim(v);
+		//if (v == null) return null;
+		//return StringTools.trim(v);
+		return v;
 	}
 
 	public function getElementTyped<T>(name:String, type:Class<T>):T{
@@ -360,7 +366,7 @@ class Form
 					e = new Input(f.name, t._(f.name), v);
 					
 				case DFlags(fl, auto):
-					e = new Flags(f.name,t._(f.name), Lambda.array(fl), Std.parseInt(v), false);
+					e = new Flags(f.name,t._(f.name), Lambda.array(fl), Std.parseInt(v));
 
 				case DTinyInt, DUInt, DSingle, DFloat:
 					e = new Input(f.name, t._(f.name), v);
@@ -402,12 +408,14 @@ class Form
 					
 
 				case DEnum(name):
-					e = new Enum(f.name, t._(f.name), name, Std.parseInt(v) );
+					e = new Enum(f.name, t._(f.name), name, Std.parseInt(v), !isNull);
+					
 
 				default :
 					e = new Input(f.name, t._(f.name) , "unknown field type : "+f.type+", value : "+v);
 				}
 			}
+			
 			form.addElement(e);
 		}
 		return form;
@@ -529,20 +537,13 @@ class Form
 
 	public function toString()
 	{
-		/* <div class="form-group">
-			<label for="inputEmail3" class="col-sm-2 control-label">Email</label>
-				<div class="col-sm-10">
-				  <input type="email" class="form-control" id="inputEmail3" placeholder="Email">
-			</div>
-		</div>*/
-		
+
 		var s:StringBuf = new StringBuf();
 		s.add(getOpenTag());
 
+		//errors
 		if (isSubmitted())
 			s.add(getErrors());
-
-		
 
 		for (element in getElements())
 			if (element != submitButton && element.internal == false)
@@ -551,11 +552,11 @@ class Form
 		//submit button
 		if (submitButton != null) {
 			submitButton.parentForm = this;
-		}else {
+		}else if(autoGenSubmitButton){
 			submitButton = new Submit('submit', submitButtonLabel != null ? submitButtonLabel : 'OK');
 			submitButton.parentForm = this;
 		}
-		s.add(submitButton.getFullRow());
+		if(submitButton!=null) s.add(submitButton.getFullRow());
 
 		
 		s.add(getCloseTag());

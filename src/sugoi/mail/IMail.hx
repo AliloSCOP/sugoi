@@ -8,5 +8,5 @@ interface IMail
 	public function getRecipients():Array<String>;
 	public function setSubject(subject:String):Void;
 	public function setHeader(key:String, value:String):Void;
-	public function send():Void;
+	public function send():Dynamic;
 }

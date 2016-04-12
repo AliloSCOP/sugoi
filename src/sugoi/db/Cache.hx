@@ -11,6 +11,9 @@ class Cache extends sys.db.Object
 	public var value : SText;
 	public var expire : SDateTime;
 	
+	/**
+	 * Read the value for key $id
+	 */
 	public static function get(id:String):Dynamic {
 		if (Std.random(1000) == 0) Cache.manager.delete($expire < Date.now());
 		
@@ -23,6 +26,10 @@ class Cache extends sys.db.Object
 		return haxe.Unserializer.run(c.value);
 	}
 	
+	/**
+	 * Set a value for key $id 
+	 * and optionnaly a lifetime in seconds
+	 */
 	public static function set(id:String, value:Dynamic,expireInSeconds:Float) {
 		var c = manager.get(id, true);
 		var niou = false;
@@ -40,6 +47,9 @@ class Cache extends sys.db.Object
 		}
 	}
 	
+	/**
+	 * Delete a value for key $id
+	 */
 	public static function destroy(id:String) {
 		var c = manager.get(id, true);
 		if (c != null) c.delete();

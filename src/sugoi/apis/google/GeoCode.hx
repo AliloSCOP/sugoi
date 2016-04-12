@@ -7,23 +7,22 @@ package sugoi.apis.google;
  * @author fbarbut
  */
 
+ 
+ /**
+  *  { "results" : [
+  * 	{ "address_components" : [
+  * 		{ "long_name" : "1", "short_name" : "1",						"types" : [ "street_number" ] },
+  * 		{ "long_name" : "Place Saint Bénigne", "short_name" : "Pl. Saint Bénigne", "types" : [ "route" ] },
+  * 		{ "long_name" : "Dijon", "short_name" : "Dijon", 			"types" : [ "locality", "political" ] },
+  * 		{ "long_name" : "Côte-d'Or", "short_name" : "Côte-d'Or",	"types" : [ "administrative_area_level_2", "political" ] },
+  * 		{ "long_name" : "Bourgogne", "short_name" : "Bourgogne", 	"types" : [ "administrative_area_level_1", "political" ] },
+  * 		{ "long_name" : "France", "short_name" : "FR", 				"types" : [ "country", "political" ] },
+  * 		{ "long_name" : "21000", "short_name" : "21000", 			"types" : [ "postal_code" ] } ],
+  * 		"formatted_address" : "1 Pl. Saint Bénigne, 21000 Dijon, France",
+  * 		"geometry" : { "bounds" : { "northeast" : { "lat" : 47.32183939999999, "lng" : 5.0339407 }, "southwest" : { "lat" : 47.3218299, "lng" : 5.0339282 } }, "location" : { "lat" : 47.32183939999999, "lng" : 5.0339282 }, "location_type" : "RANGE_INTERPOLATED", "viewport" : { "northeast" : { "lat" : 47.3231836302915, "lng" : 5.035283430291502 }, "southwest" : { "lat" : 47.3204856697085, "lng" : 5.032585469708497 } } }, "partial_match" : true, "place_id" : "EikxIFBsLiBTYWludCBCw6luaWduZSwgMjEwMDAgRGlqb24sIEZyYW5jZQ", "types" : [ "street_address" ] } ], "status" : "OK" }
+  */
  typedef GeoCodingData = Array<{
 	address_components : Array<{long_name:String,short_name:String,types:Array<String>}>,
-	/*{
-               "long_name" : "Marché de Lerme",
-               "short_name" : "Marché de Lerme",
-               "types" : [ "point_of_interest", "establishment" ]
-            },
-            {
-               "long_name" : "Place de Lerme",
-               "short_name" : "Pl. de Lerme",
-               "types" : [ "route" ]
-            },
-            {
-               "long_name" : "Bordeaux",
-               "short_name" : "Bordeaux",
-               "types" : [ "locality", "political" ]
-            },*/
 	formatted_address : String, //Marché de Lerme, Pl. de Lerme, 33000 Bordeaux, France
 	geometry : {location:{lat:Float,lng:Float}}
  }>
@@ -44,12 +43,15 @@ class GeoCode
 	
 	/**
 	 * address -> lat/lng
+	 * 
+	 * @doc components filtering : https://developers.google.com/maps/documentation/geocoding/intro#ComponentFiltering
 	 */
-	public function geocode(address:String) {
+	public function geocode(address:String,?components:String):GeoCodingData {
 		var url = "https://maps.googleapis.com/maps/api/geocode/json?address=" + StringTools.urlEncode(address) + "&key=" + KEY;
+		if (components != null) url += "&components=" + components;
+		
 		var d = curlRequest("GET", url, null, null);
 		if (d == "" || d == null) throw "curl response is empty";
-		//throw d;
 		return onData(d);
 	}
 
@@ -82,11 +84,11 @@ class GeoCode
 	}
 
 	public function onData(s:String) {
-		
+		//trace("<pre>"+s+"</pre>");
 		var json  = cast haxe.Json.parse(s);
 		if (json.status != "OK") throw "Google geocoding API Error : " + s;
 		var r : GeoCodingData = cast json.results;
-		return r[0].geometry.location;
+		return r;
 	}
 	
 	

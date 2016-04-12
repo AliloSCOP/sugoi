@@ -78,7 +78,7 @@ class BaseMail implements IMail
 	 * @param	tpl		A Template path
 	 * @param	ctx 	Vars to send to template
 	 */
-	public function setHtmlBody(tpl, ctx:Dynamic) {
+	public function setHtmlBodyWithTemplate(tpl, ctx:Dynamic) {
 		var app = App.current;
 		var tpl = app.loadTemplate(tpl);
 		if( ctx == null ) ctx = { };
@@ -94,7 +94,11 @@ class BaseMail implements IMail
 		
 	}
 	
-	public function setTextBody(tpl, ctx:Dynamic) {		
+	public function setHtmlBody(s) {
+		htmlBody = s;
+	}
+	
+	public function setTextBodyWithTemplate(tpl, ctx:Dynamic) {		
 		var app = App.current;
 		var tpl = app.loadTemplate(tpl);
 		if( ctx == null ) ctx = { };
@@ -105,7 +109,7 @@ class BaseMail implements IMail
 	
 	
 	
-	public function send() {
+	public function send():Dynamic {
 		throw "not implemented";
 	}
 	

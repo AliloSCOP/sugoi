@@ -18,6 +18,7 @@ class BaseApp {
 	public var params 		: Map<String,String>;
 	public var cookieName	: String;
 	public var cookieDomain	: String;
+	public var uri 			: String;
 	
 	public static var config: Config;
 
@@ -154,7 +155,6 @@ class BaseApp {
 		//Get session
 		var sids = [];
 		var cookieSid = Web.getCookies().get(cookieName);
-		//trace(Web.getCookies());
 		if( params.exists("sid") ) sids.push(params.get("sid"));
 		if( cookieSid != null ) sids.push(cookieSid);
 		session = sugoi.db.Session.init(sids);
@@ -163,7 +163,10 @@ class BaseApp {
 		maintain = sugoi.db.Variable.getInt("maintain") != 0;
 		user = session.user;
 		
+		//setup langage
 		setupLang();
+		
+		
 		if( maintain && ((user != null && user.isAdmin()) ) )
 			maintain = false;
 		
@@ -175,21 +178,31 @@ class BaseApp {
 			return;
 		}
 		
+
+		
 		//dispatching
 		try {
-			var url = Web.getURI();
-			if( StringTools.endsWith(url, "/index.n") )
-				url = url.substr(0, -8);
-			var d = new haxe.web.Dispatch(url, params);
+			
+			uri = Web.getURI();
+			if ( StringTools.endsWith(uri, "/index.n") ) uri = uri.substr(0, -8);
+			
+			//"before dispatch" callback
+			beforeDispatch();
+			
+			var d = new haxe.web.Dispatch(uri, params);
 			d.onMeta = onMeta;
 			d.dispatch(new controller.Main());
-		} catch( e : haxe.web.Dispatch.DispatchError ) {
-			if( App.config.DEBUG )
-				Lib.rethrow(e);
+			
+		} catch ( e : haxe.web.Dispatch.DispatchError ) {
+			
+			//dispatch / routing error
+			if( App.config.DEBUG )	Lib.rethrow(e);
 			cnx.rollback();
 			Web.redirect("/");
 			return;
-		} catch( e : sugoi.BaseController.ControllerAction) {
+			
+		} catch ( e : sugoi.BaseController.ControllerAction) {
+			
 			switch( e ) {
 			case RedirectAction(url):
 				Web.redirect(url);
@@ -218,6 +231,14 @@ class BaseApp {
 			executeTemplate(true); // will saveAndClose
 		}
 	}
+	
+	/**
+	 * Override this function if you want 
+	 * to insert some actions 
+	 */
+	public function beforeDispatch() {
+		
+	}
 
 	public function logError( e : Dynamic, ?stack ) {
 		var stack = if( stack != null ) stack else haxe.CallStack.toString(haxe.CallStack.exceptionStack());
@@ -231,6 +252,7 @@ class BaseApp {
 		e.ip = Web.getClientIP();
 		e.user = if( user != null ) user else null;
 		e.date = Date.now();
+		e.userAgent = Web.getClientHeader("User-Agent");
 		e.error = message.toString();
 		e.insert();
 	}
