@@ -12,19 +12,19 @@ import sugoi.form.ListData;
 /**
  * A list of selectBox for day + month + year
  */
-class DateDropdowns extends FormElement
+class DateDropdowns extends FormElement<Date>
 {
 	public var maxOffset:Int;
 	public var minOffset:Int;
 
-	public var date : Date; //valeur typée à la place de value:Dynamic
+	//public var date : Date; //valeur typée à la place de value:Dynamic
 
 	public var yearMin:Int;
 	public var yearMax:Int;
 
-	private var daySelector:Selectbox;
-	private var monthSelector:Selectbox;
-	private var yearSelector:Selectbox;
+	private var daySelector:Selectbox<Int>;
+	private var monthSelector:Selectbox<Int>;
+	private var yearSelector:Selectbox<Int>;
 
 	public function new(name:String, label:String, ?_value:Date, ?required:Bool=false, yearMin:Int=1950, yearMax:Int=null, ?validators:Array<Validator>, ?attibutes:String="")
 	{
@@ -34,10 +34,10 @@ class DateDropdowns extends FormElement
 
 		if (_value == null) {
 			value = Date.now();
-			date = Date.now();
+			//date = Date.now();
 		}else {
 			value = _value;
-			date = _value;
+			//date = _value;
 		}
 
 		this.required = required;
@@ -48,21 +48,21 @@ class DateDropdowns extends FormElement
 		maxOffset = null;
 		minOffset = null;
 
-		var day = "";
-		var month = "";
-		var year = "";
+		var day :Int = null;
+		var month :Int = null;
+		var year :Int = null;
 
-		if (date != null)
+		if (value != null)
 		{
-			day = 	""+date.getDate();
-			month = ""+(date.getMonth()+1);
-			year = 	""+date.getFullYear();
+			day = 	value.getDate();
+			month = (value.getMonth()+1);
+			year = 	value.getFullYear();
 		}
 
 		var t = sugoi.form.Form.translator;
-		daySelector = 	new Selectbox(name+"_day", t._("day"),ListData.getDays(),day,true);
-		monthSelector = new Selectbox(name+"_month", t._("month"),ListData.getMonths(),month,true);
-		yearSelector = 	new Selectbox(name+"_year", t._("year"), ListData.getYears(Date.now().getFullYear()-3, Date.now().getFullYear()+3, true), year, true);
+		daySelector = 	new IntSelect(name+"_day", t._("day"),ListData.getDays(),day,true);
+		monthSelector = new IntSelect(name+"_month", t._("month"),ListData.getMonths(),month,true);
+		yearSelector = 	new IntSelect(name+"_year", t._("year"), ListData.getYears(Date.now().getFullYear()-3, Date.now().getFullYear()+3, true), year, true);
 
 		daySelector.internal = monthSelector.internal = yearSelector.internal = true;
 
@@ -127,7 +127,7 @@ class DateDropdowns extends FormElement
 	{
 		super.render();
 		
-		if (value != "" && value != null && value != "null")
+		if (value != null)
 		{
 			try{
 			var v:Date = cast value;

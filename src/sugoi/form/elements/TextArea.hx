@@ -6,7 +6,7 @@ import sugoi.form.Form;
 import sugoi.form.Validator;
 import sugoi.form.validators.BoolValidator;
 
-class TextArea extends Input
+class TextArea extends StringInput
 {
 	public var height:Int;
 
@@ -14,8 +14,6 @@ class TextArea extends Input
 	{		
 		super(name, label, value, required, validators, attributes);
 		
-		width = 300;
-		height = 50;
 	}
 	
 	override public function render():String
@@ -32,16 +30,11 @@ class TextArea extends Input
 		
 		var s = "";
 		if (required && parentForm.isSubmitted() && printRequired) s += "required<br />";
-		var style = useSizeValues ? "style=\"width:" + width + "px; height:" + height + "px;\"" : "";
 		
-		s += "<textarea " + style + " class=\""+ getClasses() +"\" name=\"" + n + "\" id=\"" + n + "\" " + attributes + " >" + safeString(value) + "</textarea>";
+		s += "<textarea class=\""+ getClasses() +"\" name=\"" + n + "\" id=\"" + n + "\" " + attributes + " >" + safeString(value) + "</textarea>";
 		
 		return s;
 	}
-	
-	override public function toString() :String
-	{
-		return render();
-	}	
+		
 	
 }

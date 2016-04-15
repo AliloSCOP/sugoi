@@ -8,11 +8,10 @@ import sugoi.form.FormElement;
 import sugoi.form.Validator;
 import sugoi.form.ListData;
 
-class HourDropDowns extends FormElement
+class HourDropDowns extends FormElement<Date>
 {
-	var hourSelector:Selectbox;
-	var minuteSelector:Selectbox;
-	var date : Date;
+	var hourSelector:Selectbox<Int>;
+	var minuteSelector:Selectbox<Int>;
 
 	public function new(name:String, label:String, ?_value:Date, ?required:Bool=false,?attributes="")
 	{
@@ -22,28 +21,26 @@ class HourDropDowns extends FormElement
 
 		if (_value == null) {
 			value = Date.now();
-			date = Date.now();
 		}else {
 			value = _value;
-			date = _value;
 		}
 
 		this.required = required;
 		this.attributes = attributes;
 
-		var hours = "";
-		var minutes = "";
+		var hours = 0;
+		var minutes = 0;
 
-		if (date != null)
+		if (value != null)
 		{
-			hours = 	""+date.getHours();
-			minutes = ""+(date.getMinutes());
+			hours = value.getHours();
+			minutes = value.getMinutes();
 		}
 
 		var t = sugoi.form.Form.translator;
 
-		hourSelector 	= new Selectbox(name+"_hour", t._("hour"), ListData.getDateElement(0, 23), Std.string(date.getHours()), true, "-", 'title="Hour"');		
-		minuteSelector 	= new Selectbox(name+"_minute", t._("minute"), ListData.getMinutes(), Std.string(date.getMinutes()), true, "-", 'title="Minute"');
+		hourSelector 	= new IntSelect(name+"_hour", t._("hour"), ListData.getDateElement(0, 23), value.getHours(), true, "-", 'title="Hour"');		
+		minuteSelector 	= new IntSelect(name+"_minute", t._("minute"), ListData.getMinutes(), value.getMinutes(), true, "-", 'title="Minute"');
 
 		hourSelector.internal = minuteSelector.internal = true;
 
@@ -53,14 +50,8 @@ class HourDropDowns extends FormElement
 		}
 
 	}
-	//public function shortLabels()
-	//{
-		//daySelector.nullMessage = "-D-";
-		//monthSelector.nullMessage = "-M-";
-		//yearSelector.nullMessage = "-Y-";
-		//monthSelector.data = ListData.getMonths(true);
-	//}
-
+	
+	
 	override public function init()
 	{
 		super.init();
@@ -85,7 +76,7 @@ class HourDropDowns extends FormElement
 	override public function render():String{
 		super.render();
 		var s = "<span class='form-inline'>";
-		if (value != "" && value != null && value != "null"){
+		if (value != null){
 			try{
 				var v:Date = cast value;
 				hourSelector.value = v.getHours();

@@ -6,7 +6,7 @@ package sugoi.form.elements;
  * 
  * @author fbarbut<francois.barbut@gmail.com>
  */
-class Html extends sugoi.form.FormElement
+class Html extends sugoi.form.FormElement<String>
 {
 
 	var html : String;
@@ -20,6 +20,11 @@ class Html extends sugoi.form.FormElement
 	
 	override public function render() {
 		return html;
+	}
+	
+	override public function getTypedValue(str:String):String 
+	{
+		return null;
 	}
 	
 	

@@ -3,7 +3,7 @@ import sugoi.form.Form;
 import sugoi.form.FormElement;
 
 
-class Submit extends FormElement
+class Submit extends FormElement<String>
 {
 	public function new(name:String, value:String)
 	{
@@ -32,10 +32,5 @@ class Submit extends FormElement
 		return "<div class='col-sm-4'></div><div class='col-sm-8'>" + this.render() + "</div>";
 	}
 	
-	override public function populate():Void
-	{
-		super.populate();
-		var n = parentForm.name + "_" + name;
-		//if ( Poko.instance.params.exists(n) ) form.submittedButtonName = name;
-	}
+	
 }

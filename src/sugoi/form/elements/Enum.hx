@@ -4,7 +4,7 @@ import sugoi.form.FormElement;
 import sugoi.form.Formatter;
 import sugoi.form.elements.Flags;
 
-class Enum extends FormElement
+class Enum<T> extends FormElement<T>
 {
 	public var enumName:String;
 	public var selectMessage:String;
@@ -25,7 +25,7 @@ class Enum extends FormElement
 	 * @param	?verticle
 	 * @param	?labelRight
 	 */
-	public function new(name:String, label:String, enumName:String, value:Int, ?required=false, ?verticle:Bool=false, ?labelRight:Bool=true)
+	public function new(name:String, label:String, enumName:String, value:T, ?required=false, ?verticle:Bool=false, ?labelRight:Bool=true)
 	{
 		super();
 		this.name = name;
@@ -36,7 +36,7 @@ class Enum extends FormElement
 		this.labelRight = labelRight;
 		
 		if (required && value == null){
-			this.value = 0;
+			this.value = Type.resolveEnum(enumName).createByIndex(0);
 		}else{
 			this.value = value;
 		}
@@ -87,7 +87,7 @@ class Enum extends FormElement
 				s += "<tr>";
 
 				var row:Dynamic = array[c];
-				var checkbox = "<input type=\"radio\" class=\"" + tagCss + "\" name=\""+n+"\" id=\""+n+row+"\" value=\""+Type.enumIndex(row)+"\" " + ((value==Type.enumIndex(row))? "checked":"") +" ></input>\n";
+				var checkbox = "<input type=\"radio\" class=\"" + tagCss + "\" name=\""+n+"\" id=\""+n+row+"\" value=\""+Type.enumIndex(row)+"\" " + ((value==row)? "checked":"") +" ></input>\n";
 				var label;
 
 				var t = Form.translator;

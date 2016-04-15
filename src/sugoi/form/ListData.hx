@@ -1,27 +1,29 @@
 package sugoi.form;
 
+typedef FormData<T> = Array<{label:String,value:T}>;
+
 class ListData
 {
-	public static function getDateElement( low : Int, high : Int, ?labels : Array<String> ) : Array<{key:String,value:String}>
+	public static function getDateElement( low : Int, high : Int, ?labels : Array<String> ) : FormData<Int>
 	{
 		var data = [];
 		if ( labels != null ){
 			for ( i in low ... high + 1 )
-				data.push( { key:Std.string(i), value:labels[i-1] } );
+				data.push( { label:labels[i-1], value:i } );
 		}else{
 			for ( i in low ... high + 1 ){
 				var n = Std.string(i);
-				data.push( { key:n, value: ((i < 10) ? "0" + n : n) } );
+				data.push( { label:((i < 10) ? "0" + n : n), value: i } );
 			}
 		}
 		return data;
 	}
 	
-	public static function getMinutes() {
+	public static function getMinutes():FormData<Int> {
 		var data = [];
 		for ( i in 0...12) {			
 			var x = i * 5;
-			data.push( {key:Std.string(x),value:Std.string( x<10?"0"+x:x ) } );
+			data.push( {label: (x<10) ? "0"+Std.string(x) : Std.string(x) ,value: x } );
 		}
 		return data;
 	}
@@ -34,12 +36,11 @@ class ListData
 		return data;
 	}
 	
-	public static function getDays(?reverse = true):Array<{key:String,value:String}>
+	public static function getDays(?reverse = true):Array<{label:String,value:Int}>
 	{
 		var data= [];
 		for (i in 1...31+1) {
-			var n = Std.string(i);
-			data.push( { key:Std.string(n), value:Std.string(n) } );
+			data.push( { label:Std.string(i), value:i } );
 		}
 		return(data);
 	}
@@ -49,31 +50,37 @@ class ListData
 	//public static var months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 	public static var months = ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Aout", "Septembre", "Octobre", "Novembre", "Décembre"];
 	
-	public inline static function getMonths(?short = false):Array<{key:String,value:String}>
+	/**
+	 * Get months list
+	 */
+	public inline static function getMonths(?short = false):Array<{label:String,value:Int}>
 	{
 		var input = short ? months_short : months;
 		var out = [];
 		var c = 1;
 		for ( i in input) {
-			out.push( { key:Std.string(c), value:i } );
+			out.push( { label:i, value:c } );
 			c++;
 		}
 		return out;
 	}
 	
-	public static function getYears(from:Int, to:Int, ?reverse = true):Array<{key:String,value:String}>
+	/**
+	 * get years list
+	 */
+	public static function getYears(from:Int, to:Int, ?reverse = true):Array<{label:String,value:Int}>
 	{
 		var data = [];
 		
 		if (reverse){
 			for (i in 0...(to-from+1)) {
 				var n = to - i;
-				data.push( { key:Std.string(n), value:Std.string(n) } );
+				data.push( { label:Std.string(n), value:n } );
 			}
 		}else {
 			for (i in 0...(to-from+1)) {
 				var n = from + i;
-				data.push( { key:Std.string(n), value:Std.string(n) } );
+				data.push( { label:Std.string(n), value:n } );
 			}
 		}
 		return(data);

@@ -2,15 +2,15 @@ package sugoi.form.elements;
 import sugoi.form.Form;
 import sugoi.form.FormElement;
 
-class Selectbox extends FormElement 
+class Selectbox<T> extends FormElement<T> 
 {
-	public var data:Array<{key:String,value:String}>;
+	public var data:Array<{label:String,value:T}>;
 	public var nullMessage:String;
 	public var onChange:String;
 	public var size:Int;
 	public var multiple:Bool;
 	
-	public function new(name:String, label:String, ?data:Array<{key:String,value:String}>, ?selected:String, required:Bool=false, ?nullMessage="-", ?attributes="") 
+	public function new(name:String, label:String, ?data:Array<{label:String,value:T}>, ?selected:T, required:Bool=false, ?nullMessage="-", ?attributes="") 
 	{
 		super();
 		this.name = name;
@@ -40,28 +40,12 @@ class Selectbox extends FormElement
 		if (data != null)
 		{	
 			for (row in data) {
-				//trace( Std.string(row.key)+' == '+Std.string(value) );
-				s += "<option value=\"" + Std.string(row.key) + "\" " + (Std.string(row.key) == Std.string(value) ? "selected":"") + ">" + Std.string(row.value) + "</option>";
+				s += "<option value=\"" + Std.string(row.value) + "\" " + (Std.string(row.value) == Std.string(value) ? "selected":"") + ">" + Std.string(row.label) + "</option>";
 			}
 		}
 		s += "</select>";
 	 
 		return s;
-	}
-	
-	public function selectFirst()
-	{
-		value = data[0].key;
-	}
-	
-	public inline function add(key:String, value:Dynamic)
-	{
-		addOption( { key:key, value:value } );
-	}
-	
-	public inline function addOption(keyVal:Dynamic)
-	{
-		data.push(keyVal);
 	}
 	
 }

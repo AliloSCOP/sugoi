@@ -1,21 +1,17 @@
 package sugoi.form;
-#if neko
-import neko.Web;
-#else
-import php.Web;
-#end
+
 import sugoi.form.filters.IFilter;
 using StringTools;
 
-class FormElement
+class FormElement<T>
 {
 	public var parentForm:Form;
 	public var name:String;
 	public var label:String;
 	public var description:String;
 	
-	//public var valueClass:Class;	
-	public var value:Dynamic;		//value can be any type : Int, Float, Enum... 
+	//value can be any type : Int, Float, Enum... 
+	public var value:T;		
 	
 	public var required:Bool;
 	public var errors:List<String>;
@@ -49,22 +45,24 @@ class FormElement
 		return value;
 	}
 	
+	/**
+	 * Checks if the current value of the elements is valid
+	 */
 	public function isValid():Bool
 	{
 		errors.clear();
 
 		if (!active) return true;
 
-		if (value == "" && required || value == null && required) {
+		if ( value == null && required ) {
 			//required field is empty
 			errors.add("<span class=\"formErrorsField\">\"" + ((label != null && label != "") ? label : name) + "\"</span> ne doit pas être vide.");
 			return false;
 		}
 
-		if (value != "" && value!=null) {
+		if (value!=null) {
 			//check validity
 			if (!validators.isEmpty()){
-				var pass:Bool = true;
 				for (validator in validators)
 				{
 					if (!validator.isValid(value)) 	return false;
@@ -76,11 +74,6 @@ class FormElement
 		}
 		return true;
 	}
-
-	public function checkValid(){
-		value == "";
-	}
-
 
 	public function init(){
 		inited = true;
@@ -94,14 +87,25 @@ class FormElement
 		filters.add(filter);
 	}
 
+	/**
+	 * fill the element with a value taken from the web params
+	 */
 	public function populate():Void
 	{
 		if (!inited) init();
 
 		var n = parentForm.name + "_" + name;
 		var v = App.current.params.get(n);
-
-		if (v != null) value = v;
+		value = getTypedValue(v);
+		//trace("value of " + name+" is " + v + ", typed :"+ value+"<br/>");
+	}
+	
+	/**
+	 * from string (web param) to typed value
+	 */
+	public function getTypedValue(str:String):T{
+		throw "getTypedValue() function not implemented in \""+name+"\"";
+		return null;
 	}
 
 	public function getErrors():List<String>
@@ -115,10 +119,13 @@ class FormElement
 		return errors;
 	}
 
+	/**
+	 * Render the element in HTML
+	 */
 	public function render():String
 	{
 		if (!inited) init();
-		return value;
+		return Std.string(value);
 	}
 
 	public function remove():Bool
@@ -146,6 +153,9 @@ class FormElement
 		return Std.string(Type.getClass(this));
 	}
 
+	/**
+	 * Get CSS classes for the form element label
+	 */
 	public function getLabelClasses() : String
 	{
 		var css = "";
@@ -154,7 +164,7 @@ class FormElement
 		var requiredSet = false;
 		if (required) {
 			css += " "+parentForm.requiredClass;
-			if (parentForm.isSubmitted() && required && value == "") {
+			if (parentForm.isSubmitted() && required && value == null) {
 				css += " "+parentForm.requiredErrorClass;
 				requiredSet = true;
 			}
@@ -174,14 +184,17 @@ class FormElement
 		var n = parentForm.name + "_" + name;
 		return "<label for=\"" + n + "\" class=\""+getLabelClasses()+"\" id=\"" + n + "__Label\">" + label +(required?parentForm.labelRequiredIndicator:'') +"</label>";
 	}
-
+	
+	/**
+	 * Return CSS classes of the element
+	 */
 	public function getClasses() : String
 	{
 		var css = ( cssClass != null ) ? cssClass : parentForm.defaultClass;
 
 		if ( required && parentForm.isSubmitted() )
 		{
-			if ( value == "" )
+			if ( value == null )
 				css += " " + parentForm.requiredErrorClass;
 			if ( !isValid() )
 				css += " " + parentForm.invalidErrorClass;
@@ -196,7 +209,7 @@ class FormElement
 
 		if ( required && parentForm.isSubmitted() )
 		{
-			if ( value == "" )
+			if ( value == null )
 				css += " " + parentForm.requiredErrorClass;
 			if ( !isValid() )
 				css += " " + parentForm.invalidErrorClass;

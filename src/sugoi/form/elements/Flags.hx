@@ -44,7 +44,10 @@ enum FakeFlag {
 	Flag32;
 }
 
-class Flags extends FormElement
+/**
+ * Manage flags stored in an Int , various flags are defined by an Enum
+ */
+class Flags<T> extends FormElement<Int>
 {
 	public var data:Array<String>;
 	public var selectMessage:String;

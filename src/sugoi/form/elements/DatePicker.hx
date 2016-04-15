@@ -15,7 +15,7 @@ import sugoi.form.ListData;
  * You'll need to install some additionnal js librairies (moment.js, jquery)
  * more info at : http://eonasdan.github.io/bootstrap-datetimepicker/
  */
-class DatePicker extends FormElement
+class DatePicker extends FormElement<Date>
 {
 	public var maxOffset:Int;
 	public var minOffset:Int;
@@ -23,9 +23,9 @@ class DatePicker extends FormElement
 	public var yearMin:Int;
 	public var yearMax:Int;
 
-	private var daySelector:Selectbox;
-	private var monthSelector:Selectbox;
-	private var yearSelector:Selectbox;
+	private var daySelector:Selectbox<Int>;
+	private var monthSelector:Selectbox<Int>;
+	private var yearSelector:Selectbox<Int>;
 	
 	public var format : String; //moment.js format
 

@@ -2,7 +2,7 @@ package sugoi.form.elements;
 import sugoi.form.Form;
 import sugoi.form.FormElement;
 
-class RadioGroup extends FormElement 
+class RadioGroup extends FormElement<String> 
 {
 	public var data:Array<{key:String,value:String}>;
 	public var selectMessage:String;
@@ -50,6 +50,13 @@ class RadioGroup extends FormElement
 		}
 		
 		return s;
+	}
+	
+	override function getTypedValue(str:String){
+		str = StringTools.trim(str);
+		return (str == "") ? return null : str;
+		
+		
 	}
 	
 }

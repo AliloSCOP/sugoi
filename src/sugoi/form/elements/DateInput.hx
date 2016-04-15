@@ -8,15 +8,15 @@ import sugoi.form.ListData;
  */
 class DateInput extends DateDropdowns
 {
-	private var hourSelector:Selectbox;
-	private var minuteSelector:Selectbox;
+	private var hourSelector:Selectbox<Int>;
+	private var minuteSelector:Selectbox<Int>;
 	
 	public function new(name:String, label:String, ?value:Date, ?required:Bool=false, yearMin:Int=1950, yearMax:Int=null, ?validators:Array<Validator>, ?attibutes:String="")
 	{
 		super(name, label, value, required, yearMin, yearMax, validators, attibutes);
 		var t = sugoi.form.Form.translator;
-		hourSelector 	= new Selectbox(name+"_hour", t._("hour"),ListData.getDateElement(0,23), Std.string(date.getHours()),true,"-",'title="Hour"');
-		minuteSelector 	= new Selectbox(name+"_minute", t._("minute"), ListData.getDateElement(0, 59), Std.string(date.getMinutes()), true, "-", 'title="Minute"');		
+		hourSelector 	= new Selectbox<Int>(name+"_hour"  , t._("hour")  , ListData.getDateElement(0,23), value.getHours(),true,"-",'title="Hour"');
+		minuteSelector 	= new Selectbox<Int>(name+"_minute", t._("minute"), ListData.getDateElement(0, 59), value.getMinutes(), true, "-", 'title="Minute"');		
 		
 		if (Form.USE_TWITTER_BOOTSTRAP) {
 			hourSelector.cssClass = "form-control";
@@ -37,7 +37,7 @@ class DateInput extends DateDropdowns
 		
 		var s = super.render() + " : ";
 		
-		if (value != "" && value != null && value != "null"){
+		if (value != null){
 			var v:Date = cast value;
 			hourSelector.value = v.getHours();
 			minuteSelector.value = v.getMinutes();

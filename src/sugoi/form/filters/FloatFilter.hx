@@ -11,8 +11,7 @@ class FloatFilter extends Filter implements IFilter
 	public function filter(n:String):Float {
 		if (n == null || n=="") return 0;
 		n = StringTools.replace(n, ",", ".");
-		var num = Std.parseFloat(n);
-		return num;
+		return Std.parseFloat(n);
 	}
 	
 }

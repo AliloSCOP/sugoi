@@ -2,11 +2,9 @@ package sugoi.form.elements;
 
 import sugoi.form.Form;
 import sugoi.form.FormElement;
-//import poko.Poko;
 
-class Checkbox extends FormElement
+class Checkbox extends FormElement<Bool>
 {
-	//public var checked : Bool;
 	
 	public function new(name:String, label:String, ?checked:Bool=false, ?required:Bool=false, ?attibutes:String="")
 	{
@@ -14,9 +12,7 @@ class Checkbox extends FormElement
 		
 		this.name = name;
 		this.label = label;
-		this.value = checked ? "1" : "0";
-		//this.value = value;
-		//this.checked = checked;
+		this.value = checked;
 		this.required = required;
 		this.attributes = attibutes;
 	}
@@ -25,30 +21,26 @@ class Checkbox extends FormElement
 	{
 		var n = parentForm.name + "_" +name;
 		
-		//var checkedStr = ( this.checked ) ? "checked" : "";
-		var checkedStr = ( value == "1" ) ? "checked" : "";
+		var checkedStr = value ? "checked" : "";
 		
 		return "<input type=\"checkbox\" id=\"" + n + "\" name=\"" + n + "\" class=\"" + getClasses() + "\" value=\"" + value + "\" " + checkedStr + " />";
-		//return "<input type=\"checkbox\" id=\"" + n + "\" name=\"" + n + "\" class=\"" + getClasses() + "\" value=\"" + value + "\" " + checkedStr + " />";
 	}
 	
 	
 	override public function populate():Void
 	{
-		var n = parentForm.name + "_" + name;
-		var v = App.current.params.exists( n ) ? "1" : "0";
+		
 		
 		if (parentForm.isSubmitted()) {
-			if (v != null) {
-				value = v;
-			}
+			var n = parentForm.name + "_" + name;
+			value = App.current.params.exists( n ) && App.current.params.get( n ) == "1";
 		}
 	}
 	
 	override public function isValid():Bool
 	{
 		errors.clear();
-		if ( required && value == "0" )
+		if ( required && value == null )
 		{
 			errors.add("Please check '" + ((label != null && label != "") ? label : name) + "'");
 			return false;

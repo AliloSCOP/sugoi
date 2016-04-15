@@ -1,6 +1,7 @@
 package sugoi.form;
 
 import haxe.crypto.Md5;
+import sugoi.form.elements.Input;
 import sugoi.i18n.translator.ITranslator;
 import sugoi.form.elements.*;
 #if neko
@@ -19,10 +20,10 @@ class Form
 	public var name:String;
 	public var action:String;
 	public var method:FormMethod;
-	public var elements:Array<FormElement>;
+	public var elements:Array<FormElement<Dynamic>>;
 	public var fieldsets:Map<String,FieldSet>;
 	public var forcePopulate:Bool;		//the form is populated by web params if isValid() is called
-	public var submitButton:FormElement;
+	public var submitButton:FormElement<String>;
 	private var extraErrors:List<String>;
 	public var requiredClass:String;
 	public var requiredErrorClass:String;
@@ -76,7 +77,7 @@ class Form
 	 * @param 	?index			which index do u want to push it
 	 * @return
 	 */
-	public function addElement(element:FormElement,?index:Int, ?fieldSetKey:String = "__default"):FormElement
+	public function addElement(element:FormElement<Dynamic>,?index:Int, ?fieldSetKey:String = "__default"):FormElement<Dynamic>
 	{
 		element.parentForm = this;
 		if (index != null) {
@@ -101,7 +102,7 @@ class Form
 		return element;
 	}
 
-	public function removeElement(element:FormElement):Bool
+	public function removeElement(element:FormElement<Dynamic>):Bool
 	{
 		if ( elements.remove(element) )
 		{
@@ -118,7 +119,7 @@ class Form
 		return false;
 	}
 
-	public function setSubmitButton(el:FormElement):FormElement
+	public function setSubmitButton(el:FormElement<String>):FormElement<String>
 	{
 		submitButton = el;
 		submitButton.parentForm = this;
@@ -141,7 +142,7 @@ class Form
 		return getElement( elementName ).getLabel();
 	}
 
-	public function getElement(name:String):FormElement {
+	public function getElement(name:String):FormElement<Dynamic> {
 		if (name == null || name=='') throw "Element name is null";
 		for (element in elements){
 			if (element.name == name) return element;
@@ -157,17 +158,14 @@ class Form
 	}
 
 	/**
-	 * Get the value of a form element. 
+	 * Get the typed value of a form element. 
 	 * The value can be of any type !
 	 * 
 	 * @param	elementName
 	 * @return
 	 */
 	public function getValueOf(elementName:String):Dynamic {
-		var v = getElement(elementName).value;
-		//if (v == null) return null;
-		//return StringTools.trim(v);
-		return v;
+		return getElement(elementName).value;
 	}
 
 	public function getElementTyped<T>(name:String, type:Class<T>):T{
@@ -184,16 +182,7 @@ class Form
 		var data = new Map<String,Dynamic>();
 		for (element in getElements())
 		{
-			
-			if(Std.is(element.value,String)) {
-				//trace(element.name+" "+element.value);
-				var val = StringTools.trim(element.value);
-				if (val == "") val = null;
-				data.set(element.name, val );	
-			}else {
-				data.set(element.name,element.value);	
-			}
-			
+			data.set(element.name,element.value);	
 		}
 		return data;
 	}
@@ -216,9 +205,9 @@ class Form
 	 * populate Form from anonymous object or if null from web params.
 	 * @param	custom
 	 */
-	public function populate(custom:Dynamic=null){
-		if (custom != null)
-		{
+	public function populate(?custom:Dynamic){
+		if (custom != null)	{
+			//from object
 			for (element in getElements()) {
 				var n = element.name;
 				var v = Reflect.field(custom, n);
@@ -226,9 +215,8 @@ class Form
 					element.value = v;
 			}
 		} else {
-			var element:FormElement;
 			for (element in getElements()) {
-				//populate from web param
+				//populate from web params
 				element.populate();
 			}
 		}
@@ -303,9 +291,10 @@ class Form
 		//loop on db object fields to create form elements
 		for (f in ti.fields) {
 			
-			var e : FormElement;
+			var e : FormElement<Dynamic>;
 			//field value
-			var v = Reflect.field(obj, f.name);
+			var v :Dynamic = Reflect.field(obj, f.name);
+			//trace( "field " + f.name+" of " + obj + " is " + v+"<br/>");
 
 			//meta of this field						
 			var meta :Dynamic = Reflect.field(metas, f.name);
@@ -341,41 +330,42 @@ class Form
 					
 					
 				}else {
-					//choppe toute les valeurs possibles
+					//get all available values
 					objects = r.manager.all(false).map(function(d) {
 						return {
-							key : Std.string(Reflect.field(d,r.manager.table_keys[0])),
-							value : d.toString()
+							label : d.toString(),
+							value : Reflect.field(d,r.manager.table_keys[0])
 						};
 					});
 				}
 
-				e = new Selectbox(f.name, t._(r.prop), Lambda.array(objects),v, !isNull);
+				e = new IntSelect(f.name, t._(r.prop), Lambda.array(objects),v, !isNull);
 
 			}else {
 				//not foreign key
 
 				switch (f.type) {
-				case DInt:
-					e = new Input(f.name,t._(f.name), v, !isNull);
-
 				case DId, DUId:
-					e = new Hidden(f.name, v);
+					e = new IntInput(f.name, "id", v, false);
+					untyped e.inputType = ITHidden;
 
 				case DEncoded:
-					e = new Input(f.name, t._(f.name), v);
+					e = new StringInput(f.name, t._(f.name), v);
 					
 				case DFlags(fl, auto):
 					e = new Flags(f.name,t._(f.name), Lambda.array(fl), Std.parseInt(v));
 
-				case DTinyInt, DUInt, DSingle, DFloat:
-					e = new Input(f.name, t._(f.name), v);
+				case DTinyInt, DUInt, DSingle, DInt:
+					e = new IntInput(f.name, t._(f.name) , v , !isNull);
+				
+				case DFloat:
+					e = new FloatInput(f.name, t._(f.name), v);
 					
 				case DBool :
 					e = new Checkbox(f.name, t._(f.name), Std.string(v) == 'true');
 					
 				case DString(n):
-					e = new Input(f.name,t._(f.name), v, !isNull ,null,"lenght="+n);
+					e = new StringInput(f.name,t._(f.name), v, !isNull ,null,"lenght="+n);
 		
 				case DTinyText, DSmallText, DText, DSerialized:
 					e = new TextArea(f.name, t._(f.name), v,!isNull);
@@ -412,7 +402,7 @@ class Form
 					
 
 				default :
-					e = new Input(f.name, t._(f.name) , "unknown field type : "+f.type+", value : "+v);
+					e = new StringInput(f.name, t._(f.name) , "unknown field type : "+f.type+", value : "+v);
 				}
 			}
 			
@@ -424,7 +414,6 @@ class Form
 
 	public function clearData()
 	{
-		var element:FormElement;
 		for (element in getElements()){
 			element.value = null;
 		}
@@ -466,10 +455,6 @@ class Form
 		}
 		if (extraErrors.length > 0) valid = false;
 
-		//if (forcePopulate && valid) {
-
-		//}
-
 		return valid;
 	}
 
@@ -498,7 +483,7 @@ class Form
 		return errors;
 	}
 
-	public function getElements():Array<FormElement>
+	public function getElements():Array<FormElement<Dynamic>>
 	{
 		return elements;
 	}
@@ -572,7 +557,7 @@ class FieldSet
 	public var form:Form;
 	public var label:String;
 	public var visible:Bool;
-	public var elements:Array<FormElement>;
+	public var elements:Array<FormElement<Dynamic>>;
 
 	public function new(?name:String = "", ?label:String = "", ?visible:Bool = true)
 	{
