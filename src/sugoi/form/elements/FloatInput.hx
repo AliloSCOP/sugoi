@@ -9,13 +9,6 @@ class FloatInput extends Input<Float>
 	}
 	
 	override public function getTypedValue(str:String):Float{
-		//str = StringTools.trim(str);
-		//if (str == "" || str==null) {
-			//return null;
-		//}else{
-			//return Std.parseFloat(str);
-		//}
-		
 		var f = new FloatFilter();
 		return f.filter(str);
 		

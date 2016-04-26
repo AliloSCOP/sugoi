@@ -9,6 +9,7 @@ class FloatFilter extends Filter implements IFilter
 	}
 	
 	public function filter(n:String):Float {
+		n = StringTools.trim(n);
 		if (n == null || n=="") return 0;
 		n = StringTools.replace(n, ",", ".");
 		return Std.parseFloat(n);

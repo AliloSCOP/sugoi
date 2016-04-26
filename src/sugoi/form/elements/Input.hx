@@ -55,41 +55,14 @@ class Input<T> extends FormElement<T>
 		return "<input class=\""+ getClasses() +"\" type=\""+tType+"\" name=\""+n+"\" id=\""+n+"\" value=\"" +safeString(value)+ "\"  "+attributes+" "+ (disabled?"disabled":"")+"/>" + ((required && parentForm.isSubmitted() && printRequired)?" required":"") ;
 	}
 	
-	//override public function getTypedValue(str:String):T{
+	override public function getTypedValue(str:String):T{
 		
-		//if (str == "" || str==null) {
-			//trace("value is null<br/>");
-			//return null;
-		//}
-		//
-		//str = StringTools.trim(str);
-		//
-		//trace(Type.typeof(value)+"<br/>");
-		//switch(Type.typeof(value)){
-			//case Type.ValueType.TBool :
-				//var r : Bool = (str == "1");
-				//return cast r;
-			//case Type.ValueType.TFloat :
-				//var r:Float = Std.parseFloat(str);
-				//return cast r;
-			//case Type.ValueType.TInt :
-				//var r : Int = Std.parseInt(str);
-				//return cast r;
-			//case Type.ValueType.TClass(c):
-				//
-				//switch(Type.getClass(value)){
-					//case String :
-						//return cast str;
-					//default : 
-						//throw "unknown class type for " + name;
-				//}
-			//case Type.ValueType.TNull :
-				//return null;
-			//default :
-				//throw "unknown value type for " + name +" : "+Type.typeof(value);
-				//return null;
-		//}
-	//}
+		if (str == "" || str==null) {
+			return null;
+		}
+		return cast StringTools.trim(str);
+		
+	}
 	
 	/**
 	 * render label + field

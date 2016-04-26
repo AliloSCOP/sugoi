@@ -23,18 +23,13 @@ class Checkbox extends FormElement<Bool>
 		
 		var checkedStr = value ? "checked" : "";
 		
-		return "<input type=\"checkbox\" id=\"" + n + "\" name=\"" + n + "\" class=\"" + getClasses() + "\" value=\"" + value + "\" " + checkedStr + " />";
+		return "<input type=\"checkbox\" id=\"" + n + "\" name=\"" + n + "\" class=\"" + getClasses() + "\" value=\"true\" " + checkedStr + " />";
 	}
 	
 	
-	override public function populate():Void
+	override public function getTypedValue(str:String):Bool
 	{
-		
-		
-		if (parentForm.isSubmitted()) {
-			var n = parentForm.name + "_" + name;
-			value = App.current.params.exists( n ) && App.current.params.get( n ) == "1";
-		}
+		return str == "1" || str == "true";
 	}
 	
 	override public function isValid():Bool

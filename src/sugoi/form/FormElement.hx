@@ -97,7 +97,7 @@ class FormElement<T>
 		var n = parentForm.name + "_" + name;
 		var v = App.current.params.get(n);
 		value = getTypedValue(v);
-		//trace("value of " + name+" is " + v + ", typed :"+ value+"<br/>");
+		//trace("value of " + name +"("+n+")  is " + v + ", typed :"+ value+"<br/>");
 	}
 	
 	/**
@@ -228,5 +228,12 @@ class FormElement<T>
 	public function toString() :String
 	{
 		return render();
+	}
+	
+	/**
+	 * get element value with the correct type
+	 */
+	public function getValue():T{
+		return value;
 	}
 }

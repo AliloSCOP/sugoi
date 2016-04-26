@@ -81,7 +81,6 @@ class Form
 	{
 		element.parentForm = this;
 		if (index != null) {
-
 			var out = elements.slice(0, index);
 			out = out.concat([element]);
 			out = out.concat(elements.slice(index));
@@ -182,7 +181,7 @@ class Form
 		var data = new Map<String,Dynamic>();
 		for (element in getElements())
 		{
-			data.set(element.name,element.value);	
+			data.set( element.name,element.getValue() );	
 		}
 		return data;
 	}
@@ -398,7 +397,8 @@ class Form
 					
 
 				case DEnum(name):
-					e = new Enum(f.name, t._(f.name), name, Std.parseInt(v), !isNull);
+					//var t = Type.resolveEnum(enumName);
+					e = new sugoi.form.elements.Enum(f.name, t._(f.name), name, Std.parseInt(v), !isNull);
 					
 
 				default :

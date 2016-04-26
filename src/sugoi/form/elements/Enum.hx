@@ -4,7 +4,7 @@ import sugoi.form.FormElement;
 import sugoi.form.Formatter;
 import sugoi.form.elements.Flags;
 
-class Enum<T> extends FormElement<T>
+class Enum extends FormElement<Int>
 {
 	public var enumName:String;
 	public var selectMessage:String;
@@ -25,7 +25,7 @@ class Enum<T> extends FormElement<T>
 	 * @param	?verticle
 	 * @param	?labelRight
 	 */
-	public function new(name:String, label:String, enumName:String, value:T, ?required=false, ?verticle:Bool=false, ?labelRight:Bool=true)
+	public function new(name:String, label:String, enumName:String, value:Int, ?required=false, ?verticle:Bool=false, ?labelRight:Bool=true)
 	{
 		super();
 		this.name = name;
@@ -35,29 +35,30 @@ class Enum<T> extends FormElement<T>
 		this.verticle = verticle;
 		this.labelRight = labelRight;
 		
+		//trace("value = " + value);
+		
 		if (required && value == null){
-			this.value = Type.resolveEnum(enumName).createByIndex(0);
+			this.value = /*Type.resolveEnum(enumName).createByIndex(0)*/0;
 		}else{
 			this.value = value;
 		}
 
-
 		columns = 1;
 	}
-
-	override public function populate()
-	{
-		//at runtime, enum is an int
-		var index = Std.parseInt(App.current.params.get(parentForm.name + "_" + name));
-		value = Type.resolveEnum(enumName).createByIndex(index);
+	
+	override function getTypedValue(str:String):Int {
 		
-		//App.log(form.name + "_" + name+" : "+value);
-
+		str = StringTools.trim(str);
+		if (str == "" || str==null) {
+			return null;
+		}else{
+			return Std.parseInt(str);
+		}
 	}
 	
-	//override function getTypedValue():Dynamic {
-		//return Type.resolveEnum(enumName).createByIndex(value);
-	//}
+	override function getValue(){
+		return Type.resolveEnum(enumName).createByIndex(value);
+	}
 
 	override public function render():String
 	{
@@ -87,7 +88,8 @@ class Enum<T> extends FormElement<T>
 				s += "<tr>";
 
 				var row:Dynamic = array[c];
-				var checkbox = "<input type=\"radio\" class=\"" + tagCss + "\" name=\""+n+"\" id=\""+n+row+"\" value=\""+Type.enumIndex(row)+"\" " + ((value==row)? "checked":"") +" ></input>\n";
+				var checked = value == Type.enumIndex(row);
+				var checkbox = "<input type=\"radio\" class=\"" + tagCss + "\" name=\""+n+"\" id=\""+n+row+"\" value=\""+Type.enumIndex(row)+"\" " + (checked? "checked":"") +" ></input>\n";
 				var label;
 
 				var t = Form.translator;
@@ -96,10 +98,10 @@ class Enum<T> extends FormElement<T>
 
 				if (labelRight)
 				{
-					s += "<td style='vertical-align:middle;'>" + checkbox + "</td> \n";
+					s += "<td style='vertical-align:middle;padding-right: 8px;'>" + checkbox + "</td> \n";
 					s += "<td style='vertical-align:middle;'>" + label + "</td>\n";
 				} else {
-					s += "<td style='vertical-align:middle;'>" + label + "</td> \n";
+					s += "<td style='vertical-align:middle;padding-right: 8px;'>" + label + "</td> \n";
 					s += "<td style='vertical-align:middle;'>" + checkbox + "</td>\n";
 				}
 
