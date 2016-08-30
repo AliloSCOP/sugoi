@@ -56,17 +56,23 @@ class BaseController {
 	
 	
 	/**
-	 * Generate files from db.File
+	 * User uploaded images are stored in the db.File table.
+	 * When there is an attempt to display an image like /file/***.jpg
+	 * the .htaccess in /file/ redirects to this handler to generate the file from the DB
 	 * @param	fname
 	 */
-	#if neko
 	function doFile( fname : String ) {
- 		var fid = Std.parseInt(fname);
 		
+		//get the file from DB
+ 		var fid = Std.parseInt(fname); 
 		var f = File.manager.get(fid, false);
-		var ext = fname.substr(fname.length - 4);//.png
-		if( f == null || fname != File.makeSign(fid)+ext ) {
-			Sys.print("404 - File not found '"+StringTools.htmlEscape(fname)+"'");
+		var ext = fname.substr( fname.lastIndexOf(".") );//.png
+		if( f == null ) {
+			Sys.print("404 - File not found '"+StringTools.htmlEscape(fname)+"' id #"+fid);
+			return;
+		}
+		if ( fname != File.makeSign(fid) + ext ){
+			Sys.print("404 - File signature do not match '"+fname+"' != '"+File.makeSign(fid)+ ext+"'");
 			return;
 		}
 		var path;
@@ -84,7 +90,11 @@ class BaseController {
 
 		try {
 			// get mtime of current index.n
-			var s = sys.FileSystem.stat(Web.getCwd()+"index.n");
+			#if neko
+			var s = sys.FileSystem.stat(Web.getCwd() + "index.n");
+			#else
+			var s = sys.FileSystem.stat(Web.getCwd() + "index.php");
+			#end
 			var mtime = s.mtime.toString();
 
 			// set mtime of new file
@@ -95,6 +105,6 @@ class BaseController {
 
 		Web.redirect(Web.getURI()+"?reload=1");
 	}
-	#end
+	
 
 }

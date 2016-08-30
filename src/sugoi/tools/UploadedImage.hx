@@ -1,10 +1,5 @@
 package sugoi.tools;
-#if neko
-import neko.Web;
-#else
-import php.Web;
-#end
-
+import sugoi.Web;
 
 /**
  * Manage images uploaded by users

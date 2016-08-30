@@ -47,9 +47,10 @@ class Enum extends FormElement<Int>
 	}
 	
 	override function getTypedValue(str:String):Int {
+		if (str == null) return null;
 		
 		str = StringTools.trim(str);
-		if (str == "" || str==null) {
+		if (str == "") {
 			return null;
 		}else{
 			return Std.parseInt(str);
@@ -57,6 +58,7 @@ class Enum extends FormElement<Int>
 	}
 	
 	override function getValue(){
+		if (value == null) return null;
 		return Type.resolveEnum(enumName).createByIndex(value);
 	}
 

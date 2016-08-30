@@ -263,9 +263,9 @@ class Form
 		for (f in Reflect.fields(obj)) {
 			var val = StringTools.trim(Reflect.field(obj, f));
 			if (val == "") val = null;
-			form.addElement(new sugoi.form.elements.Input(f, f, val));
+			form.addElement(new sugoi.form.elements.StringInput(f, f, val));
 		}
-		form.populate(obj);
+		
 		return form;
 	}
 
@@ -454,7 +454,6 @@ class Form
 			if (!element.isValid()) valid = false;
 		}
 		if (extraErrors.length > 0) valid = false;
-
 		return valid;
 	}
 

@@ -124,6 +124,8 @@ class BaseApp {
 			}
 		return App.config.LANGS[App.config.LANGS.length - 1];
 	}
+	
+	
 
 	function setupLang() {
 		if( session.lang == null )
@@ -133,7 +135,13 @@ class BaseApp {
 			session.lang = lang;
 		initLang(session.lang);
 	}
-
+	
+	/**
+	 * Get current application langage (2 letters lowercase)
+	 */
+	public function getLang(){
+		return session != null && session.lang != null && session.lang != "" ? session.lang : App.config.LANG;
+	}
 
 	public function rollback() {
 		if( cnx != null ) cnx.rollback();
@@ -177,8 +185,6 @@ class BaseApp {
 			executeTemplate();
 			return;
 		}
-		
-
 		
 		//dispatching
 		try {

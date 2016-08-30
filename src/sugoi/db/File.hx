@@ -1,4 +1,5 @@
 package sugoi.db;
+import sys.db.Manager;
 import sys.db.Types;
 
 /**
@@ -38,22 +39,27 @@ class File extends sys.db.Object {
 	 */
 	public static function create(stringData:String, ?fileName=""):File {
 		
-		var f = new File();
-		f.name = fileName;		
-		f.data = new haxe.io.StringInput(stringData).readAll();
-		f.insert();
-		return f;
+		
+		var bytes = new haxe.io.StringInput(stringData).readAll();
+		return createFromBytes(bytes, fileName);
 		
 	}
 	
 	
-	public static function createFromBytes(data:haxe.io.Bytes, ?fileName=""):File {
+	public static function createFromBytes(b:haxe.io.Bytes, ?fileName=""):File {
 		
+		#if neko
 		var f = new File();
 		f.name = fileName;		
-		f.data = data;
+		f.data = b;
 		f.insert();
 		return f;
+		#else
+		//there is a bug in PHP, we do it manually		
+		var hexa = b.toHex();
+		Manager.cnx.request("INSERT INTO File (name,data) VALUES ('"+fileName+"', 0x"+hexa+")");
+		return File.manager.select($name==fileName);
+		#end
 		
 	}
 	

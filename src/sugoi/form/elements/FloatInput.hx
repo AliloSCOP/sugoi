@@ -9,8 +9,17 @@ class FloatInput extends Input<Float>
 	}
 	
 	override public function getTypedValue(str:String):Float{
+		
 		var f = new FloatFilter();
-		return f.filter(str);
+		var n = f.filter(str);
+		
+		if (n==null && this.required){
+			return 0.0;
+		}else{
+			return n;
+		}
+		
+		
 		
 	}
 	

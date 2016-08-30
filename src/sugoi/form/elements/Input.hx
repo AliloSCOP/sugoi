@@ -16,7 +16,7 @@ enum InputType{
 
 class Input<T> extends FormElement<T>
 {
-	public var password:Bool;
+	public var password(get,set):Bool;
 	public var disabled:Bool;
 	public var showLabelAsDefaultValue:Bool;
 	public var printRequired:Bool;
@@ -38,9 +38,19 @@ class Input<T> extends FormElement<T>
 		
 		printRequired = false;
 		if(Form.USE_TWITTER_BOOTSTRAP) cssClass = "form-control";
-		
-		//trace("value of " + name+" is " + value+" of type " + Type.typeof(value) + "<br/>");
-		//trace("disabled " + disabled);
+	}
+	
+	public function get_password(){
+		return inputType == ITPassword;
+	}
+	
+	public function set_password(v:Bool){
+		if (v){
+			inputType = ITPassword;
+		}else{
+			inputType = ITText;
+		}
+		return v;
 	}
 	
 	override public function render():String

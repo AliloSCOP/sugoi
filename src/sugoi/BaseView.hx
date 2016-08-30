@@ -89,19 +89,17 @@ class BaseView implements Dynamic {
 	/**
 	 * Return the url of a db.File record
 	 */
-	#if neko
 	public function file( file : sugoi.db.File) {
 		if (file == null) throw "file is null";
 		return "/file/"+sugoi.db.File.makeSign(file.id)+"."+file.getExtension();
 	}
-	#end
 	
 	/**
 	 * Try to print an HTML table from any kind of object
 	 * @param	data
 	 */
 	function table(data:Dynamic) {
-		return new sugoi.helper.Table("table").toString(data);
+		return new sugoi.helper.Table("table table-bordered").toString(data);
 	}
 	
 	

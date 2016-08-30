@@ -97,6 +97,7 @@ class FormElement<T>
 		var n = parentForm.name + "_" + name;
 		var v = App.current.params.get(n);
 		value = getTypedValue(v);
+		
 		//trace("value of " + name +"("+n+")  is " + v + ", typed :"+ value+"<br/>");
 	}
 	

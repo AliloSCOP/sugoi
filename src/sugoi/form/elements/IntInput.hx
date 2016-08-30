@@ -11,10 +11,28 @@ class IntInput extends Input<Int>
 	
 	override public function getTypedValue(str:String):Int{
 		str = StringTools.trim(str);
+		
 		if (str == "" || str==null) {
-			return null;
+			
+			if (this.required){
+				return 0;				
+			}else{
+				return null;
+			}
+			
+			
 		}else{
-			return Std.parseInt(str);
+			var v = Std.parseInt(str);
+			
+			if (v == null){
+				if (this.required){
+					return 0;		
+				}else{
+					return null;
+				}
+			}else{
+				return v;
+			}
 		}
 	}
 	
