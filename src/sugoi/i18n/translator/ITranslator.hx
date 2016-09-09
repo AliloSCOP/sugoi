@@ -16,6 +16,6 @@ interface ITranslator{
 	 */
 	public function _( t : String, ?params : Dynamic ):String;
 	
-	
+	public function getStrings():Map<String,String>;
 	
 }

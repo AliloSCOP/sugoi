@@ -102,8 +102,8 @@ class BaseApp {
 		case "tpl":
 			setTemplate(args[0]);
 		case "logged":
-			if( user == null )
-				throw sugoi.BaseController.ControllerAction.RedirectAction("/");
+			if ( user == null )				
+				throw sugoi.BaseController.ControllerAction.RedirectAction("/?redirect="+Web.getURI());
 		case "admin":
 			if( user == null || !user.isAdmin() )
 				throw sugoi.BaseController.ControllerAction.RedirectAction("/");

@@ -14,7 +14,6 @@ class TMap implements ITranslator{
 	public function new(arr: Map<String,String>, lang:String) {
 		this.lang = lang;
 		texts = arr;
-
 	}
 
 	public function _(key:String, ?data:Dynamic):String {
@@ -35,6 +34,10 @@ class TMap implements ITranslator{
 			}
 		}
 		return str;
+	}
+	
+	public function getStrings(){
+		return texts;
 	}
 
 
