@@ -136,4 +136,25 @@ class Csv
 		return true;
 	}
 	
+	
+	public static function printCsvData(data:Array<Dynamic>,headers:Array<String>,fileName:String) {
+		
+		App.current.setTemplate('empty.mtt');
+		Web.setHeader("Content-type", "text.csv");
+		Web.setHeader('Content-disposition', 'attachment;filename='+fileName+'.csv');
+		
+		Sys.println(Lambda.map(headers,function(t) return App.t._(t)).join(","));
+		
+		for (d in data) {
+			var row = [];
+			//for ( f in Reflect.fields(d)) {
+			for( f in headers){
+				row.push( "\""+Reflect.getProperty(d,f)+"\"");	
+			}
+			Sys.println(row.join(","));
+		}
+		return true;		
+	}
+	
+	
 }

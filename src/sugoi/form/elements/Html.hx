@@ -15,6 +15,7 @@ class Html extends sugoi.form.FormElement<String>
 	{
 		this.html = html;
 		this.label = label;
+		this.name = Std.string(Std.random(999));
 		super();
 	}
 	

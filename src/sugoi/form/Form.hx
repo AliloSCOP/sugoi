@@ -181,6 +181,7 @@ class Form
 		var data = new Map<String,Dynamic>();
 		for (element in getElements())
 		{
+			if (element.name == null) throw "Element has no name : "+element.toString();
 			data.set( element.name,element.getValue() );	
 		}
 		return data;
@@ -248,7 +249,11 @@ class Form
 				if (v == "") v = null;
 			}
 			//trace(f + " -> " + v+"<br>");
-			Reflect.setProperty(obj, f, v);
+			try{
+				Reflect.setProperty(obj, f, v);
+			}catch (e:Dynamic){
+				throw "Error '" + e+"' while setting value " + v + " to " + f;
+			}
 			
 
 		}
