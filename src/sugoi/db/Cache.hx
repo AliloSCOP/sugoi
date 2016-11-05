@@ -39,7 +39,7 @@ class Cache extends sys.db.Object
 			c.name = id;
 		}
 		c.value = haxe.Serializer.run(value);
-		c.expire = DateTools.delta(Date.now(), expireInSeconds*1000);
+		c.expire = DateTools.delta(Date.now(), expireInSeconds*1000.0);
 		if (niou) {
 			c.insert();
 		}else {

@@ -10,9 +10,11 @@ class Csv
 	public var separator :String;
 	public var datas : Array<Array<String>>;
 	public var headers : Array<String>;
+	public var step : Int;
 	
 	public function new() 
 	{
+		step = 1;
 		separator = ",";
 		datas = [];
 		headers = [];

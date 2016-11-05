@@ -48,7 +48,7 @@ class GeoCode
 	 */
 	public function geocode(address:String,?components:String):GeoCodingData {
 		var url = "https://maps.googleapis.com/maps/api/geocode/json?address=" + StringTools.urlEncode(address) + "&key=" + KEY;
-		if (components != null) url += "&components=" + components;
+		if (components != null) url += "&components=" + StringTools.urlEncode(components);
 		
 		var d = curlRequest("GET", url, null, null);
 		if (d == "" || d == null) throw "curl response is empty";
