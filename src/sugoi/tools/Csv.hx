@@ -8,9 +8,12 @@ class Csv
 {
 
 	public var separator :String;
-	public var datas : Array<Array<String>>;
-	public var headers : Array<String>;
 	public var step : Int;
+	
+	//datas accessible in both forms
+	var headers : Array<String>;
+	var datas : Array<Array<String>>;
+	var datasAsMap : Array<Map<String,String>>;
 	
 	public function new() 
 	{
@@ -20,24 +23,73 @@ class Csv
 		headers = [];
 	}
 	
+	public function setHeaders(_headers){
+		headers = _headers;
+	}
+	
 	public function addDatas(d:Array<Dynamic>) {
 		datas.push( Lambda.array(Lambda.map(d, function(x) return StringTools.trim(Std.string(x)) )) );
 	}
 	
-	/**
-	 * Export Datas in CSV
-	 */
-	public function export():String {
-		return "";
+	public function getHeaders(){
+		return headers;
+	}
+	
+	public function getDatas():Array<Array<String>>{
+		return datas;
+	}
+	
+	public function isEmpty(){
+		return datasAsMap == null || datasAsMap.length == 0;
+	}
+	
+	
+	
+	public function importDatasAsMap(d:String):Array<Map<String,String>>{
+		
+		if (headers.length == 0) throw "CSV headers should be defined";
+		
+		var _datas = thx.csv.Csv.decode(d);
+		
+		//removes headers
+		_datas.shift(); 
+		
+		//cut datas out of headers
+		
+		for ( d in _datas){
+			datas.push( d.copy().splice(0, headers.length) );
+		}
+		//maps
+		datasAsMap = new Array<Map<String,String>>();
+		
+		
+		for ( d in datas){
+			
+			var m = new Map();
+			
+			for ( h in 0...headers.length){
+				
+				//nullify
+				var v = d[h];
+				if ( v == "" || v=="null" ) v = null;
+				
+				m[headers[h]] = v;
+			}
+			
+			datasAsMap.push(m);
+			
+		}
+		
+		
+		return datasAsMap;
+		
 	}
 	
 	/**
 	 * Import CSV Datas
-	 * @param	d
-	 * @return
 	 */
 	public function importDatas(d:String):Array<Array<String>> {
-		//trace("<pre>D:"+d+"</pre>");
+		
 		d = StringTools.replace(d, "\r", ""); //vire les \r
 		
 		var data = d.split("\n");
@@ -64,25 +116,6 @@ class Csv
 				u[i] = StringTools.replace(u[i], "|", separator);
 			}
 		}
-		//for( o in out)	trace(o);
-		
-		//removing extra fields
-		/*var out2 = [];
-		for (o in out.copy()) {
-			out2.push(o.copy());
-		}
-		out = [];
-		if (headers != null && headers.length > 0) {
-			
-			var l = headers.length;
-			for ( o in out) {
-				out2.push( o.slice(0, l) );
-				
-			}
-			
-		}
-		out = out2;*/
-		
 			
 		//cleaning
 		for ( o in out.copy() ) {
@@ -133,7 +166,8 @@ class Csv
 		return out;
 	}
 	
-	function isNullRow(row:Array<String>):Bool{
+	
+	private function isNullRow(row:Array<String>):Bool{
 		for (c in row) if (c != null) return false;
 		return true;
 	}

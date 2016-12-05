@@ -363,7 +363,7 @@ class Form
 					e = new IntInput(f.name, t._(f.name) , v , !isNull);
 				
 				case DFloat:
-					e = new FloatInput(f.name, t._(f.name), v);
+					e = new FloatInput(f.name, t._(f.name), v, !isNull );
 					
 				case DBool :
 					e = new Checkbox(f.name, t._(f.name), Std.string(v) == 'true');
