@@ -37,8 +37,7 @@ class Selectbox<T> extends FormElement<T>
 		if (nullMessage != "")
 			s += "<option value=\"\" " + (Std.string(value) == "" ? "selected":"") + ">" + nullMessage + "</option>";
 			
-		if (data != null)
-		{	
+		if (data != null){	
 			for (row in data) {
 				s += "<option value=\"" + Std.string(row.value) + "\" " + (Std.string(row.value) == Std.string(value) ? "selected":"") + ">" + Std.string(row.label) + "</option>";
 			}

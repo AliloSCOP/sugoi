@@ -324,14 +324,14 @@ class Form
 				if (meta != null) {
 					//trace(r.prop+"=>" + meta + "<br/>");
 					if (meta.formPopulate != null) {
-						//populate customisé avec @formPopulate()
+						//If @formPopulate() meta is set, use this function to populate select box.
 						objects = Reflect.callMethod(obj, Reflect.field(obj,Std.string(meta.formPopulate[0])) , []);	
 					}
 					
+					//if @hideInForms meta is set, hide the fields in the form
 					if (meta!=null && Reflect.hasField(meta,'hideInForms')) {
 						continue;
 					}
-					
 					
 				}else {
 					//get all available values

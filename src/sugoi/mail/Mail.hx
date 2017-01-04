@@ -1,16 +1,15 @@
 package sugoi.mail;
 using Lambda;
-/**
- * abstract class to extend
- */
-class BaseMail implements IMail
+
+class Mail implements IMail
 {
 	public var title : String;
 	public var htmlBody : String;
 	public var textBody : String;
-	var senderName : String;
-	var senderEmail : String;
+	
+	var sender : {name:String,email:String,?userId:Int};
 	var recipients : Array<{name:String,email:String,?userId:Int}>;
+	
 	var headers : Map<String,String>;
 	
 	public function new() {
@@ -18,20 +17,27 @@ class BaseMail implements IMail
 		headers = new Map();
 	}
 	
-	public function getRecipients() {
-		return Lambda.map(recipients, function(c) return c.email).array();
+	public function getRecipients(){
+		return recipients;
 	}
 	
-	public function setSender(email, ?name) {
-		if(!isValid(email)) throw "invalid sender \""+email+"\"";
-		senderEmail = email;
-		name == null?senderName = senderEmail:senderName = name;
+	public function setSender(email, ?name,?userId) {
+		if(!isValid(email)) throw "invalid sender email : \""+email+"\"";
+		
+		sender = {name:name,email:email,userId:userId};		
+		return this;
+	}
+	
+	public function setReplyTo(email, ?name) {
+		if(!isValid(email)) throw "invalid reply-to email : \""+email+"\"";
+		
+		setHeader("Reply-To","<"+email+">"+(name==null?"":name));
 	}
 	
 	public function setSubject(s:String) {
 		title = s;
+		return this;
 	}
-	
 	
 	/**
 	 * can add one or more recipient
@@ -41,10 +47,8 @@ class BaseMail implements IMail
 	 */
 	public function addRecipient(email:String, ?name:String, ?userId:Int) {
 		if(!isValid(email)) throw "invalid recipient \""+email+"\"";
-		//recipientEmail = email;
-		//name == null?recipientName = recipientEmail:recipientName = name;
-		//recipientUserId = userId;
-		recipients.push( {email:email,name:name,userId:userId } );
+		recipients.push( {email:email, name:name, userId:userId } );
+		return this;
 	}
 	
 	/**
@@ -55,6 +59,7 @@ class BaseMail implements IMail
 	 */
 	public function setRecipient(email:String, ?name:String, ?userId:Int) {
 		addRecipient(email, name, userId);
+		return this;
 	}
 	
 	public static function isValid( addr : String ){
@@ -64,6 +69,7 @@ class BaseMail implements IMail
 	
 	public function setHeader(k:String, v:String) {
 		headers.set(k, v);
+		return this;
 	}
 	
 	/**
@@ -84,8 +90,8 @@ class BaseMail implements IMail
 		if( ctx == null ) ctx = { };
 		ctx.HOST = App.config.HOST;
 		ctx.key = getKey();
-		ctx.senderName = senderName;
-		ctx.senderEmail = senderEmail;
+		ctx.senderName = sender.name;
+		ctx.senderEmail = sender.email;
 		ctx.recipientName = recipients[0].name;
 		ctx.recipientEmail = recipients[0].email;
 		ctx.recipients = recipients;
@@ -96,6 +102,7 @@ class BaseMail implements IMail
 	
 	public function setHtmlBody(s) {
 		htmlBody = s;
+		return this;
 	}
 	
 	public function setTextBodyWithTemplate(tpl, ctx:Dynamic) {		
@@ -104,15 +111,11 @@ class BaseMail implements IMail
 		if( ctx == null ) ctx = { };
 		ctx.HOST = App.config.HOST;
 		ctx.key = getKey();
-		textBody = tpl.execute(ctx);		
+		textBody = tpl.execute(ctx);
+		return this;
 	}
 	
-	
-	
-	public function send():Dynamic {
-		throw "not implemented";
-	}
-	
+
 	function CSSInlining(ctx) {
 		// CSS inlining
 		var css : Map<String,Array<String>> = new Map();
@@ -143,6 +146,32 @@ class BaseMail implements IMail
 				applyStyleRec(n);
 			return x.toString();
 		}
+	}
+	
+	
+	public function getSubject(){
+		return title;
+	}
+	
+	public function getHtmlBody(){
+		return htmlBody;
+	}
+	
+	public function getTextBody(){
+		return textBody;
+	}
+	
+	public function setTextBody(t){
+		textBody = t;
+		return this;
+	}
+	
+	public function getHeaders(){
+		return headers;
+	}
+	
+	public function getSender(){
+		return sender;
 	}
 	
 }
