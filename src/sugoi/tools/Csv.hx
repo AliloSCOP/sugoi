@@ -44,24 +44,37 @@ class Csv
 	}
 	
 	
-	
+	/**
+	 * Import CSV / DCSV datas as Maps
+	 */
 	public function importDatasAsMap(d:String):Array<Map<String,String>>{
 		
 		if (headers.length == 0) throw "CSV headers should be defined";
 		
-		var _datas = thx.csv.Csv.decode(d);
+		//separator detection
+		try{
+			var x = d.split("\n");
+			if (x[0].split(";").length > x[0].split(",").length) separator = ";";
+			
+		}catch (e:Dynamic){}
+	
+		var _datas = [];
+		if (separator == ","){
+			_datas = thx.csv.Csv.decode(d);
+		}else{
+			_datas = thx.csv.DCsv.decode(d);
+		}
 		
 		//removes headers
 		_datas.shift(); 
 		
-		//cut datas out of headers
-		
+		//cut columns which are out of headers		
 		for ( d in _datas){
 			datas.push( d.copy().splice(0, headers.length) );
 		}
+		
 		//maps
 		datasAsMap = new Array<Map<String,String>>();
-		
 		
 		for ( d in datas){
 			
@@ -87,12 +100,18 @@ class Csv
 	
 	/**
 	 * Import CSV Datas
+	 * 
+	 * @deprecated Use importDatasAsMap instead
 	 */
 	public function importDatas(d:String):Array<Array<String>> {
 		
 		d = StringTools.replace(d, "\r", ""); //vire les \r
 		
 		var data = d.split("\n");
+		
+		//separator detection
+		if (data[0].split(";").length > data[0].split(",").length) separator = ";";
+		
 		var out = new Array<Array<String>>();
 		
 		var rowLen = null;
