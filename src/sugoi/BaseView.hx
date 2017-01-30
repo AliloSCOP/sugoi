@@ -22,6 +22,12 @@ class BaseView implements Dynamic {
 		this.DEBUG = App.config.DEBUG;
 		this.NAME = App.config.NAME;
 		this.isAdmin = app.user != null && app.user.isAdmin();
+		
+		//Access basic functions in views
+		this.Std = Std;
+		this.Math = Math;
+		
+		
 		if ( App.config.SQL_LOG  ) {			
 			this.sqlLog = untyped app.cnx == null ? null : app.cnx.log;
 		}
@@ -100,6 +106,15 @@ class BaseView implements Dynamic {
 	 */
 	function table(data:Dynamic) {
 		return new sugoi.helper.Table("table table-bordered").toString(data);
+	}
+	
+	/**
+	 * newline to <br/>
+	 * @param	txt
+	 */
+	public function nl2br(txt:String):String {	
+		if (txt == null) return "";
+		return txt.split("\n").join("<br/>");		
 	}
 	
 	

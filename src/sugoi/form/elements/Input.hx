@@ -12,6 +12,7 @@ enum InputType{
 	ITText;
 	ITPassword;
 	ITHidden;
+	ITColor; //http://caniuse.com/#feat=input-color
 }
 
 class Input<T> extends FormElement<T>
@@ -60,6 +61,7 @@ class Input<T> extends FormElement<T>
 			case ITHidden: "hidden";
 			case ITPassword : "password" ;
 			case ITText : "text" ;
+			case ITColor : "color";
 		}
 		
 		return "<input class=\""+ getClasses() +"\" type=\""+tType+"\" name=\""+n+"\" id=\""+n+"\" value=\"" +safeString(value)+ "\"  "+attributes+" "+ (disabled?"disabled":"")+"/>" + ((required && parentForm.isSubmitted() && printRequired)?" required":"") ;
