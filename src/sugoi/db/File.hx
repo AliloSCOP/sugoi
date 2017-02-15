@@ -35,10 +35,9 @@ class File extends sys.db.Object {
 	
 	/**
 	 * Creates a File record
-	 * from data (typically sent from a form) and a file name
+	 * from string data (typically sent from a form) and a file name
 	 */
 	public static function create(stringData:String, ?fileName=""):File {
-		
 		
 		var bytes = new haxe.io.StringInput(stringData).readAll();
 		return createFromBytes(bytes, fileName);

@@ -1,12 +1,8 @@
 package sugoi.form.elements;
 
-#if neko
-import neko.Web;
-#else
-import php.Web;
-#end
+import sugoi.Web;
 import sugoi.form.FormElement;
-import sugoi.form.Validator;
+import sugoi.form.validators.Validator;
 import sugoi.form.ListData;
 
 /**
@@ -26,7 +22,7 @@ class DateDropdowns extends FormElement<Date>
 	private var monthSelector:Selectbox<Int>;
 	private var yearSelector:Selectbox<Int>;
 
-	public function new(name:String, label:String, ?_value:Date, ?required:Bool=false, yearMin:Int=1950, yearMax:Int=null, ?validators:Array<Validator>, ?attibutes:String="")
+	public function new(name:String, label:String, ?_value:Date, ?required:Bool=false, yearMin:Int=1950, yearMax:Int=null, ?validators:Array<Validator<Date>>, ?attibutes:String="")
 	{
 		super();
 		this.name = name;
@@ -34,10 +30,8 @@ class DateDropdowns extends FormElement<Date>
 
 		if (_value == null) {
 			value = Date.now();
-			//date = Date.now();
 		}else {
 			value = _value;
-			//date = _value;
 		}
 
 		this.required = required;

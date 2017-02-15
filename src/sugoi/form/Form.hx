@@ -4,15 +4,17 @@ import haxe.crypto.Md5;
 import sugoi.form.elements.Input;
 import sugoi.i18n.translator.ITranslator;
 import sugoi.form.elements.*;
-#if neko
-import neko.Web;
-#else
-import php.Web;
-#end
+import sugoi.Web;
 import sys.db.Types;
 import sys.db.Object;
 import sys.db.Manager;
 import sys.db.TableInfos;
+
+enum FormMethod
+{
+	GET;
+	POST;
+}
 
 class Form
 {
@@ -426,15 +428,14 @@ class Form
 
 	function getOpenTag():String
 	{
-		//return '<form id="'+id+'" name="' + name + '" method="'+ method +'" action="'+ action +'"  >';
-
-		//multipart = false;
-		//for ( e in elements) {
-			//if (Std.is(e,FileUpload)) multipart == true;
-		//}
-		
+		//if there is a file input in the form, make it multipart
+		for ( e in elements) {
+			if (Type.getClass(e) == sugoi.form.elements.FileUpload || Type.getClass(e) == sugoi.form.elements.ImageUpload){
+				multipart = true;
+				break;
+			}
+		}
 		return '<form id="' + id + '" class="'+(Form.USE_TWITTER_BOOTSTRAP?"form-horizontal":"")+'" name="' + name + '" method="' + method +'" action="' + action +'" ' + (multipart?'enctype="multipart/form-data"':'') + ' >';
-
 	}
 
 	function getCloseTag():String
@@ -524,6 +525,9 @@ class Form
 		return s.toString();
 	}
 
+	/**
+	 * Render form's HTML
+	 */
 	public function toString()
 	{
 
@@ -546,45 +550,10 @@ class Form
 			submitButton.parentForm = this;
 		}
 		if(submitButton!=null) s.add(submitButton.getFullRow());
-
 		
 		s.add(getCloseTag());
 
 		return s.toString();
 	}
 
-}
-
-class FieldSet
-{
-	public var name:String;
-	public var form:Form;
-	public var label:String;
-	public var visible:Bool;
-	public var elements:Array<FormElement<Dynamic>>;
-
-	public function new(?name:String = "", ?label:String = "", ?visible:Bool = true)
-	{
-		this.name = name;
-		this.label = label;
-		this.visible = visible;
-
-		elements = [];
-	}
-
-	public function getOpenTag()
-	{
-		return "<fieldset id=\""+form.name+"_"+name+"\" name=\""+form.name+"_"+name+"\" class=\""+(visible?"":"fieldsetNoDisplay")+"\" ><legend>" + label + "</legend>";
-	}
-
-	public function getCloseTag()
-	{
-		return "</fieldset>";
-	}
-}
-
-enum FormMethod
-{
-	GET;
-	POST;
 }

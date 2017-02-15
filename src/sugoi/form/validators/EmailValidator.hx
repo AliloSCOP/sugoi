@@ -1,7 +1,7 @@
 package sugoi.form.validators;
-import sugoi.form.Validator;
+import sugoi.form.validators.Validator;
 
-class EmailValidator extends Validator
+class EmailValidator extends Validator<String>
 {
 	public var errorNotValid:String;
 	public static var emailRegex = ~/^[^()<>@,;:\\"\[\]\s[:cntrl:]]+@[A-Z0-9][A-Z0-9-]*(\.[A-Z0-9][A-Z0-9-]*)*\.(xn--[A-Z0-9]+|[A-Z]{2,8})$/i;

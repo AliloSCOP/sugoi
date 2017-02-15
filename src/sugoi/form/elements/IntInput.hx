@@ -10,7 +10,7 @@ class IntInput extends Input<Int>
 	}
 	
 	override public function getTypedValue(str:String):Int{
-		str = StringTools.trim(str);
+		if(str!=null) str = StringTools.trim(str);
 		
 		if (str == "" || str==null) {
 			

@@ -1,6 +1,7 @@
 package sugoi.form;
 
 import sugoi.form.filters.IFilter;
+import sugoi.form.validators.Validator;
 using StringTools;
 
 class FormElement<T>
@@ -22,8 +23,8 @@ class FormElement<T>
 	public var inited:Bool;
 	public var internal:Bool;
 	
-	public var validators:List<Validator>;
-	public var filters:List<IFilter>;
+	public var validators:List<Validator<T>>;
+	public var filters:List<IFilter<T>>;
 
 	public function new()
 	{
@@ -79,11 +80,11 @@ class FormElement<T>
 		inited = true;
 	}
 
-	public function addValidator(validator:Validator){
+	public function addValidator(validator:Validator<T>){
 		validators.add(validator);
 	}
 	
-	public function addFilter(filter:IFilter) {
+	public function addFilter(filter:IFilter<T>) {
 		filters.add(filter);
 	}
 
@@ -106,7 +107,6 @@ class FormElement<T>
 	 */
 	public function getTypedValue(str:String):T{
 		throw "getTypedValue() function not implemented in \""+name+"\"";
-		return null;
 	}
 
 	public function getErrors():List<String>

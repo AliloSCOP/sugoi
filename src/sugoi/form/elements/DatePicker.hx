@@ -1,16 +1,12 @@
 package sugoi.form.elements;
 
-#if neko
-import neko.Web;
-#else
-import php.Web;
-#end
+import sugoi.Web;
 import sugoi.form.FormElement;
-import sugoi.form.Validator;
+import sugoi.form.validators.Validator;
 import sugoi.form.ListData;
 
 /**
- * DatePicker for Bootstrap
+ * DatePicker for Bootstrap 3
  * 
  * You'll need to install some additionnal js librairies (moment.js, jquery)
  * more info at : http://eonasdan.github.io/bootstrap-datetimepicker/
@@ -29,10 +25,9 @@ class DatePicker extends FormElement<Date>
 	
 	public var format : String; //moment.js format
 
-	public function new(name:String, label:String, ?v:Date, ?required:Bool=false, yearMin:Int=1950, yearMax:Int=null, ?validators:Array<Validator>, ?attibutes:String="")
+	public function new(name:String, label:String, ?v:Date, ?required:Bool=false, yearMin:Int=1950, yearMax:Int=null, ?validators:Array<Validator<Date>>, ?attibutes:String="")
 	{
 		
-		//trace(v);
 		super();
 		this.name = name;
 		this.label = label;

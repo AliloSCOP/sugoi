@@ -1,6 +1,6 @@
 package sugoi.form.elements;
 import sugoi.form.FormElement;
-import sugoi.form.Validator;
+import sugoi.form.validators.Validator;
 import sugoi.form.ListData;
 
 /**
@@ -11,7 +11,7 @@ class DateInput extends DateDropdowns
 	private var hourSelector:Selectbox<Int>;
 	private var minuteSelector:Selectbox<Int>;
 	
-	public function new(name:String, label:String, ?value:Date, ?required:Bool=false, yearMin:Int=1950, yearMax:Int=null, ?validators:Array<Validator>, ?attibutes:String="")
+	public function new(name:String, label:String, ?value:Date, ?required:Bool=false, yearMin:Int=1950, yearMax:Int=null, ?validators:Array<Validator<Date>>, ?attibutes:String="")
 	{
 		super(name, label, value, required, yearMin, yearMax, validators, attibutes);
 		var t = sugoi.form.Form.translator;

@@ -3,14 +3,13 @@ package sugoi.form.elements;
 
 import sugoi.form.elements.Input;
 import sugoi.form.Form;
-import sugoi.form.Validator;
-import sugoi.form.validators.BoolValidator;
+import sugoi.form.validators.*;
 
 class TextArea extends StringInput
 {
 	public var height:Int;
 
-	public function new(name:String, label:String, ?value:String, ?required:Bool=false, ?validators:Array<Validator>, ?attributes:String) 
+	public function new(name:String, label:String, ?value:String, ?required:Bool=false, ?validators:Array<Validator<String>>, ?attributes:String) 
 	{		
 		super(name, label, value, required, validators, attributes);
 		
@@ -20,9 +19,9 @@ class TextArea extends StringInput
 	{
 		var n = parentForm.name + "_" +name;
 		
-		if (showLabelAsDefaultValue && value == label){
-			addValidator(new BoolValidator(false, "Not valid"));
-		}
+		//if (showLabelAsDefaultValue && value == label){
+			//addValidator(new BoolValidator(false, "Not valid"));
+		//}
 		
 		if ((value == null || value == "") && showLabelAsDefaultValue) {
 			value = label;

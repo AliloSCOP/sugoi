@@ -1,6 +1,6 @@
-package sugoi.form;
+package sugoi.form.validators;
 
-class Validator 
+class Validator<T> 
 {
 	public var errors:List<String>;
 	
@@ -9,7 +9,7 @@ class Validator
 		errors = new List();
 	}
 	
-	public function isValid(value:Dynamic):Bool
+	public function isValid(value:T):Bool
 	{
 		errors.clear();
 		

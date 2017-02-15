@@ -15,7 +15,7 @@ class MandrillMailer implements IMailer
 	
 	public function new() {}
 	
-	public function init(c){
+	public function init(c:Dynamic):IMailer{
 		conf = c;
 		return this;
 	}

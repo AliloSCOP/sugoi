@@ -1,6 +1,6 @@
 package sugoi.form.filters;
 
-class FloatFilter extends Filter implements IFilter
+class FloatFilter extends Filter implements IFilter<Float>
 {
 
 	public function new() 
@@ -8,7 +8,11 @@ class FloatFilter extends Filter implements IFilter
 		super();
 	}
 	
-	public function filter(n:String):Float {
+	public function filter(f:Float):Float{
+		return f;
+	}
+	
+	public function filterString(n:String):Float {
 		
 		if (n == null || n=="") return null;
 		n = StringTools.trim(n);		

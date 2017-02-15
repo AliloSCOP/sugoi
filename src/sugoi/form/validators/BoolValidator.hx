@@ -1,8 +1,8 @@
 
 package sugoi.form.validators;
-import sugoi.form.Validator;
+import sugoi.form.validators.Validator;
 
-class BoolValidator extends Validator
+class BoolValidator extends Validator<Bool>
 {
 	public var errorNotValid:String;
 	public var valid:Bool;

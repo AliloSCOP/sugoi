@@ -2,8 +2,7 @@ package sugoi.form.elements;
 
 import sugoi.form.Form;
 import sugoi.form.FormElement;
-import sugoi.form.Validator;
-import sugoi.form.validators.BoolValidator;
+import sugoi.form.validators.*;
 import sugoi.form.Formatter;
 
 using StringTools;
@@ -25,7 +24,7 @@ class Input<T> extends FormElement<T>
 	public var formatter:Formatter;
 	public var inputType : InputType;
 	
-	public function new(name:String, label:String, ?value:T, ?required=false, ?validators:Array<Validator>, ?attributes="")
+	public function new(name:String, label:String, ?value:T, ?required=false, ?validators:Array<Validator<T>>, ?attributes="")
 	{
 		super();
 		this.name = name;

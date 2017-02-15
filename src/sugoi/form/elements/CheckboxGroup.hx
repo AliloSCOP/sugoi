@@ -83,8 +83,6 @@ class CheckboxGroup extends FormElement<Array<String>>
 						label = "<label for=\"" + n + c + "\" class=\"" + ''/*labelCss*/+"\" >" + row.label +"</label>\n";
 					}
 					
-					
-					
 					if (labelRight)
 					{
 						s += "<td>" + checkbox + "</td>\n";

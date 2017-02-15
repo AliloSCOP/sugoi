@@ -1,11 +1,8 @@
 package sugoi.form.elements;
-#if neko
-import neko.Web;
-#else
-import php.Web;
-#end
+
+import sugoi.Web;
 import sugoi.form.FormElement;
-import sugoi.form.Validator;
+import sugoi.form.validators.Validator;
 import sugoi.form.ListData;
 
 class HourDropDowns extends FormElement<Date>

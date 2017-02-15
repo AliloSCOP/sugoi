@@ -1,0 +1,5 @@
+enum FormMethod
+{
+	GET;
+	POST;
+}
