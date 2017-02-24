@@ -8,8 +8,10 @@ class IntSelect extends Selectbox<Int>
 {
 
 	override function getTypedValue(str:String):Int{
-		str = StringTools.trim(str);
-		if (str == "" || str==null) {
+		
+		if (str != null) str = StringTools.trim(str);
+		
+		if (str==null || str=="") {
 			return null;
 		}else{
 			return Std.parseInt(str);

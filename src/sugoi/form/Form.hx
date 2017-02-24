@@ -55,7 +55,9 @@ class Form
 		multipart = false;
 		autoGenSubmitButton = true;
 
-		this.id = this.name = name;
+		this.id = name;
+		this.name = name;
+		
 		if (action == null) {
 			this.action = Web.getURI();
 		}else {
