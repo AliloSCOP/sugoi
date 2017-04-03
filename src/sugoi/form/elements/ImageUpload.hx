@@ -1,6 +1,4 @@
 package sugoi.form.elements;
-import haxe.crypto.Md5;
-import haxe.Timer;
 import sugoi.form.Form;
 import sys.io.File;
 

@@ -4,13 +4,13 @@ import sugoi.form.FormElement;
 
 class RadioGroup extends FormElement<String> 
 {
-	public var data:Array<{key:String,value:String}>;
+	public var data:ListData.FormData<String>;
 	public var selectMessage:String;
 	public var labelLeft:Bool;
 	public var labelRight:Bool;
 	public var vertical:Bool;
 	
-	public function new(name:String, label:String, ?data:Array<{key:String,value:String}>, ?selected:String, ?defaultValue:String, ?vertical:Bool=true, ?labelRight:Bool=true,?required=false) 
+	public function new(name:String, label:String, ?data:Array<{label:String,value:String}>, ?selected:String, ?defaultValue:String, ?vertical:Bool=true, ?labelRight:Bool=true,?required=false) 
 	{
 		super();
 		this.name = name;
@@ -22,9 +22,9 @@ class RadioGroup extends FormElement<String>
 		this.required = required;
 	}
 	
-	public function addOption(key:String, value:String)
+	public function addOption(label:String, value:String)
 	{
-		data.push( { key:key, value:value } );
+		data.push( { label:label, value:value } );
 	}
 	
 	override public function render():String
@@ -39,8 +39,8 @@ class RadioGroup extends FormElement<String>
 			{
 				var vClass = vertical ? " radioItemVertical" : " radioItemHorizontal";
 				s += '<div class="radioItem'+vClass+'">';
-				var radio = "<input type=\"radio\" name=\""+n+"\" id=\""+n+c+"\" value=\"" + row.key + "\" " + (row.key == Std.string(value) ? "checked":"") +" />\n";
-				var label = "<label for=\"" + n+c + "\" >" + row.value  +"</label>";
+				var radio = "<input type=\"radio\" name=\""+n+"\" id=\""+n+c+"\" value=\"" + row.value + "\" " + (row.value == Std.string(value) ? "checked":"") +" />\n";
+				var label = "<label for=\"" + n+c + "\" >" + row.label  +"</label>";
 				
 				s += labelRight ? radio + " "+label+" ": label+" "+radio+" ";
 				s += '</div>';

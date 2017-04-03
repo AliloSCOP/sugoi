@@ -497,6 +497,11 @@ class Form
 
 	public function isSubmitted():Bool
 	{
+		//if (multipart){
+			//var req = sugoi.tools.Utils.getMultipart(1024 * 1024 * 12);
+			//for ( r in req.keys() ) App.current.params.set(r, req.get(r));
+		//}
+
 		return App.current.params.get(name + "_formSubmitted") == "true";
 	}
 

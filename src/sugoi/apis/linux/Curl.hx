@@ -19,7 +19,7 @@ class Curl
 	
 	public function new() 
 	{
-		postData = new Map();
+		postData = new Map<String,String>();
 		params = [];
 	}
 	
@@ -41,35 +41,48 @@ class Curl
 	 * @param	headers
 	 * @param	post		A string sent as raw POST i.e a json request object
 	 */
-	public function call( ?method="POST", url : String, ?headers : Dynamic,?post:String) : String {
-		params = ["--max-time", "5"];
+	public function call( method:String, url : String, ?headers : Map<String,String>,?post:String) : String {
+		
+		//method GET or POST
+		if (post != null || Lambda.count(postData) > 0)
+			params.push("-X" + method);
+		
+		//time out
+		params.push("--max-time");
+		params.push("20");
 		
 		//headers
-		for( k in Reflect.fields(headers) ){
-			params.push("-H");
-			params.push(k+": "+Reflect.field(headers,k));
+		if (headers != null){
+			for( k in headers.keys() ){
+				params.push("-H");
+				//params.push("\""+haxe.Utf8.encode(k+": "+headers.get(k))+"\"");
+				params.push( k+": "+headers.get(k) );
+			}
+			
 		}
+		
 		params.push(url);
 		
-		//if there is POST params (key-values)
-		if( Lambda.count(postData) > 0 ){
+		//POST params (key-values)
+		if( postData!=null && Lambda.count(postData) > 0 ){
 			params.push("-d");
 			var d = [];			
 			for (k in postData.keys()) {
 				d.push( k + "=" + StringTools.urlEncode(postData.get(k)) );
+				//d.push( k + "=" + postData.get(k) );
 			}
 			params.push("\""+d.join("&")+"\"");
-
 		}
 		
 		//if there is a POST payload ( i.e a JSON formatted request )
-		if (post != null) {
-			
+		if (post != null) {			
 			params.push("-d");
-			params.push("\""+StringTools.urlEncode(post)+"\"");
+			params.push(post);
+			//params.push("\""+StringTools.urlEncode(post)+"\"");
 		}
 		
-		if (post != null || Lambda.count(postData) > 0) params.push("-X" + method);
+		//params = params.map(function(s) return haxe.Utf8.encode(s));
+		
 		
 		debugCommand = "curl " + params.join(" ");
 		var p = new sys.io.Process("curl", params);
@@ -83,9 +96,9 @@ class Curl
 		//error ?
 		if (str == null) {
 			#if neko
-			var str = neko.Lib.stringReference(p.stderr.readAll());
+			str = "Error : " + neko.Lib.stringReference(p.stderr.readAll());
 			#else
-			var str = p.stderr.readAll().toString();
+			str = "Error : " + p.stderr.readAll().toString();
 			#end
 		}
 		

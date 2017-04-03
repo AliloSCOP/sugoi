@@ -109,7 +109,7 @@ class DebugConnection implements sys.db.Connection {
 		return cnx.quote(s);
 	}
 
-	public function addValue(s,v) {
+	public function addValue(s:StringBuf,v:Dynamic) {
 		cnx.addValue(s,v);
 	}
 
