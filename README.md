@@ -1,5 +1,5 @@
 # Sugoï !
-A simple MVC web framework for haxe and neko
+A simple MVC web framework for Haxe
 
 `haxelib git sugoi git@github.com:bablukid/sugoi.git`
 
