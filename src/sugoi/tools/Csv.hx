@@ -209,8 +209,9 @@ class Csv
 		
 		for (d in data) {
 			var row = [];
-			for( f in headers){
-				row.push( "\""+Reflect.getProperty(d,f)+"\"");	
+			for ( f in headers){
+				var v = Reflect.getProperty(d, f);
+				row.push( "\""+(v==null?"":v)+"\"");	
 			}
 			Sys.println(row.join(","));
 		}

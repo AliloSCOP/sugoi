@@ -9,11 +9,14 @@ class EmailValidator extends Validator<String>
 	public function new()
 	{
 		super();
+		#if js
+		errorNotValid = "Not a valid email address";
+		#else
 		errorNotValid = switch(App.current.getLang()){
-			
 			case "fr" : "Adresse email invalide";
 			default : "Not a valid email address";
 		};
+		#end
 	}
 	
 	override public function isValid(value:Dynamic):Bool
