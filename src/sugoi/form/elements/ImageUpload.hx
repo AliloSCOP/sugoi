@@ -3,7 +3,7 @@ import sugoi.form.Form;
 import sys.io.File;
 
 /**
- * Manage an <input type="file" /> element for images.
+ * Manage an <input type="file" /> element for uploading images.
  */
 class ImageUpload extends FormElement<haxe.io.Bytes>
 {
@@ -40,16 +40,10 @@ class ImageUpload extends FormElement<haxe.io.Bytes>
 		var strData = request.get(parentForm.name + "_" + name + "_data");
 		if (strData != null && strData != ""){
 			fileName = request.get(parentForm.name + "_" + name + "_data_filename");
-		
-			//throw request.toString();
-			//throw {name:fileName,data:strData};
-		
 			return new haxe.io.StringInput(strData).readAll();	
 		}
-		//throw "no upload";
+
 		return null;
-		
-		
 	}
 	
 	public function hasDeleteAction():Bool{

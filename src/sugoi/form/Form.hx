@@ -243,16 +243,19 @@ class Form
 		}
 
 		for (f in data.keys()) {
+			
 			//check if field was in the original form
 			if (this.getElement(f) == null) throw "field '"+f+"' was not in the original form";
 			var v = data.get(f);
 			if (f == "id") continue;
 			
-			if (Std.is(v, String)) {
+			//Values are already cleaned by each form elements when populated
+			/*if (Std.is(v, String)) {
 				v = StringTools.trim(v);
 				if (v == "") v = null;
-			}
-			//trace(f + " -> " + v+"<br>");
+			}*/
+			
+			//Debug : trace(f + " -> " + v+"<br>");
 			try{
 				Reflect.setProperty(obj, f, v);
 			}catch (e:Dynamic){

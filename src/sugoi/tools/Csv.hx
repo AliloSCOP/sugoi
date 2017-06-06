@@ -1,7 +1,9 @@
 package sugoi.tools;
 
 /**
- * CSV Import / Export
+ * CSV Import-Export Tool
+ * Based on thx.csv
+ * 
  * @author fbarbut<francois.barbut@gmail.com>
  */
 class Csv
@@ -84,15 +86,12 @@ class Csv
 				
 				//nullify
 				var v = d[h];
-				if ( v == "" || v=="null" ) v = null;
-				
+				if ( v == "" || v == "null" || v=="NULL" ) v = null;				
 				m[headers[h]] = v;
 			}
 			
 			datasAsMap.push(m);
-			
 		}
-		
 		
 		return datasAsMap;
 		
@@ -147,7 +146,7 @@ class Csv
 			//nullify empty fields
 			for (i in 0...o.length) {
 				
-				if (o[i] == "") {
+				if (o[i] == "" || o[i] == "null" || o[i]=="NULL") {
 					o[i] = null;
 					continue;
 				}
@@ -192,7 +191,6 @@ class Csv
 	}
 	
 	/**
-	 * 
 	 * Print datas as a CSV file
 	 * 
 	 * @param	data
