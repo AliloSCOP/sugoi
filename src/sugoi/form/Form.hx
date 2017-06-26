@@ -50,6 +50,7 @@ class Form
 		requiredErrorClass = "formRequiredError";
 		invalidErrorClass = "formInvalidError";
 		labelRequiredIndicator = " *";
+		defaultClass = Form.USE_TWITTER_BOOTSTRAP ? "form-horizontal":"";
 
 		forcePopulate = true;
 		multipart = false;
@@ -150,8 +151,6 @@ class Form
 		for (element in elements){
 			if (element.name == name) return element;
 		}
-
-		throw "Cannot access form element: '" + name + "'";
 		return null;
 	}
 	
@@ -431,7 +430,10 @@ class Form
 		}
 	}
 
-	function getOpenTag():String
+	/**
+	 * Prints form open tag <form ...>
+	 */
+	public function getOpenTag():String
 	{
 		//if there is a file input in the form, make it multipart
 		for ( e in elements) {
@@ -440,10 +442,13 @@ class Form
 				break;
 			}
 		}
-		return '<form id="' + id + '" class="'+(Form.USE_TWITTER_BOOTSTRAP?"form-horizontal":"")+'" name="' + name + '" method="' + method +'" action="' + action +'" ' + (multipart?'enctype="multipart/form-data"':'') + ' >';
+		return '<form id="' + id + '" class="'+defaultClass+'" name="' + name + '" method="' + method +'" action="' + action +'" ' + (multipart?'enctype="multipart/form-data"':'') + ' >';
 	}
 
-	function getCloseTag():String
+	/**
+	 * Prints form close tag ...</form>
+	 */
+	public function getCloseTag():String
 	{
 		var s = new StringBuf();
 		s.add('<div style="clear:both; height:0px;">&nbsp;</div>');
