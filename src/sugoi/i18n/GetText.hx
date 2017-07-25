@@ -4,7 +4,6 @@ import haxe.macro.Expr;
 import haxe.macro.Context;
 
 #if (potools || macro)
-
 typedef POData = Array<POEntry>;
 
 typedef POEntry = {
@@ -21,7 +20,6 @@ typedef POEntry = {
 	?cPrevious : String,
 	?cComment: String,
 }
-
 #end
 
 typedef LocaleString = String;
@@ -112,7 +110,7 @@ class GetText {
 		r = null;
 	}
 
-	public function emptyDictionary(){
+	public function emptyDictionary() {
 		texts = new Map();
 	}
 
@@ -123,24 +121,26 @@ class GetText {
 	/**
 	 * parse tout le projet pour générer le fichier POT
 	 */
-	macro public static function parse(codePath:String, potFilePath:String, ?refPoFilePath:String) {
+	macro public static function parse(codePath:Array<String>, potFilePath:String, ?refPoFilePath:String) {
 		Sys.println("[GetText] Parsing source code...");
 		var data : POData = [];
-		data.push( POTools.mkHeaders([
+		data.push(POTools.mkHeaders([
 			"MIME-Version" => "1.0",
 			"Content-Type" => "text/plain; charset=UTF-8",
 			"Content-Transfer-Encoding" => "8bit"
-		]) );
+		]));
 		var strMap : Map<String,Bool> = new Map();
-		explore(codePath, data, strMap);
+		
+		for( path in codePath )
+			explore(path, data, strMap);
 
 		Sys.println("[GetText] Saving POT file...");
 		POTools.exportFile( potFilePath, data );
 
-		if( refPoFilePath != null ){
-			if( !sys.FileSystem.exists(refPoFilePath) ){
+		if( refPoFilePath != null ) {
+			if( !sys.FileSystem.exists(refPoFilePath) ) {
 				Sys.println("[GetText] Warning: File not found: "+refPoFilePath );
-			}else{
+			} else {
 				Sys.println("[GetText] Saving Translated-POT file...");
 				POTools.exportTranslatedFile(potFilePath,refPoFilePath,data);
 			}
@@ -151,7 +151,6 @@ class GetText {
 	}
 	
 	#if macro
-
 	static function explore(folder:String, data:POData, strMap:Map<String,Bool>) {
 		// Test it: http://regexr.com/
 		var strReg = ~/_\([ ]*"((\\"|[^"])+)"/i;
@@ -189,14 +188,13 @@ class GetText {
 
 					// Ignore commented strings
 					var i = line.indexOf("//");
-					if( i>=0 && i<strReg.matchedPos().pos )
+					if( i >= 0 && i < strReg.matchedPos().pos )
 						break;
 
 					var cleanedStr = str;
-
 					// Translator comment
 					var comment : String = null;
-					if( cleanedStr.indexOf("||")>=0 ) {
+					if( cleanedStr.indexOf("||") >= 0 ) {
 						var parts = cleanedStr.split("||");
 						if( parts.length!=2 ) {
 							throw "Malformed translator comment in "+f+" (line "+n+")";
@@ -207,8 +205,6 @@ class GetText {
 						cleanedStr = StringTools.rtrim(cleanedStr);
 					}
 
-					Sys.println("cleanedStr:"+cleanedStr);
-
 					// New entry found
 					if( !strMap.exists(cleanedStr) ) {
 						strMap.set(cleanedStr, true);
@@ -218,8 +214,8 @@ class GetText {
 							cRef		: folder+"/"+f+":"+n,
 							cExtracted	: comment,
 						});
-					}else{
-						var previous = Lambda.find(data,function(e) return e.id==cleanedStr);
+					} else {
+						var previous = Lambda.find(data, function(e) return e.id == cleanedStr);
 						if( previous != null )
 							previous.cRef += " "+folder+"/"+f+":"+n;
 					}
@@ -228,7 +224,6 @@ class GetText {
 		}
 	}
 	#end
-
 }
 
 /**

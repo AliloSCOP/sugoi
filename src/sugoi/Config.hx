@@ -20,8 +20,8 @@ class Config {
 	public var DATA_HOST 	:String;
 	public var SQL_LOG 		:Bool;
 
-	public function new() {
-		PATH = Web.getCwd() + "../";
+	public function new(?path:String) {
+		PATH = (path != null) ? path : Web.getCwd() + "../";
 		//json = haxe.Json.parse(sys.io.File.getContent(PATH + "config.json"));	
 		xml = Xml.parse(sys.io.File.getContent(PATH + "config.xml")).firstElement();
 		
