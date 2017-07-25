@@ -21,21 +21,22 @@ class Macros {
 							case CString(s):
 								/*
 								 * //look for the template in the filesystem in all the paths
+								 */
 								var found = false;
 								var cp = Context.getClassPath();
 								cp.reverse();
 								for ( path in cp) {
-									Context.warning(path + "lang/fr/tpl/" + s,m.pos);
-									if ( sys.FileSystem.exists(path + "lang/fr/tpl/" + s) ) {
+									//Context.warning(path + s+" "+sys.FileSystem.exists(path + s),m.pos);
+									if ( sys.FileSystem.exists(path + s) ) {
 										found = true;	
 										break;
 									}
-									
 								}
-								if( !found ) Context.error("File not found '"+s+"'", m.params[0].pos);*/
+
+								if( !found ) Context.error("File not found '"+s+"'", m.params[0].pos);
 								
-								if( !sys.FileSystem.exists("lang/fr/tpl/"+s) )
-									Context.error("File not found '"+s+"'", m.params[0].pos);
+								//if( !sys.FileSystem.exists("lang/fr/tpl/"+s) )
+								//	Context.error("File not found '"+s+"'", m.params[0].pos);
 							default:
 								Context.error("Invalid @tpl", m.pos);
 							}
