@@ -1,9 +1,7 @@
 package sugoi;
-#if neko
-import neko.Web;
-#else
-import php.Web;
-#end
+
+import sugoi.Web;
+
 class Config {
 
 	public var PATH :String;
