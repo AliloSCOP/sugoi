@@ -117,5 +117,19 @@ class BaseView implements Dynamic {
 		return txt.split("\n").join("<br/>");		
 	}
 	
+	/**
+	 * Live translation function
+	 * @param	str
+	 * @param	params
+	 */
+	public function _(str:String){
+		return sugoi.i18n.Locale.texts.get(str);
+	}
+	
+	//same function with params ( templo doesnt manage optionnal params in functions )
+	public function __(str:String, params:Dynamic){
+		return sugoi.i18n.Locale.texts.get(str, params);
+	}
+	
 	
 }

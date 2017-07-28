@@ -53,13 +53,23 @@ class BaseApp {
 	}
 
 	public function initLang( lang : String ) {
-		if( !Lambda.has(App.config.LANGS,lang) )
-			return false;
-		session.lang = lang;
-		if( lang == App.config.LANG )
-			return false;
-		App.config.LANG = lang;
-		var path = Web.getCwd() + "../lang/" + lang + "/";
+		
+		//switch to default lang if lang is unknown
+		/*if ( !Lambda.has(App.config.LANGS, lang) ){
+			lang = App.config.LANG;
+		}*/
+		
+		/*session.lang = lang;
+		
+		App.config.LANG = lang;*/
+		
+		//template path
+		var path;
+		if (!App.config.DEBUG){
+			path = Web.getCwd() + "../lang/" + lang + "/";
+		}else{
+			path = Web.getCwd() + "../lang/master/";
+		}
 		App.config.TPL = path + "tpl/";
 		App.config.TPL_TMP = path + "tmp/";
 		
@@ -111,6 +121,9 @@ class BaseApp {
 		}
 	}
 
+	/**
+	 * Detect lang from HTTP headers
+	 */
 	function detectLang() {
 		var l = Web.getClientHeader("Accept-Language");
 		if( l != null )
@@ -122,17 +135,26 @@ class BaseApp {
 					if( a == l )
 						return a;
 			}
-		return App.config.LANGS[App.config.LANGS.length - 1];
+			
+		return App.config.LANG;
 	}
 	
 	
-
+	/**
+	 * Setup current app language
+	 */
 	function setupLang() {
+		
+		//lang is taken from user object or from HTTP headers
 		if( session.lang == null )
-			session.lang = user == null ? detectLang() : user.lang;
+			session.lang = (user == null) ? detectLang() : user.lang;
+		
+		//override if param is given
 		var lang = params.get("lang");
 		if( lang != null && Lambda.has(App.config.LANGS, lang) )
 			session.lang = lang;
+		
+		//init lang	
 		initLang(session.lang);
 	}
 	
@@ -140,7 +162,7 @@ class BaseApp {
 	 * Get current application langage (2 letters lowercase)
 	 */
 	public function getLang(){
-		return session != null && session.lang != null && session.lang != "" ? session.lang : App.config.LANG;
+		return (session != null && session.lang != null && session.lang != "") ? session.lang : App.config.LANG;
 	}
 
 	public function rollback() {
