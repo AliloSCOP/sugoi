@@ -18,6 +18,7 @@ class Locale
 		var file = sys.io.File.getBytes(Web.getCwd()+"../"+fileName(lang));
 		//var file = sys.io.File.getBytes(Sys.programPath()+"/../../"+fileName(lang));
 		#end
+		
         texts = new GetText();
 		texts.readMo(file);
 	}

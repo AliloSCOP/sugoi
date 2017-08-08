@@ -1,11 +1,6 @@
 package sugoi;
-#if neko
-import neko.Web;
-import neko.Lib;
-#else
-import php.Web;
-import php.Lib;
-#end
+import sugoi.i18n.TemplateTranslator;
+import sugoi.Web;
 
 class BaseApp {
 
@@ -30,6 +25,13 @@ class BaseApp {
 		
 		cookieName = "sid";
 		cookieDomain = "." + App.config.HOST;
+		
+		/**
+		 * This macro generates translated templates for each langage
+		 */
+		#if i18n_generation
+		if( false ) TemplateTranslator.parse("lang/master");
+		#end
 	}
 	
 	public function loadConfig() {
@@ -54,16 +56,7 @@ class BaseApp {
 
 	public function initLang( lang : String ) {
 		
-		//switch to default lang if lang is unknown
-		/*if ( !Lambda.has(App.config.LANGS, lang) ){
-			lang = App.config.LANG;
-		}*/
-		
-		/*session.lang = lang;
-		
-		App.config.LANG = lang;*/
-		
-		//template path
+		//Define template path
 		var path;
 		if (!App.config.DEBUG){
 			path = Web.getCwd() + "../lang/" + lang + "/";
@@ -73,7 +66,12 @@ class BaseApp {
 		App.config.TPL = path + "tpl/";
 		App.config.TPL_TMP = path + "tmp/";
 		
+		//init system locale
 		initLocale();
+		
+		//init gettext translator
+		sugoi.i18n.Locale.init(session.lang);
+		
 		return true;
 	}
 
@@ -156,6 +154,8 @@ class BaseApp {
 		
 		//init lang	
 		initLang(session.lang);
+		
+		//trace('lang is ${session.lang}');
 	}
 	
 	/**
@@ -224,7 +224,13 @@ class BaseApp {
 		} catch ( e : haxe.web.Dispatch.DispatchError ) {
 			
 			//dispatch / routing error
-			if( App.config.DEBUG )	Lib.rethrow(e);
+			if ( App.config.DEBUG )	{
+				#if neko
+				neko.Lib.rethrow(e);
+				#else
+				php.Lib.rethrow(e);
+				#end
+			}
 			cnx.rollback();
 			Web.redirect("/");
 			return;
@@ -382,6 +388,14 @@ class BaseApp {
 	}
 
 	static function main() {
+		
+		/**
+		 * this macro will parse the code and generate the allTexts.pot file
+		 * which will be used as a template for translation files (*.po and *.mo)
+		 */
+		#if i18n_parsing
+		if( false ) sugoi.i18n.GetText.parse(["src", "lang/master"], "lang/allTexts.pot");
+		#end
 		
 		App.current = new App();
 		var a : BaseApp = App.current;
