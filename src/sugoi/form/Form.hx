@@ -280,20 +280,28 @@ class Form
 		return form;
 	}
 
+	
+	
+	
 	/*
 	 *  Generate a form from a spod object
 	 */
 	public static function fromSpod(obj:sys.db.Object) {
 
 		//generate a form name
-		var name = Type.getClassName(Type.getClass(obj));
+		var cl = Type.getClass(obj);
+		var name = Type.getClassName(cl);
 
 		var form = new Form("form"+Md5.encode(name));
 		var ti = new TableInfos(Type.getClassName(Type.getClass(obj)));
 
 		//translator
-		var t = Form.translator;
-		if(t == null) t = Form.translator = new sugoi.i18n.translator.TMap(new Map<String,String>(), App.current.session.lang);
+		//var t = Form.translator;
+		var t = new Map<String,String>();
+		if (Reflect.hasField(cl, "getLabels")){
+			t = Reflect.callMethod(cl, Reflect.getProperty(cl,"getLabels"),[]); 
+		}
+		var label = function(s) return if (t.get(s) == null)  s else t.get(s);
 
 		//get metas of this object
 		var metas = haxe.rtti.Meta.getFields(Type.getClass(obj));
@@ -349,7 +357,7 @@ class Form
 					});
 				}
 
-				e = new IntSelect(f.name, t._(r.prop), Lambda.array(objects),v, !isNull);
+				e = new IntSelect(f.name, label(r.prop), Lambda.array(objects),v, !isNull);
 
 			}else {
 				//not foreign key
@@ -360,25 +368,25 @@ class Form
 					untyped e.inputType = ITHidden;
 
 				case DEncoded:
-					e = new StringInput(f.name, t._(f.name), v);
+					e = new StringInput(f.name, label(f.name), v);
 					
 				case DFlags(fl, auto):
-					e = new Flags(f.name,t._(f.name), Lambda.array(fl), Std.parseInt(v));
+					e = new Flags(f.name,label(f.name), Lambda.array(fl), Std.parseInt(v));
 
 				case DTinyInt, DUInt, DSingle, DInt:
-					e = new IntInput(f.name, t._(f.name) , v , !isNull);
+					e = new IntInput(f.name, label(f.name) , v , !isNull);
 				
 				case DFloat:
-					e = new FloatInput(f.name, t._(f.name), v, !isNull );
+					e = new FloatInput(f.name, label(f.name), v, !isNull );
 					
 				case DBool :
-					e = new Checkbox(f.name, t._(f.name), Std.string(v) == 'true');
+					e = new Checkbox(f.name, label(f.name), Std.string(v) == 'true');
 					
 				case DString(n):
-					e = new StringInput(f.name,t._(f.name), v, !isNull ,null,"lenght="+n);
+					e = new StringInput(f.name,label(f.name), v, !isNull ,null,"lenght="+n);
 		
 				case DTinyText, DSmallText, DText, DSerialized:
-					e = new TextArea(f.name, t._(f.name), v,!isNull);
+					e = new TextArea(f.name, label(f.name), v,!isNull);
 
 				case DTimeStamp, DDateTime:
 					
@@ -386,10 +394,10 @@ class Form
 						 
 						//WTF bugfix : the type is correct (Date) but is null when traced in DatePicker
 						var d :Date = cast v;
-						e = new DatePicker(f.name, t._(f.name), d);	
+						e = new DatePicker(f.name, label(f.name), d);	
 						untyped e.format = "LLLL";
 					}else {
-						e = new DateInput(f.name, t._(f.name), v);	
+						e = new DateInput(f.name, label(f.name), v);	
 					}
 					
 				case DDate :
@@ -400,20 +408,20 @@ class Form
 						
 						//WTF bugfix : the type is correct (Date) but is null when traced in DatePicker
 						var d :Date = cast v;
-						e = new DatePicker(f.name, t._(f.name), d);	
+						e = new DatePicker(f.name, label(f.name), d);	
 						untyped e.format = "LL";
 					}else {
-						e = new DateDropdowns(f.name, t._(f.name), v);	
+						e = new DateDropdowns(f.name, label(f.name), v);	
 					}
 					
 
 				case DEnum(name):
 					//var t = Type.resolveEnum(enumName);
-					e = new sugoi.form.elements.Enum(f.name, t._(f.name), name, Std.parseInt(v), !isNull);
+					e = new sugoi.form.elements.Enum(f.name, label(f.name), name, Std.parseInt(v), !isNull);
 					
 
 				default :
-					e = new StringInput(f.name, t._(f.name) , "unknown field type : "+f.type+", value : "+v);
+					e = new StringInput(f.name, label(f.name) , "unknown field type : "+f.type+", value : "+v);
 				}
 			}
 			
