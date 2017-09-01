@@ -8,18 +8,14 @@ package sugoi.tools;
  */
 class Csv
 {
-
 	public var separator :String;
-	public var step : Int;
-	
-	//datas accessible in both forms
-	var headers : Array<String>;
-	var datas : Array<Array<String>>;
-	var datasAsMap : Array<Map<String,String>>;
+	var headers : Array<String>;	//datas accessible in both forms
+	public var datas : Array<Array<String>>;
+	public var datasAsMap : Array<Map<String,String>>;
+	public var step:Int;//@deprecated
 	
 	public function new() 
 	{
-		step = 1;
 		separator = ",";
 		datas = [];
 		headers = [];
@@ -220,12 +216,8 @@ class Csv
 	 * do a "array.shift()" on datas
 	 */
 	public function shift(){
-		if (datas.length == 0){
-			datasAsMap.shift();
-		}else{
-			datas.shift();
-		}
-		
+		if (datasAsMap != null)	datasAsMap.shift();
+		datas.shift();		
 	}
 	
 	

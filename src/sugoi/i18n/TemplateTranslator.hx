@@ -16,18 +16,42 @@ class TemplateTranslator
 		var langs = new sugoi.Config(neko.Web.getCwd()).LANGS;
         
         for( lang in langs ) {
-            Sys.println("Generating the "+lang+" template files");
+            Sys.println(lang + " : Generating template files");
 			Locale.init(lang);
 			translateTemplates(lang, "lang/master");
+			//translationForJs(lang);
+			
+			//copy mo files in web root for translation in javascript
+			sys.io.File.copy(sugoi.Web.getCwd() + "lang/texts_" + lang + ".mo", sugoi.Web.getCwd() + "www/js/texts_" + lang + ".mo");
 		}
 
 		return macro {}
 	}
 
     #if macro
+	static public function translationForJs(lang:String){
+		
+		var out = new StringBuf();
+		var v = "";
+		out.add("var texts = [];\n");		
+		for ( k in Locale.texts.texts.keys()){
+			v = Locale.texts.get(k);
+			k = StringTools.replace(k, '\"', '\\"');
+			v = StringTools.replace(v, '\"', '\\"');
+			
+			out.add('texts["$k"] = "$v";\n');
+		}
+		var path = sugoi.Web.getCwd() + "www/js/texts_" + lang + ".js";
+		sys.io.File.saveContent(path, out.toString());
+		Sys.println(lang +" : Save js translation file (" + path + ")");
+		
+	}
+	
+	
     static public function translateTemplates(lang:String, folder:String)
     {
-        var strReg = ~/(::_\("([^"]*)"\)::)+/ig;
+        Sys.println('$lang : $folder');
+		var strReg = ~/(::_\("([^"]*)"\)::)+/ig;
 
 		for( f in sys.FileSystem.readDirectory(folder) ) {
 			// Parse sub folders
@@ -43,18 +67,19 @@ class TemplateTranslator
 			if( !isTemplateFile )
 				continue;
 
-			var c = sys.io.File.getContent(folder+"/"+f);
+			var c = sys.io.File.getContent(folder + "/" + f);
+			var out = c;
 			var out = strReg.map(c, function(e) {
                 var str = e.matched(2);
-                Sys.println("str matched:"+str);
+                //Sys.println("str matched:"+str);
                 // Ignore commented strings
                 var i = str.indexOf("//");
                 if( i >= 0 && i < strReg.matchedPos().pos )
                     return "";
-                
-                var cleanedStr = str;
+               
+				var cleanedStr = str;
                 // Translator comment
-                var comment : String = null;
+				var comment : String = null;
                 if( cleanedStr.indexOf("||") >= 0 ) {
                     var parts = cleanedStr.split("||");
                     if( parts.length!=2 ) {
@@ -72,6 +97,7 @@ class TemplateTranslator
             //copy the file to the correct new folder
             var filePath = StringTools.replace(folder+"/"+f, "master", lang);
             var langFile = sys.io.File.write(filePath, false);
+			out = StringTools.replace(out, "\r", "");//for an unknown reason, there was double newlines
             langFile.writeString(out);
             langFile.flush();
             langFile.close();

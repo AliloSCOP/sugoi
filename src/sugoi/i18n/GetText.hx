@@ -2,10 +2,10 @@ package sugoi.i18n;
 
 import haxe.macro.Expr;
 import haxe.macro.Context;
- /**
-  * @author tpfeiffer<thomas.pfeiffer@gmail.com> 
-  */
-
+ 
+/**
+ * @author tpfeiffer<thomas.pfeiffer@gmail.com> 
+ */
 #if (potools || macro)
 typedef POData = Array<POEntry>;
 
@@ -29,9 +29,10 @@ typedef LocaleString = String;
 
 class GetText {
 
-	var texts : Map<String,LocaleString>;
+	public var texts : Map<String,LocaleString>;
 
-
+	public function new() {}
+	
 	public function toString() {
 		return "GetText";
 	}
@@ -116,13 +117,10 @@ class GetText {
 	public function emptyDictionary() {
 		texts = new Map();
 	}
-
-
-	public function new() {
-	}
+	
 
 	/**
-	 * parse tout le projet pour générer le fichier POT
+	 * Parses all the project to generate the POT file
 	 */
 	macro public static function parse(codePath:Array<String>, potFilePath:String, ?refPoFilePath:String) {
 		Sys.println("[GetText] Parsing source code...");
@@ -155,9 +153,11 @@ class GetText {
 	
 	#if macro
 	static function explore(folder:String, data:POData, strMap:Map<String,Bool>) {
+		
 		// Test it: http://regexr.com/
 		var strReg = ~/_\([ ]*"((\\"|[^"])+)"/i;
-		for( f in sys.FileSystem.readDirectory(folder) ) {
+		for ( f in sys.FileSystem.readDirectory(folder) ) {
+			
 			// Parse sub folders
 			if( sys.FileSystem.isDirectory(folder+"/"+f) ) {
 				explore(folder+"/"+f, data, strMap);
@@ -170,6 +170,8 @@ class GetText {
 			
 			if( !(isHaxeFile || isTemplateFile) )
 				continue;
+				
+			Sys.println('explore $folder/$f');
 
 			// Read lines
 			var c = sys.io.File.getContent(folder+"/"+f);
@@ -217,6 +219,7 @@ class GetText {
 							cRef		: folder+"/"+f+":"+n,
 							cExtracted	: comment,
 						});
+						//Sys.println("  "+cleanedStr);
 					} else {
 						var previous = Lambda.find(data, function(e) return e.id == cleanedStr);
 						if( previous != null )

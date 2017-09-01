@@ -1,6 +1,5 @@
 package sugoi.i18n;
 
-import sugoi.Web;
 
 /**
   * @author tpfeiffer<thomas.pfeiffer@gmail.com> 
@@ -9,19 +8,37 @@ class Locale
 {	
 	static public var texts	: GetText;
 	
-    public static function init(lang:String)
+	public static function init(lang:String,?callback:GetText->Void)
 	{
 		#if macro
-		var file = sys.io.File.getBytes(Web.getCwd()+fileName(lang));
+		var file = sys.io.File.getBytes(sugoi.Web.getCwd() + fileName(lang));
+		texts = new GetText();
+		texts.readMo(file);
+		#elseif js
+		var file : haxe.io.Bytes = null;
+		var r = new js.html.XMLHttpRequest();
+		r.responseType = js.html.XMLHttpRequestResponseType.ARRAYBUFFER;
+		r.onreadystatechange = function(e:js.html.Event){
+			if (r.readyState == js.html.XMLHttpRequest.DONE){
+				file = haxe.io.Bytes.ofData(r.response);
+				texts = new GetText();
+				texts.readMo(file);
+				callback(texts);
+			}			
+		}
+		r.open('GET', '/js/texts_$lang.mo', true);
+		r.send();
+		
 		#else
-		App.log("loading "+fileName(lang));
-		var file = sys.io.File.getBytes(Web.getCwd()+"../"+fileName(lang));
-		//var file = sys.io.File.getBytes(Sys.programPath()+"/../../"+fileName(lang));
+		var file = sys.io.File.getBytes(sugoi.Web.getCwd() + "../" + fileName(lang));
+		texts = new GetText();
+		texts.readMo(file);
 		#end
 		
-        texts = new GetText();
-		texts.readMo(file);
+		
+       
 	}
+	
 	
 	inline static function fileName(lang:String)
 	{

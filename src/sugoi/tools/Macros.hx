@@ -19,9 +19,7 @@ class Macros {
 						case EConst(c):
 							switch(c) {
 							case CString(s):
-								/*
-								 * //look for the template in the filesystem in all the paths
-								 */
+								// look for the template in the filesystem in all the paths
 								var found = false;
 								var cp = Context.getClassPath();
 								cp.reverse();

@@ -56,6 +56,8 @@ class BaseApp {
 
 	public function initLang( lang : String ) {
 		
+		if (lang == null || lang == "") lang = config.LANG;
+		
 		//Define template path
 		var path;
 		if (!App.config.DEBUG){
@@ -67,19 +69,14 @@ class BaseApp {
 		App.config.TPL_TMP = path + "tmp/";
 		
 		//init system locale
-		initLocale();
-		
-		//init gettext translator
-		sugoi.i18n.Locale.init(session.lang);
-		
-		return true;
-	}
-
-	public function initLocale() {
-		
 		if ( !Sys.setTimeLocale("en_US.UTF-8") ) {			
 			Sys.setTimeLocale("en");
 		}
+		
+		//init gettext translator
+		sugoi.i18n.Locale.init(lang);
+		
+		return true;
 	}
 
 	function saveAndClose() {
@@ -144,18 +141,19 @@ class BaseApp {
 	function setupLang() {
 		
 		//lang is taken from user object or from HTTP headers
-		if( session.lang == null )
+		if ( session.lang == null || !Lambda.has(App.config.LANGS, session.lang) ){			
 			session.lang = (user == null) ? detectLang() : user.lang;
+		}
 		
 		//override if param is given
 		var lang = params.get("lang");
-		if( lang != null && Lambda.has(App.config.LANGS, lang) )
+		if ( lang != null && Lambda.has(App.config.LANGS, lang) ){
 			session.lang = lang;
-		
-		//init lang	
+			
+		}
+			
+		//init lang			
 		initLang(session.lang);
-		
-		//trace('lang is ${session.lang}');
 	}
 	
 	/**
@@ -394,7 +392,7 @@ class BaseApp {
 		 * which will be used as a template for translation files (*.po and *.mo)
 		 */
 		#if i18n_parsing
-		if( false ) sugoi.i18n.GetText.parse(["src", "lang/master"], "lang/allTexts.pot");
+		if( false ) sugoi.i18n.GetText.parse(["src", "lang/master","js","common"], "lang/allTexts.pot");
 		#end
 		
 		App.current = new App();

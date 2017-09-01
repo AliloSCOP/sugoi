@@ -123,7 +123,12 @@ class BaseView implements Dynamic {
 	 * @param	params
 	 */
 	public function _(str:String){
-		return sugoi.i18n.Locale.texts.get(str);
+		if (sugoi.i18n.Locale.texts != null){
+			return sugoi.i18n.Locale.texts.get(str);	
+		}else{
+			return str;
+		}
+		
 	}
 	
 	//same function with params ( templo doesnt manage optionnal params in functions )
