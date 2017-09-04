@@ -392,7 +392,7 @@ class BaseApp {
 		 * which will be used as a template for translation files (*.po and *.mo)
 		 */
 		#if i18n_parsing
-		if( false ) sugoi.i18n.GetText.parse(["src", "lang/master","js","common"], "lang/allTexts.pot");
+		if( false ) sugoi.i18n.GetText.parse(["src", "lang/master","js","common"], "www/lang/allTexts.pot");
 		#end
 		
 		App.current = new App();

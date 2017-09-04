@@ -19,17 +19,14 @@ class TemplateTranslator
             Sys.println(lang + " : Generating template files");
 			Locale.init(lang);
 			translateTemplates(lang, "lang/master");
-			//translationForJs(lang);
-			
-			//copy mo files in web root for translation in javascript
-			sys.io.File.copy(sugoi.Web.getCwd() + "lang/texts_" + lang + ".mo", sugoi.Web.getCwd() + "www/js/texts_" + lang + ".mo");
+			//translationForJs(lang);			
 		}
 
 		return macro {}
 	}
 
     #if macro
-	static public function translationForJs(lang:String){
+	/*static public function translationForJs(lang:String){
 		
 		var out = new StringBuf();
 		var v = "";
@@ -43,9 +40,8 @@ class TemplateTranslator
 		}
 		var path = sugoi.Web.getCwd() + "www/js/texts_" + lang + ".js";
 		sys.io.File.saveContent(path, out.toString());
-		Sys.println(lang +" : Save js translation file (" + path + ")");
-		
-	}
+		Sys.println(lang +" : Save js translation file (" + path + ")");		
+	}*/
 	
 	
     static public function translateTemplates(lang:String, folder:String)

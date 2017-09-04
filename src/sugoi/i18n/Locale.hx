@@ -10,8 +10,11 @@ class Locale
 	
 	public static function init(lang:String,?callback:GetText->Void)
 	{
+		//Load mo file in various runtimes : macro, js and serverside
 		#if macro
-		var file = sys.io.File.getBytes(sugoi.Web.getCwd() + fileName(lang));
+		trace(sugoi.Web.getCwd() + "www" + fileName(lang));
+		var file = sys.io.File.getBytes(sugoi.Web.getCwd() + "www/" + fileName(lang));
+		
 		texts = new GetText();
 		texts.readMo(file);
 		#elseif js
@@ -26,17 +29,14 @@ class Locale
 				callback(texts);
 			}			
 		}
-		r.open('GET', '/js/texts_$lang.mo', true);
+		r.open('GET', '/'+fileName(lang), true);
 		r.send();
 		
 		#else
-		var file = sys.io.File.getBytes(sugoi.Web.getCwd() + "../" + fileName(lang));
+		var file = sys.io.File.getBytes(sugoi.Web.getCwd() + "/" + fileName(lang));
 		texts = new GetText();
 		texts.readMo(file);
 		#end
-		
-		
-       
 	}
 	
 	

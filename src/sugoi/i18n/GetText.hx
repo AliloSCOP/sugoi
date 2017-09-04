@@ -135,7 +135,7 @@ class GetText {
 		for( path in codePath )
 			explore(path, data, strMap);
 
-		Sys.println("[GetText] Saving POT file...");
+		Sys.println("[GetText] Saving POT file..." + potFilePath);
 		POTools.exportFile( potFilePath, data );
 
 		if( refPoFilePath != null ) {
