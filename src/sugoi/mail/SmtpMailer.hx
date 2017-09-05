@@ -13,7 +13,7 @@ class SmtpMailer implements IMailer
 	
 	public function new(){}
 	
-	public function init(conf:Dynamic) :IMailer
+	public function init(conf:{smtp_host:String,smtp_port:Int,smtp_user:String,smtp_pass:String}) :IMailer
 	{
 		m = new smtpmailer.SmtpMailer({
 			host: conf.smtp_host,
@@ -33,18 +33,18 @@ class SmtpMailer implements IMailer
 			subject: e.getSubject(),
 			from: e.getSender().email,
 			to: Lambda.array(Lambda.map(e.getRecipients(), function(x) return x.email)),
-			headers : e.getHeaders(),
+			//headers : e.getHeaders(),
 			content: {
-				text: e.getTextBody(),
+				text: "please display html version of this email"/*e.getTextBody()*/,
 				html: e.getHtmlBody()
-			},
-			attachments: []
+			}/*,
+			attachments: []*/
 		});
 		
+			
 		if (callback != null){
 			
 			surprise.handle(function(s){
-				
 				
 				var map = new MailerResult();
 				

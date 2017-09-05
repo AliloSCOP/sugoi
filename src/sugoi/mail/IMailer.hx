@@ -31,7 +31,7 @@ interface IMailer
 	/**
 	 * init with a configuration object
 	 */
-	public function init(conf:Dynamic):IMailer;
+	public function init(conf:{smtp_host:String,smtp_port:Int,smtp_user:String,smtp_pass:String}):IMailer;
 	
 	/**
 	 * Sends an email. A callback can be defined to handle the result
