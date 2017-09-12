@@ -32,10 +32,10 @@ class SmtpMailer implements IMailer
 		var surprise = m.send({
 			subject: e.getSubject(),
 			from: e.getSender().email,
-			to: Lambda.array(Lambda.map(e.getRecipients(), function(x) return x.email)),
+			to: Lambda.array(Lambda.map(e.getRecipients(), function(x) return smtpmailer.Address.ofString(x.email) )),
 			//headers : e.getHeaders(),
 			content: {
-				text: "please display html version of this email"/*e.getTextBody()*/,
+				text: e.getTextBody(),
 				html: e.getHtmlBody()
 			}/*,
 			attachments: []*/
