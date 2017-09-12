@@ -95,8 +95,12 @@ class Enum extends FormElement<Int>
 				var label;
 
 				var t = Form.translator;
-
-				label = "<label for=\"" + n + c + "\" >" + t._(Std.string(row))  +"</label>\n";
+				if (t == null){
+					label = "<label for=\"" + n + c + "\" >" + Std.string(row)  +"</label>\n";
+				}else{
+					label = "<label for=\"" + n + c + "\" >" + t._(Std.string(row))  +"</label>\n";	
+				}
+				
 
 				if (labelRight)
 				{
