@@ -44,8 +44,7 @@ class GetText {
 	public macro function _(ethis:Expr, estr:ExprOf<String>, ?params:ExprOf<Dynamic>) {
 		var str = switch(estr.expr) {
 			case EConst(CString(s)) : s;
-			default :
-				Context.error("Constant string expected here!", estr.pos);
+			default : Context.error("Constant string expected here!", estr.pos);
 		}
 
 		var odd = false;
@@ -61,7 +60,6 @@ class GetText {
 
 		switch( params.expr ) {
 			case EObjectDecl(fields) :
-
 				var vmap = new Map();
 				for(f in fields) {
 					if( str.indexOf("::"+f.field+"::")<0 )
@@ -93,17 +91,16 @@ class GetText {
 
 		str = StringTools.rtrim( str.split("||")[0] );
 
-		if(texts.exists(str))
+		if(texts.exists(str)) {
 			str = texts.get(str);
-
+		}
 
 		var list = str.split("::");
-		if(params!=null){
-			for (k in Reflect.fields(params)){
+		if(params != null) {
+			for (k in Reflect.fields(params)) {
 				str = StringTools.replace(str, "::" + k + "::", Reflect.field(params, k));
 			}
 		}
-
 		return new LocaleString(str);
 	}
 
@@ -116,7 +113,6 @@ class GetText {
 	public function emptyDictionary() {
 		texts = new Map();
 	}
-	
 
 	/**
 	 * Parses all the project to generate the POT file
@@ -151,10 +147,7 @@ class GetText {
 	}
 	
 	#if macro
-	static function explore(folder:String, data:POData, strMap:Map<String,Bool>) {
-		
-		// Test it: http://regexr.com/
-		var strReg = ~/_\([ ]*"((\\"|[^"])+)"/i;
+	static function explore(folder:String, data:POData, strMap:Map<String,Bool>) {	
 		for ( f in sys.FileSystem.readDirectory(folder) ) {
 			
 			// Parse sub folders
@@ -169,63 +162,57 @@ class GetText {
 			
 			if( !(isHaxeFile || isTemplateFile) )
 				continue;
-				
+			
 			Sys.println('explore $folder/$f');
-
+			
 			// Read lines
-			var c = sys.io.File.getContent(folder+"/"+f);
-			var n = 0;
-			for( line in c.split("\n") ) {
-				n++;
-				if( line == "" )
-					continue;
+			var c = sys.io.File.getContent(folder + "/" + f);
 
-				var pos = 0;
-				while( strReg.match(line.substr(pos)) ) {
-					var str = strReg.matched(1);
-					try {
-						pos += strReg.matchedPos().pos + strReg.matchedPos().len;
-					} catch(e:Dynamic) {
-						//trace(str);
-						throw e;
-					}
+			// Test it: http://regexr.com/
+			var strReg = ~/_\([ ]*"((\\"|[^"])+)"/ig;
+			//var strReg = ~/_\([ ]*"([^"]+)+"[ ]*\)/igm;
 
-					// Ignore commented strings
-					var i = line.indexOf("//");
-					if( i >= 0 && i < strReg.matchedPos().pos )
-						break;
+			var out = strReg.map(c, function(e) {
+                var str = e.matched(2);
+                Sys.println("str matched:"+str);
+                // Ignore commented strings
+                var i = str.indexOf("//");
+                if( i >= 0 && i < strReg.matchedPos().pos )
+                    return "";
+               
+				var cleanedStr = str;
+                // Translator comment
+				var comment : String = null;
+                if( cleanedStr.indexOf("||") >= 0 ) {
+                    var parts = cleanedStr.split("||");
+                    if( parts.length!=2 ) {
+                        throw "Malformed translator comment";
+                        return "";
+                    }
+                    comment = StringTools.trim(parts[1]);
+                    cleanedStr = cleanedStr.substr(0,cleanedStr.indexOf("||"));
+                    cleanedStr = StringTools.rtrim(cleanedStr);
+                }
 
-					var cleanedStr = str;
-					// Translator comment
-					var comment : String = null;
-					if( cleanedStr.indexOf("||") >= 0 ) {
-						var parts = cleanedStr.split("||");
-						if( parts.length!=2 ) {
-							throw "Malformed translator comment in "+f+" (line "+n+")";
-							continue;
-						}
-						comment = StringTools.trim(parts[1]);
-						cleanedStr = cleanedStr.substr(0,cleanedStr.indexOf("||"));
-						cleanedStr = StringTools.rtrim(cleanedStr);
-					}
-
-					// New entry found
-					if( !strMap.exists(cleanedStr) ) {
-						strMap.set(cleanedStr, true);
-						data.push({
-							id			: cleanedStr,
-							str			: "",
-							cRef		: folder+"/"+f+":"+n,
-							cExtracted	: comment,
-						});
-						//Sys.println("  "+cleanedStr);
-					} else {
-						var previous = Lambda.find(data, function(e) return e.id == cleanedStr);
-						if( previous != null )
-							previous.cRef += " "+folder+"/"+f+":"+n;
-					}
+				var n = e.matchedPos().pos;
+				Sys.println("match line : "+n);
+				// New entry found
+				if( !strMap.exists(cleanedStr) ) {
+					strMap.set(cleanedStr, true);
+					data.push({
+						id			: cleanedStr,
+						str			: "",
+						cRef		: folder+"/"+f+":"+n,
+						cExtracted	: comment,
+					});
+				} else {
+					var previous = Lambda.find(data, function(e) return e.id == cleanedStr);
+					if( previous != null )
+						previous.cRef += " "+folder+"/"+f+":"+n;
 				}
-			}
+                //return Locale.texts.get(cleanedStr);
+				return str;
+            });		
 		}
 	}
 	#end

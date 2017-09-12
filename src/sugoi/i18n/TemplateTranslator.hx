@@ -10,7 +10,7 @@ import haxe.macro.Context;
   */
 class TemplateTranslator
 {
-    macro public static function parse(path:ExprOf<String>)
+    macro public static function parse(path:String)
     {
         Sys.println("TemplateTranslator::parse");
 		var langs = new sugoi.Config(neko.Web.getCwd()).LANGS;
@@ -18,7 +18,7 @@ class TemplateTranslator
         for( lang in langs ) {
             Sys.println(lang + " : Generating template files");
 			Locale.init(lang);
-			translateTemplates(lang, "lang/master");
+			translateTemplates(lang, path);
 			//translationForJs(lang);			
 		}
 
@@ -43,12 +43,12 @@ class TemplateTranslator
 		Sys.println(lang +" : Save js translation file (" + path + ")");		
 	}*/
 	
-	
     static public function translateTemplates(lang:String, folder:String)
     {
         Sys.println('$lang : $folder');
-		var strReg = ~/(::_\("([^"]*)"\)::)+/ig;
-
+		//var strReg = ~/(::_\("([^"]*)"\)::)+/ig;
+        var strReg = ~/(::_\([ ]*"([^"]+)+"[ ]*\)::)+/ig;
+        
 		for( f in sys.FileSystem.readDirectory(folder) ) {
 			// Parse sub folders
 			if(sys.FileSystem.isDirectory(folder+"/"+f) ) {
@@ -87,7 +87,25 @@ class TemplateTranslator
                     cleanedStr = StringTools.rtrim(cleanedStr);
                 }
 
-                return Locale.texts.get(cleanedStr);
+
+                var strTmp = Locale.texts.get(cleanedStr);
+                // return strTmp;
+
+                function getVars(ereg:EReg, input:String, index:Int = 0):Array<String> {
+					var matches = [];
+					while (ereg.match(input)) {
+						matches.push(ereg.matched(index)); 
+						input = ereg.matchedRight();
+					}
+					return matches;
+				}
+				var eregVars = ~/(?:::([^:]+)::)/i;
+				var aVars = getVars(eregVars, strTmp,1);
+				var sVars = aVars.map(function(v) { return v+":"+v; });
+				var variables = '{'+sVars.join(",")+'}';
+                
+                var contentWithVars = StringTools.replace(e.matched(1), str, strTmp+","+variables);
+                return StringTools.replace(contentWithVars, "::_", "::__");
             });
 
             //copy the file to the correct new folder
