@@ -149,7 +149,6 @@ class GetText {
 	#if macro
 	static function explore(folder:String, data:POData, strMap:Map<String,Bool>) {	
 		for ( f in sys.FileSystem.readDirectory(folder) ) {
-			
 			// Parse sub folders
 			if( sys.FileSystem.isDirectory(folder+"/"+f) ) {
 				explore(folder+"/"+f, data, strMap);
@@ -169,24 +168,28 @@ class GetText {
 			var c = sys.io.File.getContent(folder + "/" + f);
 
 			// Test it: http://regexr.com/
-			//var strReg = ~/_\([ ]*"((\\"|[^"])+)"/ig;
-			
-			var strReg = ~/_\([ ]*"((?:[^"\\]+|\\.)*)"[ ]*\)/igm;
+			//var strReg = ~/_\([ ]*"((?:[^"\\]+|\\.)*)"[ ]*\)/igm;
+			var strReg = ~/_\([ ]*"((?:[^"\\]+|\\.)*)"[ ]*(?:,[ ]*{[,:\w\s]*})?\)/igm;
 			var out = strReg.map(c, function(e) {
-                var str = e.matched(1);
+                var fullStr = e.matched(0);
+				var str = e.matched(1);
                 Sys.println("str matched:"+str);
                 // Ignore commented strings
                 var i = str.indexOf("//");
-                if( i >= 0 && i < strReg.matchedPos().pos )
-                    return "";
-               
+				var matchPos = strReg.matchedPos().pos;
+				//Sys.println("i="+i+" matchPos="+matchPos);
+				//TODO required??
+                //if( i >= 0 && i < matchPos )
+                //    return "";
+
 				var cleanedStr = str;
                 // Translator comment
 				var comment : String = null;
                 if( cleanedStr.indexOf("||") >= 0 ) {
                     var parts = cleanedStr.split("||");
-                    if( parts.length!=2 ) {
-                        throw "Malformed translator comment";
+                    if( parts.length != 2 ) {
+                        Sys.println("Malformed translator comment");
+						throw "Malformed translator comment";
                         return "";
                     }
                     comment = StringTools.trim(parts[1]);
@@ -198,6 +201,7 @@ class GetText {
 				Sys.println("match line : "+n);
 				// New entry found
 				if( !strMap.exists(cleanedStr) ) {
+					Sys.println("register key : "+cleanedStr);
 					strMap.set(cleanedStr, true);
 					data.push({
 						id			: cleanedStr,
@@ -211,7 +215,9 @@ class GetText {
 						previous.cRef += " "+folder+"/"+f+":"+n;
 				}
                 //return Locale.texts.get(cleanedStr);
-				return str;
+				//return fullStr;
+				Sys.println("out = "+cleanedStr);
+				return cleanedStr;
             });		
 		}
 	}

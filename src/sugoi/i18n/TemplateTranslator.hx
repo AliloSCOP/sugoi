@@ -47,8 +47,8 @@ class TemplateTranslator
     {
         Sys.println('$lang : $folder');
 		//var strReg = ~/(::_\("([^"]*)"\)::)+/ig;
-        var strReg = ~/(::_\([ ]*"([^"]+)+"[ ]*\)::)+/ig;
-        
+        //var strReg = ~/(::_\([ ]*"([^"]+)+"[ ]*\)::)+/ig;
+        var strReg = ~/_\([ ]*"((?:[^"\\]+|\\.)*)"[ ]*(?:,[ ]*{[,:\w\s]*})?\)/igm;
 		for( f in sys.FileSystem.readDirectory(folder) ) {
 			// Parse sub folders
 			if(sys.FileSystem.isDirectory(folder+"/"+f) ) {
@@ -66,12 +66,12 @@ class TemplateTranslator
 			var c = sys.io.File.getContent(folder + "/" + f);
 			var out = c;
 			var out = strReg.map(c, function(e) {
-                var str = e.matched(2);
+                var str = e.matched(1);
                 //Sys.println("str matched:"+str);
                 // Ignore commented strings
-                var i = str.indexOf("//");
-                if( i >= 0 && i < strReg.matchedPos().pos )
-                    return "";
+                //var i = str.indexOf("//");
+                //if( i >= 0 && i < strReg.matchedPos().pos )
+                //    return "";
                
 				var cleanedStr = str;
                 // Translator comment
@@ -87,8 +87,12 @@ class TemplateTranslator
                     cleanedStr = StringTools.rtrim(cleanedStr);
                 }
 
-                var strTmp = Locale.texts.get(cleanedStr);
-               	return strTmp;
+				//Sys.println(e.matched(0)+" replace "+str+" by "+Locale.texts.get(cleanedStr));
+				var output = StringTools.replace( e.matched(0), str, Locale.texts.get(cleanedStr) );
+				Sys.println("output:"+output);
+				return output;
+                //return Locale.texts.get(cleanedStr);
+               
 				/*
                 function getVars(ereg:EReg, input:String, index:Int = 0):Array<String> {
 					var matches = [];

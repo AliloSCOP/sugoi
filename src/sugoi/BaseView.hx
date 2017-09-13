@@ -116,7 +116,8 @@ class BaseView implements Dynamic {
 		if (txt == null) return "";
 		return txt.split("\n").join("<br/>");		
 	}
-	
+
+
 	public function _(str:String):String {
 		if (sugoi.i18n.Locale.texts != null) {
 			return sugoi.i18n.Locale.texts.get(str);
@@ -129,5 +130,26 @@ class BaseView implements Dynamic {
 	public function __(str:String, params:Dynamic){
 		return sugoi.i18n.Locale.texts.get(str, params);
 	}
+/*
+#else
+	public function _(str:String):String {
+		neko.Web.logMessage("_call "+str);
+		return StringTools.rtrim( str.split("||")[0] );
+	}
+	
+	//same function with params ( templo doesnt manage optionnal params in functions )
+	public function __(str:String, params:Dynamic):String {
+		neko.Web.logMessage("_call "+str);
+		str = StringTools.rtrim( str.split("||")[0] );
+		var list = str.split("::");
+		if(params != null) {
+			for (k in Reflect.fields(params)) {
+				str = StringTools.replace(str, "::" + k + "::", Reflect.field(params, k));
+			}
+		}
+		return str;
+	}
+#end
+*/
 	
 }
