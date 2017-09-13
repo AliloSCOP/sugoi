@@ -87,10 +87,9 @@ class TemplateTranslator
                     cleanedStr = StringTools.rtrim(cleanedStr);
                 }
 
-
                 var strTmp = Locale.texts.get(cleanedStr);
-                // return strTmp;
-
+               	return strTmp;
+				/*
                 function getVars(ereg:EReg, input:String, index:Int = 0):Array<String> {
 					var matches = [];
 					while (ereg.match(input)) {
@@ -106,6 +105,7 @@ class TemplateTranslator
                 
                 var contentWithVars = StringTools.replace(e.matched(1), str, strTmp+","+variables);
                 return StringTools.replace(contentWithVars, "::_", "::__");
+				*/
             });
 
             //copy the file to the correct new folder

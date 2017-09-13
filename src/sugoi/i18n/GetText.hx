@@ -169,11 +169,11 @@ class GetText {
 			var c = sys.io.File.getContent(folder + "/" + f);
 
 			// Test it: http://regexr.com/
-			var strReg = ~/_\([ ]*"((\\"|[^"])+)"/ig;
-			//var strReg = ~/_\([ ]*"([^"]+)+"[ ]*\)/igm;
-
+			//var strReg = ~/_\([ ]*"((\\"|[^"])+)"/ig;
+			
+			var strReg = ~/_\([ ]*"((?:[^"\\]+|\\.)*)"[ ]*\)/igm;
 			var out = strReg.map(c, function(e) {
-                var str = e.matched(2);
+                var str = e.matched(1);
                 Sys.println("str matched:"+str);
                 // Ignore commented strings
                 var i = str.indexOf("//");

@@ -117,31 +117,6 @@ class BaseView implements Dynamic {
 		return txt.split("\n").join("<br/>");		
 	}
 	
-	/**
-	 * Live translation function
-	 * @param	str
-	 * @param	params
-	 */
-	#if debug
-	macro public function _(str:String):String { 
-		var strTmp = str;
-		function getVars(ereg:EReg, input:String, index:Int = 0):Array<String> {
-			var matches = [];
-			while (ereg.match(input)) {
-				matches.push(ereg.matched(index)); 
-				input = ereg.matchedRight();
-			}
-			return matches;
-		}
-		var eregVars = ~/(?:::([^:]+)::)/i;
-		var aVars = getVars(eregVars, strTmp,1);
-		var sVars = aVars.map(function(v) { return v+":"+v; });
-		var variables = '{'+sVars.join(",")+'}';
-		
-		var contentWithVars = StringTools.replace(e.matched(1), str, strTmp+","+variables);
-		return "";//StringTools.replace(contentWithVars, "::_", "::__");
-	}
-	#else
 	public function _(str:String):String {
 		if (sugoi.i18n.Locale.texts != null) {
 			return sugoi.i18n.Locale.texts.get(str);
@@ -149,7 +124,6 @@ class BaseView implements Dynamic {
 			return str;
 		}
 	}
-	#end
 	
 	//same function with params ( templo doesnt manage optionnal params in functions )
 	public function __(str:String, params:Dynamic){
