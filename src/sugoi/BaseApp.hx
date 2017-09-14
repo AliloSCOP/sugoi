@@ -140,6 +140,9 @@ class BaseApp {
 	 */
 	function setupLang() {
 		
+		//this app doesnt manage i18n
+		if (App.config.LANG == "master") return;
+		
 		//lang is taken from user object or from HTTP headers
 		if ( session.lang == null || !Lambda.has(App.config.LANGS, session.lang) ){			
 			session.lang = (user == null) ? detectLang() : user.lang;
