@@ -10,6 +10,7 @@ class Locale
 	
 	public static function init(lang:String,?callback:GetText->Void)
 	{
+		
 		//Load mo file in various runtimes : macro, js and serverside
 		#if macro
 		trace(sugoi.Web.getCwd() + "www" + fileName(lang));
