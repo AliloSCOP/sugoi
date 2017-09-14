@@ -169,7 +169,7 @@ class GetText {
 
 			// Test it: http://regexr.com/
 			//var strReg = ~/_\([ ]*"((?:[^"\\]+|\\.)*)"[ ]*\)/igm;
-			var strReg = ~/_\([ ]*"((?:[^"\\]+|\\.)*)"[ ]*(?:,[ ]*{[,:\w\s]*})?\)/igm;
+			var strReg = ~/_\([ ]*"((?:[^"\\]+|\\.)*)"[ ]*(?:,[ ]*{[.,:\w\s]*})?\)/igm;
 			var out = strReg.map(c, function(e) {
                 var fullStr = e.matched(0);
 				var str = e.matched(1);
