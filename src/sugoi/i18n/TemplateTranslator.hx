@@ -48,7 +48,7 @@ class TemplateTranslator
         Sys.println('$lang : $folder');
 		//var strReg = ~/(::_\("([^"]*)"\)::)+/ig;
         //var strReg = ~/(::_\([ ]*"([^"]+)+"[ ]*\)::)+/ig;
-        var strReg = ~/_\([ ]*"((?:[^"\\]+|\\.)*)"[ ]*(?:,[ ]*{[,:\w\s]*})?\)/igm;
+        var strReg = ~/_\([ ]*"((?:[^"\\]+|\\.)*)"[ ]*(?:,[ ]*{[.,:\w\s]*})?\)/igm;
 		for( f in sys.FileSystem.readDirectory(folder) ) {
 			// Parse sub folders
 			if(sys.FileSystem.isDirectory(folder+"/"+f) ) {
