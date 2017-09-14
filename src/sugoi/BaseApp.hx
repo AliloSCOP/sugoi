@@ -140,7 +140,7 @@ class BaseApp {
 	 */
 	function setupLang() {
 		
-		//this app doesnt manage i18n
+		//this app is monolingual and doesn't manage i18n
 		if (App.config.LANG == "master") return;
 		
 		//lang is taken from user object or from HTTP headers
