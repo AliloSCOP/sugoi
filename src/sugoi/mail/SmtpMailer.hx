@@ -2,6 +2,7 @@ package sugoi.mail;
 import tink.core.Future;
 import tink.core.Noise;
 import sugoi.mail.IMailer;
+import smtpmailer.Address;
 
 /**
  * Send emails thru SMTP by using ben merckx's library 
@@ -31,8 +32,8 @@ class SmtpMailer implements IMailer
 	{
 		var surprise = m.send({
 			subject: e.getSubject(),
-			from: e.getSender().email,
-			to: Lambda.array(Lambda.map(e.getRecipients(), function(x) return x.email)),
+			from: new Address({address:e.getSender().email}),
+			to: Lambda.array(Lambda.map(e.getRecipients(), function(x) return new Address({address:x.email}) )),
 			headers : e.getHeaders(),
 			content: {
 				text: e.getTextBody(),
@@ -44,7 +45,6 @@ class SmtpMailer implements IMailer
 		if (callback != null){
 			
 			surprise.handle(function(s){
-				
 				
 				var map = new MailerResult();
 				

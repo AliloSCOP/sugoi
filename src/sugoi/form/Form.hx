@@ -44,6 +44,8 @@ class Form
 	public static var USE_TWITTER_BOOTSTRAP = true;
 	public static var USE_DATEPICKER = true; //http://eonasdan.github.io/bootstrap-datetimepicker/
 
+	public var toString : Void->String; //you can change the way the form is rendered
+
 	public function new(name:String, ?action:String, ?method:FormMethod)
 	{
 		requiredClass = "formRequired";
@@ -73,6 +75,8 @@ class Form
 		addFieldset("__default", new FieldSet("__default", "Default", false));
 
 		addElement(new CSRFProtection());
+
+		toString = render;
 	}
 
 	/**
@@ -543,7 +547,7 @@ class Form
 	/**
 	 * Render form's HTML
 	 */
-	public function toString()
+	public function render()
 	{
 
 		var s:StringBuf = new StringBuf();
