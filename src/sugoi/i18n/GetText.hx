@@ -65,7 +65,8 @@ class GetText {
 					if( str.indexOf("::"+f.field+"::")<0 )
 						Context.error("Variable "+f.field+" not found in the string!", f.expr.pos);
 					vmap.set(f.field, true);
-					f.field = "_"+f.field;
+					//useless when there's no obfuscation
+					//f.field = "_"+f.field;
 				}
 
 				for(k in strVars)
