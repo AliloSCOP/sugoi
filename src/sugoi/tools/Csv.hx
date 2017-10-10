@@ -193,7 +193,7 @@ class Csv
 	 * @param	headers
 	 * @param	fileName
 	 */
-	public static function printCsvData(data:Array<Dynamic>,headers:Array<String>,fileName:String) {
+	public static function printCsvDataFromObjects(data:Array<Dynamic>,headers:Array<String>,fileName:String) {
 		
 		App.current.setTemplate('empty.mtt');
 		Web.setHeader("Content-type", "text/csv");
@@ -211,6 +211,25 @@ class Csv
 		}
 		return true;		
 	}
+	
+	public static function printCsvDataFromStringArray(data:Array<Array<String>>,headers:Array<String>,fileName:String) {
+		
+		App.current.setTemplate('empty.mtt');
+		Web.setHeader("Content-type", "text/csv");
+		Web.setHeader('Content-disposition', 'attachment;filename="$fileName.csv"');
+		
+		Sys.println(Lambda.map(headers,function(t) return App.t._(t)).join(","));
+		
+		for (r in data) {
+			var row = [];
+			for ( v in r ){				
+				row.push( "\""+(v==null?"":v)+"\"");	
+			}
+			Sys.println(row.join(","));
+		}
+		return true;		
+	}
+	
 	
 	/**
 	 * do a "array.shift()" on datas

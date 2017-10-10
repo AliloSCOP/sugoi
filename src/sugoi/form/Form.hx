@@ -416,9 +416,7 @@ class Form
 					
 
 				case DEnum(name):
-					//var t = Type.resolveEnum(enumName);
 					e = new sugoi.form.elements.Enum(f.name, label(f.name), name, Std.parseInt(v), !isNull);
-					
 
 				default :
 					e = new StringInput(f.name, label(f.name) , "unknown field type : "+f.type+", value : "+v);

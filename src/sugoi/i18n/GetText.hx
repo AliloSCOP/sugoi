@@ -96,7 +96,8 @@ class GetText {
 		}
 
 		var list = str.split("::");
-		if(params != null) {
+		if (params != null) {
+
 			for (k in Reflect.fields(params)) {
 				str = StringTools.replace(str, "::" + k + "::", Reflect.field(params, k));
 			}
