@@ -13,8 +13,7 @@ class CheckboxGroup extends FormElement<Array<String>>
 	public var selectMessage:String;
 	public var labelLeft:Bool;
 	public var verticle:Bool;
-	public var labelRight:Bool;
-	
+	public var labelRight:Bool;	
 	public var formatter:Formatter;
 	public var columns:Int;
 	
@@ -38,10 +37,9 @@ class CheckboxGroup extends FormElement<Array<String>>
 		
 		if (parentForm.isSubmitted())
 		{
-			value = (v != null) ? v : new Array();
+			value = (v != null) ? v : [];
 		} else {
-			if (v != null)
-				value = v;
+			if (v != null) value = v;
 		}
 	}
 	

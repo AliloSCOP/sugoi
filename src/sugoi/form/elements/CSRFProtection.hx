@@ -17,7 +17,7 @@ class CSRFProtection extends StringInput
 	{
 		
 		value = haxe.crypto.Md5.encode(App.current.session.sid + App.config.KEY.substr(0, 5));
-		super("token","token", value, true);
+		super("token","", value, true);
 		inputType = ITHidden;
 	}
 
