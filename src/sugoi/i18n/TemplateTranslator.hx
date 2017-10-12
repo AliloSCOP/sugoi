@@ -12,7 +12,6 @@ class TemplateTranslator
 {
     macro public static function parse(path:String)
     {
-        Sys.println("TemplateTranslator::parse");
 		var langs = new sugoi.Config(neko.Web.getCwd()).LANGS;
         
         for( lang in langs ) {
@@ -45,7 +44,8 @@ class TemplateTranslator
 	
     static public function translateTemplates(lang:String, folder:String)
     {
-        Sys.println('$lang : $folder');
+        //Sys.println('$lang : $folder');
+		
 		//var strReg = ~/(::_\("([^"]*)"\)::)+/ig;
         //var strReg = ~/(::_\([ ]*"([^"]+)+"[ ]*\)::)+/ig;
         var strReg = ~/_\([ ]*"((?:[^"\\]+|\\.)*)"[ ]*(?:,[ ]*{[.,:\w\s]*})?\)/igm;
@@ -89,7 +89,7 @@ class TemplateTranslator
 
 				//Sys.println(e.matched(0)+" replace "+str+" by "+Locale.texts.get(cleanedStr));
 				var output = StringTools.replace( e.matched(0), str, Locale.texts.get(cleanedStr) );
-				Sys.println("output:"+output);
+				//Sys.println("output:"+output);
 				return output;
                 //return Locale.texts.get(cleanedStr);
                
@@ -115,6 +115,7 @@ class TemplateTranslator
             //copy the file to the correct new folder
             var filePath = StringTools.replace(folder+"/"+f, "master", lang);
             var langFile = sys.io.File.write(filePath, false);
+			Sys.println(lang+" : "+filePath);
 			out = StringTools.replace(out, "\r", "");//for an unknown reason, there was double newlines
             langFile.writeString(out);
             langFile.flush();

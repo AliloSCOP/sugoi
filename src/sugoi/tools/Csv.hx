@@ -66,6 +66,35 @@ class Csv
 		//removes headers
 		_datas.shift(); 
 		
+		//cleaning
+		for ( o in _datas.copy() ) {
+			//remove empty lines
+			if (o == null || o.length <= 1) {
+				_datas.remove(o);
+				continue;
+			}
+			
+			//nullify empty fields
+			for (i in 0...o.length) {
+				
+				if (o[i] == "" || o[i] == "null" || o[i]=="NULL") {
+					o[i] = null;
+					continue;
+				}
+				
+				//clean spaces and useless chars
+				o[i] = StringTools.trim(o[i]);
+				o[i] = StringTools.replace(o[i], "\n", "");
+				o[i] = StringTools.replace(o[i], "\t", "");
+				o[i] = StringTools.replace(o[i], "\r", "");
+			}
+			
+			//remove empty lines
+			if (isNullRow(o)) _datas.remove(o);
+
+		}
+		
+		
 		//cut columns which are out of headers		
 		for ( d in _datas){
 			datas.push( d.copy().splice(0, headers.length) );
