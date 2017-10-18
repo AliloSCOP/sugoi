@@ -53,6 +53,7 @@ class RadioGroup extends FormElement<String>
 	}
 	
 	override function getTypedValue(str:String){
+		if(str==null) return null;
 		str = StringTools.trim(str);
 		return (str == "") ? return null : str;
 		
