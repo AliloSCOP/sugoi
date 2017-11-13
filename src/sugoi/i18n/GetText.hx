@@ -171,11 +171,11 @@ class GetText {
 
 			// Test it: http://regexr.com/
 			//var strReg = ~/_\([ ]*"((?:[^"\\]+|\\.)*)"[ ]*\)/igm;
-			var strReg = ~/_\([ ]*"((?:[^"\\]+|\\.)*)"[ ]*(?:,[ ]*{[().,:\w\s]*})?\)/igm;
+			var strReg = ~/_\([ ]*"((?:[^"\\]+|\\.)*)"[ ]*(?:,[ ]*{[()\[\].,:\w\s]*})?\)/igm;
 			var out = strReg.map(c, function(e) {
                 var fullStr = e.matched(0);
 				var str = e.matched(1);
-                Sys.println("str matched:"+str);
+                //Sys.println("str matched:"+str);
                 // Ignore commented strings
                 var i = str.indexOf("//");
 				var matchPos = strReg.matchedPos().pos;
@@ -200,10 +200,10 @@ class GetText {
                 }
 
 				var n = e.matchedPos().pos;
-				Sys.println("match line : "+n);
+				//Sys.println("match line : "+n);
 				// New entry found
 				if( !strMap.exists(cleanedStr) ) {
-					Sys.println("register key : "+cleanedStr);
+					//Sys.println("register key : "+cleanedStr);
 					strMap.set(cleanedStr, true);
 					data.push({
 						id			: cleanedStr,

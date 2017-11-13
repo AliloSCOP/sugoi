@@ -2,7 +2,7 @@ package sugoi.db;
 import sys.db.Types;
 
 /**
- * Key-Value storage in MySQL
+ * Key-Value temporary storage in a Memcached style
  */
 @:id(name)
 class Cache extends sys.db.Object
@@ -10,6 +10,12 @@ class Cache extends sys.db.Object
 	public var name : SString<128>;
 	public var value : SText;
 	public var expire : SDateTime;
+	public var cdate : SNull<SDateTime>;
+	
+	public function new(){
+		super();
+		cdate = Date.now();
+	}
 	
 	/**
 	 * Read the value for key $id

@@ -13,7 +13,7 @@ class Locale
 		
 		//Load mo file in various runtimes : macro, js and serverside
 		#if macro
-		trace(sugoi.Web.getCwd() + "www" + fileName(lang));
+		//trace(sugoi.Web.getCwd() + "www" + fileName(lang));
 		var file = sys.io.File.getBytes(sugoi.Web.getCwd() + "www/" + fileName(lang));
 		
 		texts = new GetText();
