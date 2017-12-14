@@ -23,8 +23,18 @@ class DebugMailer implements IMailer
 		t.add("to:" + m.getRecipients()+"\n");
 		t.add("subject:" + m.getSubject()+"\n");
 		t.add("body:" + m.getHtmlBody()+"\n");
+
+		App.current.logError( "[DEBUG] Email sent to " + m.getRecipients(), t.toString() );
 		
-		App.current.logError( t.toString() );
+		if (callback != null){
+			
+			var map = new MailerResult();
+			for ( u in m.getRecipients() ){
+				map.set( u.email , Success(Sent) );
+			}
+			
+			callback(map);
+		}
 	}
 	
 }

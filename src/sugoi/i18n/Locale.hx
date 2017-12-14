@@ -8,16 +8,21 @@ class Locale
 {	
 	static public var texts	: GetText;
 	
-	public static function init(lang:String,?callback:GetText->Void)
+	/**
+	 * Cache gettext objects in case of many language switches
+	 * (like in a cron action which lead to send many emails in various languages)
+	 */
+	static public var cache = new Map<String,GetText>();
+	
+	public static function init(lang:String,?callback:GetText->Void):GetText
 	{
 		
 		//Load mo file in various runtimes : macro, js and serverside
 		#if macro
-		//trace(sugoi.Web.getCwd() + "www" + fileName(lang));
-		var file = sys.io.File.getBytes(sugoi.Web.getCwd() + "www/" + fileName(lang));
-		
+		var file = sys.io.File.getBytes(sugoi.Web.getCwd() + "www/" + fileName(lang));		
 		texts = new GetText();
 		texts.readMo(file);
+		return texts;
 		#elseif js
 		var file : haxe.io.Bytes = null;
 		var r = new js.html.XMLHttpRequest();
@@ -32,12 +37,20 @@ class Locale
 		}
 		r.open('GET', '/'+fileName(lang), true);
 		r.send();
-		
+		return null;
 		#else
-		var file = sys.io.File.getBytes(sugoi.Web.getCwd() + "/" + fileName(lang));
-		texts = new GetText();
-		texts.readMo(file);
+		/*var texts = cache.get(lang);
+		trace(texts);
+		if (texts == null){*/
+			var file = sys.io.File.getBytes(sugoi.Web.getCwd() + "/" + fileName(lang));
+			texts = new GetText();
+			texts.readMo(file);
+			/*cache.set(lang,texts);
+		}*/
+		return texts;
 		#end
+		
+		
 	}
 	
 	

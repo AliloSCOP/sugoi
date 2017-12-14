@@ -275,7 +275,7 @@ class BaseApp {
 		
 	}
 
-	public function logError( e : Dynamic, ?stack ) {
+	public function logError( e : Dynamic, ?stack : String ) {
 		var stack = if( stack != null ) stack else haxe.CallStack.toString(haxe.CallStack.exceptionStack());
 		var message = new StringBuf();
 		message.add(Std.string(e));

@@ -228,7 +228,7 @@ class Csv
 		Web.setHeader("Content-type", "text/csv");
 		Web.setHeader('Content-disposition', 'attachment;filename="$fileName.csv"');
 		
-		Sys.println(Lambda.map(headers,function(t) return App.t._(t)).join(","));
+		Sys.println(Lambda.map(headers,function(t) return App.t._(t)).join(";"));
 		
 		for (d in data) {
 			var row = [];
@@ -236,25 +236,28 @@ class Csv
 				var v = Reflect.getProperty(d, f);
 				row.push( "\""+(v==null?"":v)+"\"");	
 			}
-			Sys.println(row.join(","));
+			Sys.println(row.join(";"));
 		}
 		return true;		
 	}
 	
+	/**
+	 * Separator is ";" for better compat with french excel users
+	 */
 	public static function printCsvDataFromStringArray(data:Array<Array<String>>,headers:Array<String>,fileName:String) {
 		
 		App.current.setTemplate('empty.mtt');
 		Web.setHeader("Content-type", "text/csv");
 		Web.setHeader('Content-disposition', 'attachment;filename="$fileName.csv"');
 		
-		Sys.println(Lambda.map(headers,function(t) return App.t._(t)).join(","));
+		Sys.println(Lambda.map(headers,function(t) return App.t._(t)).join(";"));
 		
 		for (r in data) {
 			var row = [];
 			for ( v in r ){				
 				row.push( "\""+(v==null?"":v)+"\"");	
 			}
-			Sys.println(row.join(","));
+			Sys.println(row.join(";"));
 		}
 		return true;		
 	}

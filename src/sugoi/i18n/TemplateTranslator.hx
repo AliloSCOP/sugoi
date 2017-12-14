@@ -48,7 +48,7 @@ class TemplateTranslator
 		
 		//var strReg = ~/(::_\("([^"]*)"\)::)+/ig;
         //var strReg = ~/(::_\([ ]*"([^"]+)+"[ ]*\)::)+/ig;
-        var strReg = ~/_\([ ]*"((?:[^"\\]+|\\.)*)"[ ]*(?:,[ ]*{[.,:\w\s]*})?\)/igm;
+        var strReg = ~/_\([ ]*"((?:[^"\\]+|\\.)*)"[ ]*(?:,[ ]*{[.,:\w\s\(\)]*})?\)/igm;
 		
 		for ( f in sys.FileSystem.readDirectory(folder) ) {
 			
