@@ -300,6 +300,10 @@ class BaseApp {
 				cnx.rollback();
 				logError(e,stack);
 			}
+			
+			//log also in a file, in case we don't have a valid connexion to DB
+			Web.logMessage(e+"\n" + stack);
+			
 			maintain = true;
 			view = new View();
 			view.message = Std.string(e);
