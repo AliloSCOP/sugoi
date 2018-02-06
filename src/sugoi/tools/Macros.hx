@@ -53,6 +53,9 @@ class Macros {
 		return changed ? fields : null;
 	}
 	
+	/**
+	 * get compile date
+	 */
 	macro public static function getCompileDate() {
 		return haxe.macro.Context.makeExpr(Date.now().toString(), haxe.macro.Context.currentPos());
 	}
@@ -62,5 +65,12 @@ class Macros {
 		//voir Context.resolvePath()
 		return haxe.macro.Context.makeExpr(p.file, Context.currentPos());
 	}
+	
+	/**
+	 * store classpathes at compilation time
+	 */
+	/*macro public static function getClassPathes() {
+		return haxe.macro.Context.makeExpr(Context.getClassPath(), haxe.macro.Context.currentPos());
+	}*/
 	
 }

@@ -16,6 +16,7 @@ class BaseApp {
 	public var uri 			: String;
 	
 	public static var config: Config;
+	//public static var classPathes = sugoi.tools.Macros.getClassPathes();
 
 	public function new() {
 		
@@ -26,16 +27,18 @@ class BaseApp {
 		cookieName = "sid";
 		cookieDomain = "." + App.config.HOST;
 		
-		/**
-		 * This macro generates translated templates for each langage
-		 */
+		#if plugins
+		if( false ) sugoi.plugin.PlugIn.copyTpl();
+		#end
+		
+		// This macro generates translated templates for each langage
 		#if i18n_generation
 		if( false ) TemplateTranslator.parse("lang/master");
 		#end
 	}
 	
 	public function loadConfig() {
-		App.config = BaseApp.config = new sugoi.Config();		
+		App.config = BaseApp.config = new sugoi.Config();	
 	}
 
 	public function loadTemplate( t : String ) {
