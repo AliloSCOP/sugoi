@@ -64,8 +64,8 @@ class PlugIn
 	
 	/**
 	 * recursive file copy
-	 * @param	src
-	 * @param	dest
+	 * @param	src		Path to source directory
+	 * @param	dest	Path to destination directory 
 	 */
 	static function copyDir(src:String, dest:String){
 		
@@ -74,7 +74,14 @@ class PlugIn
 		for ( r in FileSystem.readDirectory(src)){
 			
 			if (FileSystem.isDirectory(src + r)) {
-				copyDir(FileSystem.fullPath(src + r +"/"), FileSystem.fullPath(dest + r + "/"));					
+				
+				copyDir(FileSystem.fullPath(src + r +"/"), FileSystem.fullPath(dest + r + "/"));
+				
+			}else if ( !FileSystem.exists(dest + r) ){
+				
+				File.copy(src + r, dest + r);
+				Sys.println("Bundle plugin tpl :" + r);
+				
 			}else{
 				
 				var srcStat = FileSystem.stat(src + r);
@@ -82,7 +89,7 @@ class PlugIn
 				//Context.warning(destStat.mtime.toString()+" == "+srcStat.mtime.toString(), Context.currentPos());
 				if (srcStat.mtime.getTime() > destStat.mtime.getTime()){
 					File.copy(src + r, dest + r);
-					Context.warning("Bundle plugin tpl :" + r, Context.currentPos());
+					Sys.println("Bundle plugin tpl :" + r);
 				}
 				
 			}
