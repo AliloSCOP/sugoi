@@ -9,11 +9,17 @@ import sys.db.Types;
 class File extends sys.db.Object {
 	
 	public var id : SId;
-	public var name : STinyText; //filename
+	public var name : STinyText; 		 //filename
+	public var cdate : SNull<SDateTime>; //creation datetime
 	public var data : SBinary;
 	
 	@:skip
 	static var CACHE = [];
+
+	override public function new(){
+		super();
+		cdate = Date.now();
+	}
 	
 	/**
 	 * Get the file name related to this File record.

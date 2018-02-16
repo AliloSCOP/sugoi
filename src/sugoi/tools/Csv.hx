@@ -92,8 +92,7 @@ class Csv
 			//remove empty lines
 			if (isNullRow(o)) _datas.remove(o);
 
-		}
-		
+		}		
 		
 		//cut columns which are out of headers		
 		for ( d in _datas){
