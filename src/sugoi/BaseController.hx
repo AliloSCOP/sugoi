@@ -1,13 +1,6 @@
 package sugoi;
-
 import sugoi.db.File;
-
-#if neko
-import neko.Web;
-#else
-import php.Web;
-#end
-
+import sugoi.Web;
 
 enum ControllerAction {
 	RedirectAction( url : String );

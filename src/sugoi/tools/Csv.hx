@@ -225,8 +225,7 @@ class Csv
 		
 		App.current.setTemplate('empty.mtt');
 		Web.setHeader("Content-type", "text/csv");
-		Web.setHeader('Content-disposition', 'attachment;filename="$fileName.csv"');
-		
+		Web.setHeader('Content-disposition', 'attachment;filename="$fileName.csv"');		
 		Sys.println(Lambda.map(headers,function(t) return App.t._(t)).join(";"));
 		
 		for (d in data) {
@@ -247,8 +246,7 @@ class Csv
 		
 		App.current.setTemplate('empty.mtt');
 		Web.setHeader("Content-type", "text/csv");
-		Web.setHeader('Content-disposition', 'attachment;filename="$fileName.csv"');
-		
+		Web.setHeader('Content-disposition', 'attachment;filename="$fileName.csv"');		
 		Sys.println(Lambda.map(headers,function(t) return App.t._(t)).join(";"));
 		
 		for (r in data) {
