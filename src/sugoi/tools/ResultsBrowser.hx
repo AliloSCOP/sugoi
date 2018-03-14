@@ -7,10 +7,15 @@ class ResultsBrowser<T> {
 	public var next : Int;
 	public var prev : Int;
 	public var size : Int;
+	public var paginationVisiblePages : Int;
+
 	var index : Int;
 	var browse : Int -> Int -> List<T>;
+	var paginationStartPage : Int;
+	var paginationEndPage : Int;
 
-	public function new( count : Int, size : Int, browse : Int -> Int -> List<T>, ?defpos ) {
+
+	public function new( count : Int, size : Int, browse : Int -> Int -> List<T>, ?defpos, ?paginationVisiblePages = 10 ) {
 		this.size = size;
 		this.browse = browse;
 		page = Std.parseInt(App.current.params.get("page"));
@@ -30,7 +35,16 @@ class ResultsBrowser<T> {
 		}
 		next = if( pages == null || page < pages ) page + 1 else null;
 		index = (page - 1) * size;
-	}
+
+		//Pagination Logic
+		this.paginationVisiblePages = paginationVisiblePages;
+		paginationStartPage = (Math.ceil(page/paginationVisiblePages) - 1) * paginationVisiblePages + 1;
+		paginationEndPage = paginationStartPage + paginationVisiblePages;
+		if( paginationEndPage > pages + 1 ) {
+			paginationEndPage = pages + 1;
+		}
+					
+	}	
 
 	public function current() {
 		return browse((page-1)*size,size);
