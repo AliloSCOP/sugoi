@@ -111,10 +111,10 @@ class BaseApp {
 			setTemplate(args[0]);
 		case "logged":
 			if ( user == null )				
-				throw sugoi.BaseController.ControllerAction.RedirectAction("/?__redirect="+Web.getURI());
+				throw sugoi.ControllerAction.RedirectAction("/?__redirect="+Web.getURI());
 		case "admin":
 			if( user == null || !user.isAdmin() )
-				throw sugoi.BaseController.ControllerAction.RedirectAction("/");
+				throw sugoi.ControllerAction.RedirectAction("/");
 		default:
 		}
 	}
@@ -239,7 +239,7 @@ class BaseApp {
 			Web.redirect("/");
 			return;
 			
-		} catch ( e : sugoi.BaseController.ControllerAction) {
+		} catch ( e : sugoi.ControllerAction) {
 			
 			switch( e ) {
 			case RedirectAction(url):

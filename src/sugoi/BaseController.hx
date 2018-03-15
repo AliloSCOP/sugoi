@@ -1,12 +1,7 @@
 package sugoi;
 import sugoi.db.File;
 import sugoi.Web;
-
-enum ControllerAction {
-	RedirectAction( url : String );
-	ErrorAction( url : String, ?text : String );
-	OkAction( url : String, ?text : String );
-}
+import sugoi.ControllerAction;
 
 @:autoBuild(sugoi.tools.Macros.buildController())
 class BaseController {
@@ -22,7 +17,6 @@ class BaseController {
 	function getParam( v : String ) {
 		return app.params.get(v);
 	}
-
 	
 	function checkToken():Bool {
 		var token = haxe.crypto.Md5.encode(app.session.sid + App.config.KEY.substr(0,6));
@@ -45,8 +39,6 @@ class BaseController {
 	public function Ok( url : String, ?text : String ) {
 		return OkAction(url, text);
 	}
-	
-	
 	
 	/**
 	 * User uploaded images are stored in the db.File table.
