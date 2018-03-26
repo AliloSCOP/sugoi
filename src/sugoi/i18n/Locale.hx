@@ -19,7 +19,15 @@ class Locale
 		
 		//Load mo file in various runtimes : macro, js and serverside
 		#if macro
-		var file = sys.io.File.getBytes(sugoi.Web.getCwd() + "www/" + fileName(lang));		
+		var filePath = sugoi.Web.getCwd() + "www/" + fileName(lang);
+		if( !sys.FileSystem.exists(filePath) ){
+			//Create MO file if not exists. "Gettext" package should be installed.
+			var cmd = 'msgfmt -o $filePath '+filePath.substr(0,filePath.length-3)+'.po';
+			Sys.println(cmd);
+			var p = new sys.io.Process(cmd);
+			p.exitCode();			
+		}
+		var file = sys.io.File.getBytes( filePath );
 		texts = new GetText();
 		texts.readMo(file);
 		return texts;
