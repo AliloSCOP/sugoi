@@ -21,7 +21,7 @@ class Locale
 		#if macro
 		var filePath = sugoi.Web.getCwd() + "www/" + fileName(lang);
 		if( !sys.FileSystem.exists(filePath) ){
-			//Create MO file if not exists. "Gettext" package should be installed.
+			//Create MO file from PO file. "Gettext" package should be installed.
 			var cmd = 'msgfmt -o $filePath '+filePath.substr(0,filePath.length-3)+'.po';
 			Sys.println(cmd);
 			var p = new sys.io.Process(cmd);
