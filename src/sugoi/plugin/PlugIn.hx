@@ -53,8 +53,10 @@ class PlugIn
 				var hl = File.getContent(p + "../haxelib.json");
 				var hl = haxe.Json.parse(hl);
 				if (hl.sugoi != null){
-					var from = FileSystem.fullPath(p + "../" + hl.sugoi.tpl + "/");
-					var to = FileSystem.fullPath(Sys.getCwd() + "/lang/master/tpl/plugin/" + hl.sugoi.plugin + "/");
+					//var from = FileSystem.fullPath(p + "../" + hl.sugoi.tpl + "/");
+					var from = p + "../" + hl.sugoi.tpl + "/";
+					//var to = FileSystem.fullPath(Sys.getCwd() + "lang/master/tpl/plugin/" + hl.sugoi.plugin + "/");
+					var to = Sys.getCwd() + "lang/master/tpl/plugin/" + hl.sugoi.plugin + "/";
 					copyDir( from , to );
 				}
 			}
@@ -75,7 +77,8 @@ class PlugIn
 			
 			if (FileSystem.isDirectory(src + r)) {
 				
-				copyDir(FileSystem.fullPath(src + r +"/"), FileSystem.fullPath(dest + r + "/"));
+				//copyDir(FileSystem.fullPath(src + r +"/"), FileSystem.fullPath(dest + r + "/"));
+				copyDir( src + r  + "/", dest + r + "/" );
 				
 			}else if ( !FileSystem.exists(dest + r) ){
 				

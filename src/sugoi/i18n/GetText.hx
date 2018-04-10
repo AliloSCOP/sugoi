@@ -88,7 +88,11 @@ class GetText {
 	}
 
 	@:noCompletion public function get(str:String, ?params:Dynamic) : LocaleString {
-		if(texts == null) throw "no data in dictionnary";
+		
+		if(texts == null){
+			//fail silently
+			texts = new Map<String,LocaleString>();
+		} 
 
 		str = StringTools.rtrim( str.split("||")[0] );
 

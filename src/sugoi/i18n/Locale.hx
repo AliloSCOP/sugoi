@@ -50,9 +50,15 @@ class Locale
 		/*var texts = cache.get(lang);
 		trace(texts);
 		if (texts == null){*/
-			var file = sys.io.File.getBytes(sugoi.Web.getCwd() + "/" + fileName(lang));
+			var file = null;
+			try{
+				file = sys.io.File.getBytes(sugoi.Web.getCwd() + "/" + fileName(lang));
+			}catch(e:Dynamic){
+				//fail safely
+				App.current.session.addMessage("Cannot read translation file : "+Std.string(e));
+			}
 			texts = new GetText();
-			texts.readMo(file);
+			if(file!=null) texts.readMo(file);
 			/*cache.set(lang,texts);
 		}*/
 		return texts;
