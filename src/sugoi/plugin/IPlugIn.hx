@@ -7,7 +7,7 @@ package sugoi.plugin;
 interface IPlugIn 
 {
 	public function getName():String;
-	public function getController():sugoi.BaseController;
+	/*public function getController():sugoi.BaseController;
 	public function isInstalled():Bool;
-	public function install():Void;
+	public function install():Void;*/
 }

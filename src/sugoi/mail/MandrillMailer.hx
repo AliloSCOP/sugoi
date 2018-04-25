@@ -94,7 +94,7 @@ class MandrillMailer implements IMailer
 
 
 	public function curlRequest( method: String, url : String, ?headers : Dynamic, postData : String ) : Dynamic {
-		var cParams = ["-X"+method,"--max-time","5"];
+		var cParams = ["-X"+method,"--max-time","15"];
 		for( k in Reflect.fields(headers) ){
 			cParams.push("-H");
 			cParams.push(k+": "+Reflect.field(headers,k));
@@ -106,7 +106,8 @@ class MandrillMailer implements IMailer
 		}
 
 		var p = new sys.io.Process("curl", cParams);
-		var curlRq = "curl " + cParams.join(" ");
+		//var curlRq = "curl " + cParams.join(" ");
+
 		#if neko
 		var str = neko.Lib.stringReference(p.stdout.readAll());
 		#else
@@ -116,7 +117,6 @@ class MandrillMailer implements IMailer
 		if (str == null || str == "") {
 			str = neko.Lib.stringReference(p.stderr.readAll());
 		}
-		
 		
 		p.exitCode();
 
