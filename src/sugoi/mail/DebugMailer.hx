@@ -12,11 +12,11 @@ class DebugMailer implements IMailer
 {
 	public function new() {}
 	
-	public function init(c:Dynamic):IMailer{		
+	public function init(?c:Dynamic):IMailer{		
 		return this;
 	}
 	
-	public function send(m:sugoi.mail.IMail,?callback:MailerResult->Void):Void{
+	public function send(m:sugoi.mail.IMail,?params:Dynamic,?callback:MailerResult->Void):Void{
 		
 		//log in the Error table
 		var t = new StringBuf();

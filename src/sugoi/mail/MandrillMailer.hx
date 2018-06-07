@@ -15,12 +15,12 @@ class MandrillMailer implements IMailer
 	
 	public function new() {}
 	
-	public function init(c:Dynamic):IMailer{
+	public function init(?c:Dynamic):IMailer{
 		conf = c;
 		return this;
 	}
 	
-	public function send(m:sugoi.mail.IMail,?callback:MailerResult->Void):Void{
+	public function send(m:sugoi.mail.IMail,?params:Dynamic,?callback:MailerResult->Void):Void{
 		
 		//build an object from headers map
 		var headersObj = { };
@@ -87,7 +87,6 @@ class MandrillMailer implements IMailer
 
 				map.set( r.email , v );
 			}
-			
 			callback(map);
 		}
 	}

@@ -14,7 +14,7 @@ class SmtpMailer implements IMailer
 	
 	public function new(){}
 	
-	public function init(conf:{smtp_host:String,smtp_port:Int,smtp_user:String,smtp_pass:String}) :IMailer
+	public function init(?conf:{smtp_host:String,smtp_port:Int,smtp_user:String,smtp_pass:String}) :IMailer
 	{
 		m = new smtpmailer.SmtpMailer({
 			host: conf.smtp_host,
@@ -28,7 +28,7 @@ class SmtpMailer implements IMailer
 		return this;
 	}
 	
-	public function send(e:sugoi.mail.IMail,?callback:MailerResult->Void) 
+	public function send(e:sugoi.mail.IMail,?params:Dynamic,?callback:MailerResult->Void) 
 	{
 		var surprise = m.send({
 			subject: e.getSubject(),
