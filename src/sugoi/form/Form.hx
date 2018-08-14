@@ -381,7 +381,7 @@ class Form
 					e = new Checkbox(f.name, label(f.name), Std.string(v) == 'true');
 					
 				case DString(n):
-					e = new StringInput(f.name,label(f.name), v, !isNull ,null,"lenght="+n);
+					e = new StringInput(f.name,label(f.name), v, !isNull ,null,"maxlength="+n);
 		
 				case DTinyText, DSmallText, DText, DSerialized:
 					e = new TextArea(f.name, label(f.name), v,!isNull);

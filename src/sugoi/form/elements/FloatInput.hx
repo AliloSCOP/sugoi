@@ -12,14 +12,12 @@ class FloatInput extends Input<Float>
 		
 		var f = new FloatFilter();
 		var n = f.filterString(str);
-		
+
 		if (n==null && this.required){
 			return 0.0;
 		}else{
 			return n;
 		}
-		
-		
 		
 	}
 	

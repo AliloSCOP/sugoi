@@ -28,7 +28,8 @@ class DebugMailer implements IMailer
 		//log in an html file
 		var tmpDir = sugoi.Web.getCwd() + "../tmp/";
 		if ( !sys.FileSystem.exists(tmpDir) ) sys.FileSystem.createDirectory(tmpDir);
-		sys.io.File.saveContent( tmpDir + Date.now().toString().substr(0,10)+ "-"+ m.getSubject() + ".html" ,  m.getHtmlBody() );
+		var dest = m.getRecipients()[0].email;
+		sys.io.File.saveContent( tmpDir + dest+"-"+Date.now().toString().substr(0,10)+ "-"+ m.getSubject() + ".html" ,  m.getHtmlBody() );
 		
 		//callback
 		if (callback != null){

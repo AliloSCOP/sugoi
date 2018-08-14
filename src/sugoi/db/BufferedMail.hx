@@ -6,13 +6,13 @@ import sugoi.mail.IMailer;
 /**
  * DB Buffer for emails
  */
-@:index(remoteId)
+@:index(remoteId,sdate,cdate)
 class BufferedMail extends sys.db.Object
 {
 	public var id : SId;
 
 	//email content
-	public var title : SString<128>;
+	public var title : SString<256>;
 	public var htmlBody : SNull<SText>;
 	public var textBody : SNull<SText>;
 	public var headers : SData<Map<String,String>>;
@@ -121,7 +121,7 @@ class BufferedMail extends sys.db.Object
 
 
 	function afterSendCb(status:MailerResult){
-		App.current.logError(status);
+		//App.current.logError(status);
 		this.status = status;
 		this.update();
 	}
