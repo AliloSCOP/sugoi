@@ -3,7 +3,7 @@ package sugoi;
 import sugoi.db.Variable;
 import sugoi.db.File;
 
-class BaseView implements Dynamic {
+class BaseView {
 
 	var _vcache : Map<String,String>;
 

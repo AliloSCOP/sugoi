@@ -124,7 +124,11 @@ class GeoCode
 		}
 
 		var p = new sys.io.Process("curl",cParams);
+		#if neko
 		var str = neko.Lib.stringReference(p.stdout.readAll());
+		#else
+		var str = p.stdout.readAll().toString();
+		#end
 		p.exitCode();
 
 		return str;

@@ -114,7 +114,11 @@ class MandrillMailer implements IMailer
 		#end
 		
 		if (str == null || str == "") {
+			#if neko
 			str = neko.Lib.stringReference(p.stderr.readAll());
+			#else
+			str = p.stderr.readAll().toString();
+			#end
 		}
 		
 		

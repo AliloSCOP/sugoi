@@ -305,7 +305,9 @@ class BaseApp {
 			}
 			
 			//log also in a file, in case we don't have a valid connexion to DB
+			#if neko
 			Web.logMessage(e+"\n" + stack);
+			#end
 			
 			maintain = true;
 			view = new View();
