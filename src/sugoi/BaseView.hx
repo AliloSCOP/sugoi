@@ -10,28 +10,6 @@ class BaseView {
 	public function new() {
 		_vcache = new Map();
 	}
-
-	public function init() {
-		var app = App.current;
-		
-		this.user = app.user;
-		this.session = app.session;
-		this.LANG = App.config.LANG;
-		this.HOST = App.config.HOST;
-		this.DATA_HOST = App.config.DATA_HOST;
-		this.DEBUG = App.config.DEBUG;
-		this.NAME = App.config.NAME;
-		this.isAdmin = app.user != null && app.user.isAdmin();
-		
-		//Access basic functions in views
-		this.Std = Std;
-		this.Math = Math;
-		
-		
-		if ( App.config.SQL_LOG  ) {			
-			this.sqlLog = untyped app.cnx == null ? null : app.cnx.log;
-		}
-	}
 	
 	function getMessage() {
 		var session = App.current.session;
@@ -161,4 +139,38 @@ class BaseView {
 		return list;
 	}
 	
+
+	public static function init():Dynamic{
+		//copy fields of view into a dynamic 
+		var view:Dynamic = {};
+		var baseView = new View();
+		for(field in Reflect.fields(baseView)){
+			Reflect.setField(view,field,Reflect.field(baseView,field));
+		}
+
+		var app = App.current;
+		
+		view.user = app.user;
+		view.session = app.session;
+		view.LANG = App.config.LANG;
+		view.HOST = App.config.HOST;
+		view.DATA_HOST = App.config.DATA_HOST;
+		view.DEBUG = App.config.DEBUG;
+		view.NAME = App.config.NAME;
+		view.isAdmin = app.user != null && app.user.isAdmin();
+		
+		//Access basic functions in views
+		view.Std = Std;
+		view.Math = Math;
+		
+		
+		if ( App.config.SQL_LOG  ) {			
+			view.sqlLog = untyped app.cnx == null ? null : app.cnx.log;
+		}
+
+		return view;
+
+
+
+	}
 }

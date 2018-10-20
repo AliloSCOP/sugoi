@@ -85,7 +85,8 @@ class BufferedMail extends sys.db.Object
 			case "mandrill":
 				new sugoi.mail.MandrillMailer().init(conf);
 			case "smtp":
-				new sugoi.mail.SmtpMailer().init(conf);
+				throw "SMTP not supported";
+				//new sugoi.mail.SmtpMailer().init(conf);
 			case "debug":
 				new sugoi.mail.DebugMailer();
 			default : 

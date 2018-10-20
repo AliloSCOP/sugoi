@@ -8,7 +8,7 @@ class BaseApp {
 	public var template		: templo.Loader;
 	public var maintain		: Bool;
 	public var session		: sugoi.db.Session;
-	public var view 		: View;
+	public var view 		: Dynamic;//View can no longer implements Dynamic
 	public var user    		: db.User;
 	public var params 		: Map<String,String>;
 	public var cookieName	: String;
@@ -311,7 +311,7 @@ class BaseApp {
 			#end
 			
 			maintain = true;
-			view = new View();
+			view = BaseView.init();
 			//Exception can be a string, Enum or tink.core.Error
 			view.exception = e; 
 			view.message = Std.string(e);
@@ -346,7 +346,7 @@ class BaseApp {
 	function init() {
 		maintain = App.config.getBool("maintain");
 		if( maintain ) {
-			view = new View();
+			view = BaseView.init();
 			setTemplate("maintain.mtt");
 			executeTemplate(false);
 			return false;
@@ -380,7 +380,7 @@ class BaseApp {
 		var app = new App();
 		var bapp : BaseApp = app;
 		bapp.cnx = cnx;
-		bapp.view = new View();
+		bapp.view = BaseView.init();
 		App.current = app;
 		bapp.mainLoop();
 	}
