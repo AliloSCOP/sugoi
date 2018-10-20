@@ -96,7 +96,8 @@ class BaseApp {
 	}
 
 	function executeTemplate( ?save ) {
-		view.init();
+		//view.init();
+		
 		var result = template.execute(view);
 		if ( save ) saveAndClose();
 		#if php

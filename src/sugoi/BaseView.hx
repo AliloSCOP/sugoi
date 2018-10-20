@@ -144,7 +144,7 @@ class BaseView {
 		//copy fields of view into a dynamic 
 		var view:Dynamic = {};
 		var baseView = new View();
-		for(field in Reflect.fields(baseView)){
+		for(field in Type.getInstanceFields(View)){
 			Reflect.setField(view,field,Reflect.field(baseView,field));
 		}
 
