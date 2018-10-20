@@ -15,12 +15,12 @@ class MandrillMailer implements IMailer
 	
 	public function new() {}
 	
-	public function init(c:Dynamic):IMailer{
+	public function init(?c:Dynamic):IMailer{
 		conf = c;
 		return this;
 	}
 	
-	public function send(m:sugoi.mail.IMail,?callback:MailerResult->Void):Void{
+	public function send(m:sugoi.mail.IMail,?params:Dynamic,?callback:MailerResult->Void):Void{
 		
 		//build an object from headers map
 		var headersObj = { };
@@ -87,14 +87,13 @@ class MandrillMailer implements IMailer
 
 				map.set( r.email , v );
 			}
-			
 			callback(map);
 		}
 	}
 
 
 	public function curlRequest( method: String, url : String, ?headers : Dynamic, postData : String ) : Dynamic {
-		var cParams = ["-X"+method,"--max-time","5"];
+		var cParams = ["-X"+method,"--max-time","15"];
 		for( k in Reflect.fields(headers) ){
 			cParams.push("-H");
 			cParams.push(k+": "+Reflect.field(headers,k));
@@ -106,7 +105,8 @@ class MandrillMailer implements IMailer
 		}
 
 		var p = new sys.io.Process("curl", cParams);
-		var curlRq = "curl " + cParams.join(" ");
+		//var curlRq = "curl " + cParams.join(" ");
+
 		#if neko
 		var str = neko.Lib.stringReference(p.stdout.readAll());
 		#else
@@ -120,7 +120,6 @@ class MandrillMailer implements IMailer
 			str = p.stderr.readAll().toString();
 			#end
 		}
-		
 		
 		p.exitCode();
 

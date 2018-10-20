@@ -264,8 +264,6 @@ class Form
 			}catch (e:Dynamic){
 				throw "Error '" + e+"' while setting value " + v + " to " + f;
 			}
-			
-
 		}
 	}
 
@@ -276,16 +274,12 @@ class Form
 	public static function fromObject(obj:Dynamic) {
 		var form = new Form('fromObj');
 		for (f in Reflect.fields(obj)) {
-			var val = StringTools.trim(Reflect.field(obj, f));
+			var val = Reflect.field(obj, f);
 			if (val == "") val = null;
 			form.addElement(new sugoi.form.elements.StringInput(f, f, val));
-		}
-		
+		}		
 		return form;
 	}
-
-	
-	
 	
 	/*
 	 *  Generate a form from a spod object
@@ -387,7 +381,7 @@ class Form
 					e = new Checkbox(f.name, label(f.name), Std.string(v) == 'true');
 					
 				case DString(n):
-					e = new StringInput(f.name,label(f.name), v, !isNull ,null,"lenght="+n);
+					e = new StringInput(f.name,label(f.name), v, !isNull ,null,"maxlength="+n);
 		
 				case DTinyText, DSmallText, DText, DSerialized:
 					e = new TextArea(f.name, label(f.name), v,!isNull);

@@ -13,9 +13,10 @@ interface IMail
 	public function setHtmlBody(body:String):IMail;
 	public function setTextBody(body:String):IMail;
 	
-	public function getSender(): {email:String,name:String};
-	public function getRecipients():Array<{email:String,name:String}>;
+	public function getSender(): {?userId:Int,email:String,name:String};
+	public function getRecipients():Array<{?userId:Int,email:String,name:String}>;
 	public function getSubject():String;
+	public function getTitle():String;
 	public function getHtmlBody():String;
 	public function getTextBody():String;
 	public function getHeaders():Map<String,String>;

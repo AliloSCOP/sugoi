@@ -105,7 +105,9 @@ class DatePicker extends FormElement<Date>
 					//stores the date in mysql format in a hidden input element	
 					$('#datetimepicker-"+name+"').on('dp.change',function(e){
 						var d = $('#datetimepicker-"+name+"').data('DateTimePicker').date();//moment.js obj
-						//console.log(d.toString());
+						//fix 2038 date overflow bug https://en.wikipedia.org/wiki/Year_2038_problem
+						if(d.year()>2037) d.year(2037);
+						console.log(d.toString());
 						$('#datetimepickerdata-"+name+"').val( d.format('YYYY-MM-DD HH:mm:ss'));
 					});
 				});

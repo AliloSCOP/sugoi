@@ -1,5 +1,8 @@
 package sugoi.form.filters;
 
+/**
+ * Converts a String to a Float
+ */
 class FloatFilter extends Filter implements IFilter<Float>
 {
 
@@ -17,7 +20,9 @@ class FloatFilter extends Filter implements IFilter<Float>
 		if (n == null || n=="") return null;
 		n = StringTools.trim(n);		
 		n = StringTools.replace(n, ",", ".");
-		return Std.parseFloat(n);
+		var f = Std.parseFloat(n);
+		if( Math.isNaN(f) ) f = null;
+		return f;
 	}
 	
 }

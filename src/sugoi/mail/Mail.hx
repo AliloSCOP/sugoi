@@ -3,14 +3,15 @@ using Lambda;
 
 class Mail implements IMail
 {
+	
 	public var title : String;
 	public var htmlBody : String;
 	public var textBody : String;
-	
+	var headers : Map<String,String>;
 	var sender : {name:String,email:String,?userId:Int};
 	var recipients : Array<{name:String,email:String,?userId:Int}>;
 	
-	var headers : Map<String,String>;
+	
 	
 	public function new() {
 		recipients = [];
@@ -151,6 +152,10 @@ class Mail implements IMail
 	
 	public function getSubject(){
 		return title;
+	}
+
+	public function getTitle(){
+		return getSubject();
 	}
 	
 	public function getHtmlBody(){

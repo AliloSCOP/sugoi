@@ -221,7 +221,7 @@ class Csv
 	 * @param	headers
 	 * @param	fileName
 	 */
-	public static function printCsvDataFromObjects(data:Array<Dynamic>,headers:Array<String>,fileName:String) {
+	public static function printCsvDataFromObjects(data:Iterable<Dynamic>,headers:Array<String>,fileName:String) {
 		
 		App.current.setTemplate('empty.mtt');
 		Web.setHeader("Content-type", "text/csv");
