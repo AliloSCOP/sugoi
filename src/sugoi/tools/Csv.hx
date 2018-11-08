@@ -225,8 +225,13 @@ class Csv
 		
 		App.current.setTemplate('empty.mtt');
 		Web.setHeader("Content-type", "text/csv");
-		Web.setHeader('Content-disposition', 'attachment;filename="$fileName.csv"');		
-		Sys.println(Lambda.map(headers,function(t) return App.t._(t)).join(";"));
+		Web.setHeader('Content-disposition', 'attachment;filename="$fileName.csv"');
+
+		if(App.t==null)	{
+			Sys.println(Lambda.map(headers,function(t) return t).join(";"));
+		}else{
+			Sys.println(Lambda.map(headers,function(t) return App.t._(t)).join(";"));
+		}
 		
 		for (d in data) {
 			var row = [];
