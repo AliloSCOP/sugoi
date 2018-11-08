@@ -89,6 +89,7 @@ class BaseView implements Dynamic {
 	}
 
 	function getParam( p : String ) {
+		if(App.current==null || App.current.params==null) return null;
 		return App.current.params.get(p);
 	}
 	

@@ -29,8 +29,7 @@ class Curl
 	
 	
 	public function setPostData(key:String, value:String) {
-		postData.set(key, value);
-		
+		postData.set(key, value);		
 	}
 	
 	/**
@@ -74,7 +73,7 @@ class Curl
 			params.push("\""+d.join("&")+"\"");
 		}
 		
-		//if there is a POST payload ( i.e a JSON formatted request )
+		//POST payload ( i.e a JSON formatted request )
 		if (post != null) {			
 			params.push("-d");
 			params.push(post);
@@ -82,7 +81,6 @@ class Curl
 		}
 		
 		//params = params.map(function(s) return haxe.Utf8.encode(s));
-		
 		
 		debugCommand = "curl " + params.join(" ");
 		var p = new sys.io.Process("curl", params);

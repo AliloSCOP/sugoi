@@ -68,6 +68,7 @@ class BaseApp {
 		}else{
 			path = Web.getCwd() + "../lang/master/";
 		}
+
 		App.config.TPL = path + "tpl/";
 		App.config.TPL_TMP = path + "tmp/";
 		
@@ -309,7 +310,10 @@ class BaseApp {
 			
 			maintain = true;
 			view = new View();
+			//Exception can be a string, Enum or tink.core.Error
+			view.exception = e; 
 			view.message = Std.string(e);
+			
 			if ( App.config.DEBUG || (user != null && user.isAdmin()) ) {				
 				view.stack = stack;
 			}
