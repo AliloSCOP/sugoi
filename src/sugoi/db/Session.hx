@@ -4,7 +4,7 @@ import db.User;
 import sugoi.Web;
 
 @:id(sid)
-@:index(uid,unique)
+//@:index(uid,unique)
 class Session extends sys.db.Object {
 
 	public var sid : SString<32>;
@@ -40,7 +40,7 @@ class Session extends sys.db.Object {
 	public function setUser( u : User ):Void {		
 		
 		//remove any previous session for this user
-		manager.delete($uid==u.id);		
+		//manager.delete($uid==u.id);		
 		
 		lang = u.lang;
 		user = u;

@@ -29,10 +29,9 @@ class BufferedMailer implements IMailer
 		bm.htmlBody = m.getHtmlBody();
 		bm.textBody = m.getTextBody();
 		bm.recipients = m.getRecipients();
-		bm.sender = m.getSender();
-		
+		bm.sender = m.getSender();		
 		bm.mailerType = this.type;
-		
+
 		//custom params
 		if(params!=null){
 			bm.data = params;
@@ -40,7 +39,7 @@ class BufferedMailer implements IMailer
 				bm.remoteId = Reflect.getProperty(params,"remoteId");
 			}
 		} 
-		
+
 		//set sending status as "queued"
 		var map = new MailerResult();
 		for( r in m.getRecipients() ){

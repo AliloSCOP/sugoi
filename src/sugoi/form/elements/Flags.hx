@@ -55,6 +55,7 @@ class Flags<T> extends FormElement<Int>
 	public var verticle:Bool;
 	public var labelRight:Bool;
 	var checked : Array<Bool>;
+	public var excluded : Array<Int>; //indexes of flags you want to exclude
 
 	public var columns:Int;
 	
@@ -76,6 +77,7 @@ class Flags<T> extends FormElement<Int>
 		this.value = value;
 		this.verticle = verticle;
 		this.labelRight = labelRight;
+		this.excluded = [];
 		if (value == null) value = 0;
 		
 		checked = [];
@@ -95,23 +97,13 @@ class Flags<T> extends FormElement<Int>
 		value = 0;
 		
 		if (v != null) {
-			//App.log("flags populate : " + v );
 			var val = new haxe.EnumFlags<FakeFlag>();
-			//var i = 0;
 			for (vv in v) {
 				val.set( FakeFlag.createByIndex(Std.parseInt(vv)) );
-				//i++;
 			}
 			
 			value = val.toInt();
 		}
-		
-		
-		//if (form.isSubmitted()){
-			//value = (v != null) ? v : new Array();
-		//} else {
-			//if (v != null) value = v;
-		//}
 	}
 	
 	override public function render():String
@@ -137,6 +129,10 @@ class Flags<T> extends FormElement<Int>
 				for (j in 0...rowsPerColumn)
 				{
 					if (c >= array.length) break;
+					if( Lambda.has(excluded,c)) {
+						c++;
+						continue;
+					}
 					
 					s += "<tr>";
 					
