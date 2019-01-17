@@ -87,6 +87,7 @@ class DatePicker extends FormElement<Date>
 		return "
 				<div class='input-group date' id='datetimepicker-"+name+"'>       
 					<span class='input-group-addon'>
+						<!--<i class='icon icon-calendar'></i>-->
 						<span class='glyphicon glyphicon-calendar'></span>
 					</span>
 					<input type='text' class='form-control' />
