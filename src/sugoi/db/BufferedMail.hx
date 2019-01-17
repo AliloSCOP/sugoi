@@ -112,7 +112,6 @@ class BufferedMail extends sys.db.Object
 		}catch(e:Dynamic){
 			this.sdate = null;
 			this.rawStatus = Std.string(e);
-			// App.current.logError( Std.string(e) );
 		}
 		
 		this.update();
@@ -121,7 +120,6 @@ class BufferedMail extends sys.db.Object
 
 
 	function afterSendCb(status:MailerResult){
-		//App.current.logError(status);
 		this.status = status;
 		this.update();
 	}
