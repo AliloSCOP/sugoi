@@ -18,6 +18,16 @@ class BaseApp {
 	public static var config: Config;
 	//public static var classPathes = sugoi.tools.Macros.getClassPathes();
 
+	public var headers : Map<String,String>;
+	public static var defaultHeaders = [
+		"Pragma"=>"no-cache",
+		"Cache-Control"=>"no-store, no-cache, must-revalidate",
+		"Expires"=>"-1",
+		"P3P"=>"CP=\"ALL DSP COR NID CURa OUR STP PUR\"",
+		"Content-Type"=>"text/html; Charset=UTF-8",
+		//"Expires"=>"Mon, 26 Jul 1997 05:00:00 GMT"
+	];
+
 	public function new() {
 		
 		if (config == null) {
@@ -26,6 +36,12 @@ class BaseApp {
 		
 		cookieName = "sid";
 		cookieDomain = "." + App.config.HOST;
+
+		//populate default headers
+		headers = new Map<String,String>();
+		for(k in BaseApp.defaultHeaders.keys() ) {
+			headers.set(k,BaseApp.defaultHeaders.get(k));
+		}
 		
 		#if plugins
 		if( false ) sugoi.plugin.PlugIn.copyTpl();
@@ -390,13 +406,13 @@ class BaseApp {
 		App.current = null;
 	}
 
+	/**
+		Send HTTP headers defined in this.headers
+	**/
 	function sendHeaders(){
-		Web.setHeader("Cache-Control", "no-store, no-cache, must-revalidate");
-		Web.setHeader("Pragma", "no-cache");
-		Web.setHeader("Expires", "-1");
-		Web.setHeader("P3P", "CP=\"ALL DSP COR NID CURa OUR STP PUR\"");
-		Web.setHeader("Content-Type", "text/html; Charset=UTF-8");
-		Web.setHeader("Expires", "Mon, 26 Jul 1997 05:00:00 GMT");
+		for(k in headers.keys() ) {
+			Web.setHeader(k,headers.get(k));
+		}
 	}
 
 	static function main() {
