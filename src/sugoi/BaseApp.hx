@@ -49,7 +49,7 @@ class BaseApp {
 		
 		// This macro generates translated templates for each langage
 		#if i18n_generation
-		if( false ) TemplateTranslator.parse("lang/master");
+		if( false ) TemplateTranslator.parse("../lang/master");
 		#end
 	}
 	
