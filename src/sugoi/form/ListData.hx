@@ -102,25 +102,24 @@ class ListData
 		return data;
 	}
 	
-	public static function arrayToList(array:Array<String>, ?startCounter:Int=0):List<Dynamic>
-	{
-		var data:List<Dynamic> = new List();
-		
-		var c = startCounter;
-		for (v in array)
-		{
-			data.add( { key:c, value:v } );
-			c++;
+	/*public static function fromArray<T>(array:Array<T>, ?startCounter:Int=0):FormData<T>{
+		var data = new FormData<T>();		
+		for (v in array){
+			data.push( { label:v, value:startCounter } );
+			startCounter++;
 		}
 		return data;
-	}
+	}*/
 	
-	public static function flatArraytoList(array:Array<String>):List<Dynamic>
-	{
-		var data:List<Dynamic> = new List();
-		
-		for (i in array) data.add( { key:i, value:i } );
-		
+	public static function fromFlatArray<T>(array:Array<T>):FormData<T>{
+		var data = new FormData<T>();
+		for (i in array) data.push( { label:Std.string(i), value:i } );
+		return data;
+	}
+
+	public static function fromSpod(array:Iterable<Dynamic>):FormData<Int>{
+		var data = new FormData<Int>();
+		for (i in array) data.push( { label:untyped i.name , value:untyped i.id } );
 		return data;
 	}
 	
