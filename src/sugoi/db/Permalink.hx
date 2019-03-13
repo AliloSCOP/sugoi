@@ -3,7 +3,7 @@ import sys.db.Types;
 
 /**
  *  Permalink utility :
-    Manage a bunch of unique links
+    Manage a bunch of unique links linked to entities
  */
 @:id(link)
 class Permalink extends sys.db.Object
@@ -81,6 +81,9 @@ class Permalink extends sys.db.Object
 		return out.toString();
 	}
 
+	/**
+		Propose a list a available links
+	**/
 	public static function propose(str:String,infos:Array<String>):Array<String>{
 
 		var out = [];
@@ -104,9 +107,7 @@ class Permalink extends sys.db.Object
 			if(!exists(noSpaces+i)) out.push(noSpaces+i);			
 		}
 
-
 		return out;
-
 	}
 
 	public static function exists(link:String):Bool{
