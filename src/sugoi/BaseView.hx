@@ -97,7 +97,7 @@ class BaseView implements Dynamic {
 	 * Return the url of a db.File record
 	 */
 	public function file( file : sugoi.db.File):String {
-		if (file == null) throw "file is null";
+		if (file == null) return "";
 		return "/file/"+sugoi.db.File.makeSign(file.id)+"."+file.getExtension();
 	}
 	
