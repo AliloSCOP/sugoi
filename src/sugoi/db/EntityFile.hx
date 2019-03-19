@@ -5,9 +5,10 @@ import sys.db.Types;
  *  EntityFile utility :
     Manage files linked to entities
  */
-@:id(fileId,entityType,entityId)
+@:index(fileId,entityType,entityId)
 class EntityFile extends sys.db.Object
 {
+    public var id:SId;
 	@:relation(fileId) public var file : sugoi.db.File;
 	public var entityType : SString<64>;
     public var documentType : SString<64>;
