@@ -33,8 +33,7 @@ class Input<T> extends FormElement<T>
 		this.required = required;
 		this.attributes = attributes;
 
-		if (validators != null)
-		{
+		if (validators != null){
 			for (i in validators)
 			{
 				this.validators.add(i);

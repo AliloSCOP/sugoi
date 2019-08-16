@@ -249,19 +249,29 @@ class Csv
 	 */
 	public static function printCsvDataFromStringArray(data:Array<Array<String>>,headers:Array<String>,fileName:String) {
 		
-		App.current.setTemplate('empty.mtt');
 		Web.setHeader("Content-type", "text/csv");
 		Web.setHeader('Content-disposition', 'attachment;filename="$fileName.csv"');		
 		Sys.println(Lambda.map(headers,function(t) return App.t._(t)).join(";"));
 		
 		for (r in data) {
 			var row = [];
-			for ( v in r ){				
+			for ( v in r ){	
 				row.push( "\""+(v==null?"":v)+"\"");	
 			}
 			Sys.println(row.join(";"));
 		}
 		return true;		
+	}
+
+	public static function escape(str:String){
+		if(str==null) return "";
+		str = StringTools.replace(str,'"',"'");
+		str.split("\n").join(" ");
+		str.split("\r").join(" ");
+		str.split("\t").join("    ");
+		return str;
+
+
 	}
 	
 	

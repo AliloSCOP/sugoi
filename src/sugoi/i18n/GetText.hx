@@ -179,7 +179,7 @@ class GetText {
 			var out = strReg.map(c, function(e) {
                 var fullStr = e.matched(0);
 				var str = e.matched(1);
-                //Sys.println("str matched:"+str);
+                Sys.println("str matched = "+str);
                 // Ignore commented strings
                 var i = str.indexOf("//");
 				var matchPos = strReg.matchedPos().pos;

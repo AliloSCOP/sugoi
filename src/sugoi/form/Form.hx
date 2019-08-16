@@ -186,8 +186,7 @@ class Form
 	public function getData():Map<String,Dynamic>
 	{
 		var data = new Map<String,Dynamic>();
-		for (element in getElements())
-		{
+		for (element in getElements()){
 			if (element.name == null) throw "Element has no name : "+element.toString();
 			data.set( element.name,element.getValue() );	
 		}

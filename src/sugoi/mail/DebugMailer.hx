@@ -23,13 +23,22 @@ class DebugMailer implements IMailer
 		t.add("to:" + m.getRecipients()+"\n");
 		t.add("subject:" + m.getSubject()+"\n");
 		t.add("body:" + m.getHtmlBody()+"\n");
-		App.current.logError( "[DEBUG] Email sent to " + m.getRecipients(), t.toString() );
 		
-		//log in an html file
-		var tmpDir = sugoi.Web.getCwd() + "../tmp/";
-		if ( !sys.FileSystem.exists(tmpDir) ) sys.FileSystem.createDirectory(tmpDir);
-		var dest = m.getRecipients()[0].email;
-		sys.io.File.saveContent( tmpDir + dest+"-"+Date.now().toString().substr(0,10)+ "-"+ m.getSubject() + ".html" ,  m.getHtmlBody() );
+		//App.current.logError( "[DEBUG] Email sent to " + m.getRecipients(), t.toString() );
+		
+		//write th mail into a html file
+		var tmpDir = sugoi.Web.getCwd() + "../tmp/emails/"+Date.now().toString().substr(0,10)+"/";
+		if ( !sys.FileSystem.exists(tmpDir) ) {
+			sys.FileSystem.createDirectory(tmpDir);
+			var chmod = new sys.io.Process("chmod",["777",tmpDir]);
+			chmod.exitCode(true);
+
+		}
+
+		for (r in m.getRecipients()){
+			sys.io.File.saveContent( tmpDir + r.email + "-" + m.getSubject() + ".html" ,  m.getHtmlBody() );
+		}
+		
 		
 		//callback
 		if (callback != null){

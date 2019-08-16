@@ -54,6 +54,7 @@ class Permalink extends sys.db.Object
 			str = StringTools.replace(str,x,"o");
 		}
 
+		str = StringTools.replace(str,"ç","c");
 		str = StringTools.replace(str,"œ","oe");
 		str = StringTools.replace(str,"ù","u");
 		str = StringTools.replace(str," ","-");
