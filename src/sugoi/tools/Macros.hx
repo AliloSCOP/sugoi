@@ -20,9 +20,10 @@ class Macros {
 							switch(c) {
 							case CString(s):
 								// look for the template in the filesystem in all the paths
-								var found = false;
+								/*var found = false;
 								var cp = Context.getClassPath();
 								cp.reverse();
+								Context.warning(cp.join(" , "),m.pos);
 								for ( path in cp) {
 									//Context.warning(path + s+" "+sys.FileSystem.exists(path + s),m.pos);
 									if ( sys.FileSystem.exists(path + s) ) {
@@ -31,10 +32,11 @@ class Macros {
 									}
 								}
 
-								if( !found ) Context.error("File not found '"+s+"'", m.params[0].pos);
-								
-								//if( !sys.FileSystem.exists("lang/fr/tpl/"+s) )
-								//	Context.error("File not found '"+s+"'", m.params[0].pos);
+								if( !found ) Context.error("File not found '"+s+"'", m.params[0].pos);*/
+								//Context.error("cwd "+, m.pos);
+								var path = Sys.getCwd()+'../lang/master/tpl/';
+								if( !sys.FileSystem.exists('$path$s') )
+									Context.error('File not found "$path$s"', m.params[0].pos);
 							default:
 								Context.error("Invalid @tpl", m.pos);
 							}

@@ -74,7 +74,7 @@ class DebugConnection implements sys.db.Connection {
 			t : Std.int((Sys.time() - t)*1000),
 			sql : rq,
 			length : r.length,
-			bad : isBadSql(explain),
+			bad : isBadSql(cast explain),
 			explain : buf.toString().split("\\").join("\\\\").split("'").join("\\'").split("\r").join("\\r").split("\n").join("\\n"),
 			stack : CallStack.toString(s).split("\\").join("\\\\").split("'").join("\\'").split("\r").join("\\r").split("\n").join("\\n")
 		});

@@ -11,8 +11,8 @@ import haxe.macro.Context;
 class TemplateTranslator
 {
     macro public static function parse(path:String)
-    {
-		var langs = new sugoi.Config(neko.Web.getCwd()).LANGS;
+    {		
+		var langs = new sugoi.Config().LANGS;
         
         for( lang in langs ) {
             Sys.println(lang + " : Generating template files");

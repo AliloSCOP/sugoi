@@ -3,15 +3,31 @@ package sugoi;
 import sugoi.db.Variable;
 import sugoi.db.File;
 
-class BaseView implements Dynamic {
+class BaseView{
 
 	var _vcache : Map<String,String>;
+	var user : db.User;
+	var session : sugoi.db.Session;
+	var LANG : String;
+	var HOST : String;
+	var DATA_HOST : String;
+	var DEBUG : Bool;
+	var NAME : String;
+	var isAdmin : Bool;
+	var sqlLog : Array<Dynamic>;
 
 	public function new() {
 		_vcache = new Map();
 	}
 
 	public function init() {
+		//copy fields of view into a dynamic 
+		var view:Dynamic = {};
+		var baseView = new View();
+		for(field in Type.getInstanceFields(View)){
+			Reflect.setField(view,field,Reflect.field(baseView,field));
+		}
+
 		var app = App.current;
 		
 		this.user = app.user;
@@ -24,8 +40,8 @@ class BaseView implements Dynamic {
 		this.isAdmin = app.user != null && app.user.isAdmin();
 		
 		//Access basic functions in views
-		this.Std = Std;
-		this.Math = Math;
+		//this.Std = Std;
+		//this.Math = Math;
 		
 		
 		if ( App.config.SQL_LOG  ) {			

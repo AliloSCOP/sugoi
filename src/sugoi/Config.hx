@@ -5,7 +5,6 @@ import sugoi.Web;
 class Config {
 
 	public var PATH :String;
-	//public var json : Dynamic;	
 	public var xml : Xml;
 	public var LANG 		:String;
 	public var LANGS 		:Array<String>;
@@ -19,8 +18,7 @@ class Config {
 	public var SQL_LOG 		:Bool;
 
 	public function new(?path:String) {
-		PATH = (path != null) ? path : Web.getCwd() + "../";
-		//json = haxe.Json.parse(sys.io.File.getContent(PATH + "config.json"));	
+		PATH = (path != null) ? path : sugoi.Web.getCwd() + "../";
 		xml = Xml.parse(sys.io.File.getContent(PATH + "config.xml")).firstElement();
 		
 		LANG = get("lang");

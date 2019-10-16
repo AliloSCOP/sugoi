@@ -7,7 +7,7 @@ import sugoi.ControllerAction;
 class BaseController {
 
 	var app : App;
-	var view : View;
+	var view : Dynamic;
 	
 	public function new() {
 		app = App.current;

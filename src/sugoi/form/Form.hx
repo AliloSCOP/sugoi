@@ -8,7 +8,7 @@ import sugoi.Web;
 import sys.db.Types;
 import sys.db.Object;
 import sys.db.Manager;
-import sys.db.TableInfos;
+import sys.db.admin.TableInfos;
 
 enum FormMethod
 {

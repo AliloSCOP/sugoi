@@ -2,7 +2,7 @@ package sugoi.mail;
 import tink.core.Future;
 import tink.core.Noise;
 import sugoi.mail.IMailer;
-import smtpmailer.Address;
+//import smtpmailer.Address;
 
 /**
  * Send emails thru SMTP by using ben merckx's library 

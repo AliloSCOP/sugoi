@@ -56,13 +56,17 @@ class Csv
 			
 		}catch (e:Dynamic){}
 	
-		var _datas = [];
-		if (separator == ","){
+		var _datas = new Array<Array<String>>();
+		/*if (separator == ","){
 			_datas = thx.csv.Csv.decode(d);
 		}else{
 			_datas = thx.csv.DCsv.decode(d);
+		}*/
+		for(line in d.split("\n")){
+			_datas.push(line.split(separator));
 		}
-		
+
+
 		//removes headers
 		_datas.shift(); 
 		
@@ -195,11 +199,11 @@ class Csv
 			for ( i in 0...row.length) {
 				var t = row[i];
 				if (t != "" && t != null) {
-					try{
-						if (!haxe.Utf8.validate(t)) {
-							t = haxe.Utf8.encode(t);	
-						}
-					}catch (e:Dynamic) {}
+					// try{
+					// 	if (!haxe.Utf8.validate(t)) {
+					// 		t = haxe.Utf8.encode(t);	
+					// 	}
+					// }catch (e:Dynamic) {}
 					row[i] = t;
 				}
 			}

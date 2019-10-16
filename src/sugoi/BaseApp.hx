@@ -8,7 +8,7 @@ class BaseApp {
 	public var template		: templo.Loader;
 	public var maintain		: Bool;
 	public var session		: sugoi.db.Session;
-	public var view 		: View;
+	public var view 		: Dynamic;
 	public var user    		: db.User;
 	public var params 		: Map<String,String>;
 	public var cookieName	: String;
@@ -326,9 +326,13 @@ class BaseApp {
 			
 			maintain = true;
 			view = new View();
-			//Exception can be a string, Enum or tink.core.Error
-			view.exception = e; 
-			view.message = Std.string(e);
+
+			//Exception can be a string, Enum, Array or tink.core.Error
+			if(Std.is(e,tink.core.Error)){
+				view.exception = e; 
+			}else{
+				view.message = Std.string(e);
+			}
 			
 			if ( App.config.DEBUG || (user != null && user.isAdmin()) ) {				
 				view.stack = stack;
@@ -346,7 +350,7 @@ class BaseApp {
 					sugoi.db.Error.manager.get(0,false);
 			} catch( e : Dynamic ) {
 				Sys.println("Initializing Database...");
-				sys.db.Admin.initializeDatabase();
+				sys.db.admin.Admin.initializeDatabase();
 				Sys.println("Done");
 			}
 			Sys.print("</pre>");
