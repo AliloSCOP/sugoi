@@ -72,10 +72,24 @@ class Csv
 		
 		//cleaning
 		for ( o in _datas.copy() ) {
+
 			//remove empty lines
 			if (o == null || o.length <= 1) {
 				_datas.remove(o);
 				continue;
+			}
+
+			//remove remaining quotes 
+			for (i in 0...o.length) {
+				var s = o[i];
+				if(s.substr(0,1)=="\""){
+					s = s.substr(1);
+				}
+				if(s.substr(s.length-1,1)=="\""){
+					s = s.substr(0,s.length-1);
+				}
+				o[i] = s;
+
 			}
 			
 			//nullify empty fields

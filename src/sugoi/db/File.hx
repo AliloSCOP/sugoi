@@ -67,10 +67,19 @@ class File extends sys.db.Object {
 		#end
 		
 	}
+
+	public static function createFromDataUrl(dataUrl:String,?fileName=""){		
+		dataUrl = dataUrl.substr( "data:image/png;base64,".length );
+		var b = haxe.crypto.Base64.decode(dataUrl);
+		/*
+		//DEBUG
+		var path = sugoi.Web.getCwd()+"../tmp/_image.png";
+		File.saveBytes(path , b);*/
+		return createFromBytes(b, fileName);		
+	}
 	
 	public function getExtension():String {
-		if (name == null || name=="") return "jpg";
-		
+		if (name == null || name=="") return "png";		
 		return name.split(".")[1];
 	}
 	
