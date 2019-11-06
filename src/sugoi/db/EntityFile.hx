@@ -12,6 +12,7 @@ class EntityFile extends sys.db.Object
 	@:relation(fileId) public var file : sugoi.db.File;
 	public var entityType : SString<64>;
     public var documentType : SString<64>;
+    public var data : SNull<SString<128>>;
     public var entityId : SInt;
 	
 	public function new(){
