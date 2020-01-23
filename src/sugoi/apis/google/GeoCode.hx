@@ -11,7 +11,7 @@ package sugoi.apis.google;
  /**
   *  { "results" : [
   * 	{ "address_components" : [
-  * 		{ "long_name" : "1", "short_name" : "1",						"types" : [ "street_number" ] },
+  * 		{ "long_name" : "1", "short_name" : "1", "types" : [ "street_number" ] },
   * 		{ "long_name" : "Place Saint Bénigne", "short_name" : "Pl. Saint Bénigne", "types" : [ "route" ] },
   * 		{ "long_name" : "Dijon", "short_name" : "Dijon", 			"types" : [ "locality", "political" ] },
   * 		{ "long_name" : "Côte-d'Or", "short_name" : "Côte-d'Or",	"types" : [ "administrative_area_level_2", "political" ] },

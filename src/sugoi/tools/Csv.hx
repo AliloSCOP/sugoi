@@ -55,16 +55,18 @@ class Csv
 			if (x[0].split(";").length > x[0].split(",").length) separator = ";";
 			
 		}catch (e:Dynamic){}
+
+		//trace(separator);
 	
 		var _datas = new Array<Array<String>>();
-		/*if (separator == ","){
+		if (separator == ","){
 			_datas = thx.csv.Csv.decode(d);
 		}else{
 			_datas = thx.csv.DCsv.decode(d);
-		}*/
-		for(line in d.split("\n")){
-			_datas.push(line.split(separator));
 		}
+		/*for(line in d.split("\n")){
+			_datas.push(line.split(separator));
+		}*/
 
 
 		//removes headers

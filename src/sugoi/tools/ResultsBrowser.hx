@@ -10,12 +10,12 @@ class ResultsBrowser<T> {
 	public var paginationVisiblePages : Int;
 
 	var index : Int;
-	var browse : Int -> Int -> List<T>;
+	var browse : Int -> Int -> Iterable<T>;
 	var paginationStartPage : Int;
 	var paginationEndPage : Int;
 
 
-	public function new( count : Int, size : Int, browse : Int -> Int -> List<T>, ?defpos, ?paginationVisiblePages = 10 ) {
+	public function new( count : Int, size : Int, browse : Int -> Int -> Iterable<T>, ?defpos, ?paginationVisiblePages = 10 ) {
 		this.size = size;
 		this.browse = browse;
 		page = Std.parseInt(App.current.params.get("page"));
