@@ -42,7 +42,7 @@ class Form
 	
 	//conf	
 	public static var USE_TWITTER_BOOTSTRAP = true;
-	public static var USE_DATEPICKER = true; //http://eonasdan.github.io/bootstrap-datetimepicker/
+	//public static var USE_DATEPICKER = true; //http://eonasdan.github.io/bootstrap-datetimepicker/
 
 	public var toString : Void->String; //you can change the way the form is rendered
 
@@ -283,7 +283,7 @@ class Form
 	/*
 	 *  Generate a form from a spod object
 	 */
-	public static function fromSpod(obj:sys.db.Object) {
+	public static function fromSpod(obj:sys.db.Object, ?fieldTypeToElementMap:Map< String , (String,sys.db.RecordInfos.RecordType,Dynamic)->Dynamic > ){
 
 		//generate a form name
 		var cl = Type.getClass(obj);
@@ -374,7 +374,11 @@ class Form
 					e = new IntInput(f.name, label(f.name) , v , !isNull);
 				
 				case DFloat:
-					e = new FloatInput(f.name, label(f.name), v, !isNull );
+					if(fieldTypeToElementMap!=null && fieldTypeToElementMap["DFloat"]!=null){
+						e = fieldTypeToElementMap["DFloat"](f.name,f.type,v);
+					}else{
+						e = new FloatInput(f.name, label(f.name), v, !isNull );
+					}
 					
 				case DBool :
 					e = new Checkbox(f.name, label(f.name), Std.string(v) == 'true');
@@ -387,30 +391,19 @@ class Form
 
 				case DTimeStamp, DDateTime:
 					
-					if (USE_DATEPICKER) {
-						 
-						//WTF bugfix : the type is correct (Date) but is null when traced in DatePicker
-						var d :Date = cast v;
-						e = new DatePicker(f.name, label(f.name), d);	
-						untyped e.format = "LLLL";
-					}else {
-						e = new DateInput(f.name, label(f.name), v);	
+					if(fieldTypeToElementMap!=null && fieldTypeToElementMap["DDateTime"]!=null){
+						e = fieldTypeToElementMap["DDateTime"](f.name,f.type,v);
+					}else{
+						e = new DateInput(f.name, label(f.name), v);
 					}
 					
 				case DDate :
 
-					if (USE_DATEPICKER) {
-						//trace(f.name+" => " + v);
-						//trace(Type.getClassName(Type.getClass(v)));
-						
-						//WTF bugfix : the type is correct (Date) but is null when traced in DatePicker
-						var d :Date = cast v;
-						e = new DatePicker(f.name, label(f.name), d);	
-						untyped e.format = "LL";
-					}else {
-						e = new DateDropdowns(f.name, label(f.name), v);	
+					if(fieldTypeToElementMap!=null && fieldTypeToElementMap["DDate"]!=null){
+						e = fieldTypeToElementMap["DDate"](f.name,f.type,v);
+					}else{
+						e = new DateInput(f.name, label(f.name), v);
 					}
-					
 
 				case DEnum(name):
 					e = new sugoi.form.elements.Enum(f.name, label(f.name), name, Std.parseInt(v), !isNull);
