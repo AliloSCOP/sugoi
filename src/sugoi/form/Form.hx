@@ -284,7 +284,7 @@ class Form
 	/*
 	 *  Generate a form from a spod object
 	 */
-	public static function fromSpod(obj:sys.db.Object, ?fieldTypeToElementMap:Map< String , (String,sys.db.RecordInfos.RecordType,Dynamic)->Dynamic > ){
+	public static function fromSpod(obj:sys.db.Object, ?fieldTypeToElementMap:Map< String , (String,String,Dynamic)->Dynamic > ){
 
 		//generate a form name
 		var cl = Type.getClass(obj);
@@ -376,7 +376,7 @@ class Form
 				
 				case DFloat:
 					if(fieldTypeToElementMap!=null && fieldTypeToElementMap["DFloat"]!=null){
-						e = fieldTypeToElementMap["DFloat"](f.name,f.type,v);
+						e = fieldTypeToElementMap["DFloat"](f.name,label(f.name),v);
 					}else{
 						e = new FloatInput(f.name, label(f.name), v, !isNull );
 					}
@@ -393,7 +393,7 @@ class Form
 				case DTimeStamp, DDateTime:
 					
 					if(fieldTypeToElementMap!=null && fieldTypeToElementMap["DDateTime"]!=null){
-						e = fieldTypeToElementMap["DDateTime"](f.name,f.type,v);
+						e = fieldTypeToElementMap["DDateTime"](f.name,label(f.name),v);
 					}else{
 						e = new NativeDatePicker(f.name, label(f.name), v, NativeDatePickerType.datetime);
 					}
@@ -401,7 +401,7 @@ class Form
 				case DDate :
 
 					if(fieldTypeToElementMap!=null && fieldTypeToElementMap["DDate"]!=null){
-						e = fieldTypeToElementMap["DDate"](f.name,f.type,v);
+						e = fieldTypeToElementMap["DDate"](f.name,label(f.name),v);
 					}else{
 						e = new NativeDatePicker(f.name, label(f.name), v, NativeDatePickerType.datetime);
 					}
