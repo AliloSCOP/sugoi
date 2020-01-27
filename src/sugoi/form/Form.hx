@@ -403,7 +403,7 @@ class Form
 					if(fieldTypeToElementMap!=null && fieldTypeToElementMap["DDate"]!=null){
 						e = fieldTypeToElementMap["DDate"](f.name,f.type,v);
 					}else{
-						e = new NativeDatePicker(f.name, label(f.name), v, NativeDatePickerType.datetime);
+						e = new NativeDatePicker(f.name, label(f.name), v, NativeDatePickerType.date);
 					}
 
 				case DEnum(name):
