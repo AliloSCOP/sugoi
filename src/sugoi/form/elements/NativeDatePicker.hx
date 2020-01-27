@@ -17,30 +17,56 @@ class NativeDatePicker extends FormElement<Date> {
     this.name = name;
     this.label = label;
     this.type = type;
-    this.value = _value == null ? Date.now() : _value;
+    this.value =  _value;
     this.required = required;
-		this.attributes = attibutes;
+	this.attributes = attibutes;
   }
 
   override public function render():String {
     var inputName = parentForm.name + "_" + name;
-    var inputType = renderInputType();
     return '
       <input
-          name=$inputName
-          type=$inputType 
-          value=$value
+          name="$inputName"
+          type="${renderInputType()}" 
+          value="${renderDate()}"
           '+ (required == true ? 'required' : '') +'
           '+ attributes +'
       />
     ';
   }
 
-  override public function populate() {
-    var n = parentForm.name + "_" + name;
-    var v = App.current.params.get(n);
-    value = Date.fromString(v);
-  }
+  	/**
+		  format date for input
+	  **/
+	function renderDate():String{
+
+		if(value==null) return "";
+
+		return switch(type){
+			case date : value.toString().substr(0,10);
+			default : 	value.toString().split(" ").join("T");
+		}
+		
+	}
+
+  	override public function getTypedValue(str:String):Date {
+
+		if(str=="") return null;
+
+		switch (type){
+			case date:
+			str = str.substr(0,10);
+
+			case time :
+
+			case datetime:
+			//tranform 2000-01-01T00:00 to 2000-01-01 00:00:00
+			str = str.split("T").join(" ");
+			str = str + ":00";
+		}
+		
+    	return Date.fromString(str);
+  	}
 
   private function renderInputType() {
     return switch (type) {
