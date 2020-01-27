@@ -4,6 +4,7 @@ import haxe.crypto.Md5;
 import sugoi.form.elements.Input;
 import sugoi.i18n.translator.ITranslator;
 import sugoi.form.elements.*;
+import sugoi.form.elements.NativeDatePicker;
 import sugoi.Web;
 import sys.db.Types;
 import sys.db.Object;
@@ -394,7 +395,7 @@ class Form
 					if(fieldTypeToElementMap!=null && fieldTypeToElementMap["DDateTime"]!=null){
 						e = fieldTypeToElementMap["DDateTime"](f.name,f.type,v);
 					}else{
-						e = new DateInput(f.name, label(f.name), v);
+						e = new NativeDatePicker(f.name, label(f.name), v, NativeDatePickerType.datetime);
 					}
 					
 				case DDate :
@@ -402,7 +403,7 @@ class Form
 					if(fieldTypeToElementMap!=null && fieldTypeToElementMap["DDate"]!=null){
 						e = fieldTypeToElementMap["DDate"](f.name,f.type,v);
 					}else{
-						e = new DateInput(f.name, label(f.name), v);
+						e = new NativeDatePicker(f.name, label(f.name), v, NativeDatePickerType.datetime);
 					}
 
 				case DEnum(name):
