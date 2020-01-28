@@ -54,7 +54,7 @@ class PlugIn
 					//var from = FileSystem.fullPath(p + "../" + hl.sugoi.tpl + "/");
 					var from = p + "../" + hl.sugoi.tpl + "/";
 					//var to = FileSystem.fullPath(Sys.getCwd() + "lang/master/tpl/plugin/" + hl.sugoi.plugin + "/");
-					var to = Sys.getCwd() + "lang/master/tpl/plugin/" + hl.sugoi.plugin + "/";
+					var to = Sys.getCwd() + "../lang/master/tpl/plugin/" + hl.sugoi.plugin + "/";
 					copyDir( from , to );
 				}
 			}
