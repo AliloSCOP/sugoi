@@ -284,7 +284,10 @@ class Form
 	/*
 	 *  Generate a form from a spod object
 	 */
-	public static function fromSpod(obj:sys.db.Object, ?fieldTypeToElementMap:Map< String , (String,String,Dynamic)->Dynamic > ){
+	public static function fromSpod(
+		obj:sys.db.Object,
+		?fieldTypeToElementMap:Map<String , (name: String, label: String, value: Dynamic, ?required: Bool)->Dynamic>
+	){
 
 		//generate a form name
 		var cl = Type.getClass(obj);

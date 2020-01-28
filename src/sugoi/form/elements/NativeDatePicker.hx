@@ -11,15 +11,22 @@ enum NativeDatePickerType {
 class NativeDatePicker extends FormElement<Date> {
   private var type: NativeDatePickerType;
 
-  public function new (name:String, label:String, ?_value:Date, ?type: NativeDatePickerType = NativeDatePickerType.date, ?required:Bool=false, ?attibutes:String="") {
+  public function new (
+    name:String,
+    label:String,
+    ?_value:Date,
+    ?type: NativeDatePickerType = NativeDatePickerType.date,
+    ?required:Bool=false,
+    ?attibutes:String=""
+  ) {
     super();
 
     this.name = name;
     this.label = label;
     this.type = type;
-    this.value =  _value;
     this.required = required;
-	this.attributes = attibutes;
+    this.value =  (this.required == true && _value == null) ? Date.now() : _value;
+	  this.attributes = attibutes;
   }
 
   override public function render():String {
@@ -39,18 +46,15 @@ class NativeDatePicker extends FormElement<Date> {
 		  format date for input
 	  **/
 	function renderDate():String{
-
 		if(value==null) return "";
 
 		return switch(type){
 			case date : value.toString().substr(0,10);
 			default : 	value.toString().split(" ").join("T");
 		}
-		
 	}
 
-  	override public function getTypedValue(str:String):Date {
-
+  override public function getTypedValue(str:String):Date {
 		if(str=="") return null;
 
 		switch (type){
@@ -65,8 +69,8 @@ class NativeDatePicker extends FormElement<Date> {
 			str = str + ":00";
 		}
 		
-    	return Date.fromString(str);
-  	}
+    return Date.fromString(str);
+  }
 
   private function renderInputType() {
     return switch (type) {
