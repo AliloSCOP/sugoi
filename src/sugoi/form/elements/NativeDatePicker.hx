@@ -1,6 +1,11 @@
 package sugoi.form.elements;
 
 import sugoi.form.FormElement;
+#if php
+import php.Web;
+#else
+import neko.Web;
+#end
 
 enum NativeDatePickerType {
   date;
@@ -48,9 +53,10 @@ class NativeDatePicker extends FormElement<Date> {
 	function renderDate():String{
 		if(value==null) return "";
 
-		return switch(type){
-			case date : value.toString().substr(0,10);
-			default : 	value.toString().split(" ").join("T");
+		return switch(type) {
+      case time: value.toString().split(" ")[1];
+      case datetime: value.toString().split(" ").join("T");
+			default : value.toString().substr(0,10);
 		}
 	}
 
@@ -58,18 +64,22 @@ class NativeDatePicker extends FormElement<Date> {
 		if(str=="") return null;
 
 		switch (type){
-			case date:
-			str = str.substr(0,10);
-
 			case time :
-
+        var strSplited = str.split(":");
+        var now = Date.now();
+        return new Date(now.getFullYear(), now.getMonth(), now.getDay(), Std.parseInt(strSplited[0]), Std.parseInt(strSplited[1]), 0);
 			case datetime:
-			//tranform 2000-01-01T00:00 to 2000-01-01 00:00:00
-			str = str.split("T").join(" ");
-			str = str + ":00";
+      //tranform 2000-01-01T00:00 to 2000-01-01 00:00:00
+        var strSplited = str.split("T");
+        str = strSplited.join(" ");
+        if (strSplited[1].split(":").length == 2) {
+          str += ":00";
+        }
+        return Date.fromString(str);
+      default:
+        str = str.substr(0,10);
+        return Date.fromString(str);
 		}
-		
-    return Date.fromString(str);
   }
 
   private function renderInputType() {
