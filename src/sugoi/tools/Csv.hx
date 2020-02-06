@@ -241,7 +241,7 @@ class Csv
 	 */
 	public static function printCsvDataFromObjects(data:Iterable<Dynamic>,headers:Array<String>,fileName:String) {
 		
-		App.current.setTemplate('empty.mtt');
+		App.current.setTemplate('empty.twig');
 		Web.setHeader("Content-type", "text/csv");
 		Web.setHeader('Content-disposition', 'attachment;filename="$fileName.csv"');
 

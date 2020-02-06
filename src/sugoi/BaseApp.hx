@@ -1,14 +1,19 @@
 package sugoi;
 import sugoi.i18n.TemplateTranslator;
 import sugoi.Web;
+import php.Global;
+import php.Const;
 
 class BaseApp {
 
-	public var cnx			: sys.db.Connection;
-	public var template		: templo.Loader;
+	public var cnx			: sys.db.Connection;	
 	public var maintain		: Bool;
 	public var session		: sugoi.db.Session;
-	public var view 		: Dynamic;
+	
+	public var view 				: Dynamic;
+	public var templateEngine		: twig.TwigEnvironment;
+	public var template 			: String;
+
 	public var user    		: db.User;
 	public var params 		: Map<String,String>;
 	public var cookieName	: String;
@@ -16,7 +21,6 @@ class BaseApp {
 	public var uri 			: String;
 	
 	public static var config: Config;
-	//public static var classPathes = sugoi.tools.Macros.getClassPathes();
 
 	public var headers : Map<String,String>;
 	public static var defaultHeaders = [
@@ -57,20 +61,13 @@ class BaseApp {
 		App.config = BaseApp.config = new sugoi.Config();	
 	}
 
-	public function loadTemplate( t : String ) {
-		templo.Loader.OPTIMIZED = App.config.DEBUG == false;
-		templo.Loader.BASE_DIR = App.config.TPL;
-		templo.Loader.TMP_DIR = App.config.TPL_TMP;
-		if ( t == null ) return null;		
-		#if neko
-		return new templo.Loader(t, App.config.getBool("cachetpl"));		
-		#else
-		return new templo.Loader(t);		
-		#end
+	public function loadTemplateEngine():twig.TwigEnvironment {		
+		var loader = new twig.loader.Filesystem(App.config.TPL);
+		return new twig.TwigEnvironment( loader , {debug:App.config.DEBUG} );
 	}
 
 	public function setTemplate( t : String ) {
-		template = t == null ? null : loadTemplate(t);
+		template = t;
 	}
 
 	public function initLang( lang : String ) {
@@ -112,14 +109,11 @@ class BaseApp {
 	}
 
 	function executeTemplate( ?save ) {
-		view.init();
-		var result = template.execute(view);
-		if ( save ) saveAndClose();
-		#if php
-		//strange bug with templo in PHP
-		if (result.substr(0, 4) == "null") result = result.substr(4);
-		#end
+		templateEngine = loadTemplateEngine();
+		var result = templateEngine.render(template,view);
 		Sys.print(result);
+		if ( save ) saveAndClose();
+		
 	}
 
 	function onMeta( m : String, args : Array<Dynamic> ) {
@@ -222,9 +216,11 @@ class BaseApp {
 			maintain = false;
 		
 		setCookie(cookieSid);
+
+		view = BaseView.init();
 		
 		if( maintain ) {
-			setTemplate("maintain.mtt");
+			setTemplate("maintain.twig");
 			executeTemplate();
 			return;
 		}
@@ -233,7 +229,7 @@ class BaseApp {
 		try {
 			
 			uri = Web.getURI();
-			if ( StringTools.endsWith(uri, "/index.n") ) uri = uri.substr(0, -8);
+			//if ( StringTools.endsWith(uri, "/index.n") ) uri = uri.substr(0, -8);
 			
 			//"before dispatch" callback
 			beforeDispatch();
@@ -291,10 +287,11 @@ class BaseApp {
 	 * Override this function if you want 
 	 * to insert some actions 
 	 */
-	public function beforeDispatch() {
-		
-	}
+	public function beforeDispatch() {}
 
+	/**
+		Log error in Error table
+	**/
 	public function logError( e : Dynamic, ?stack : String ) {
 		var stack = if( stack != null ) stack else haxe.CallStack.toString(haxe.CallStack.exceptionStack());
 		var message = new StringBuf();
@@ -322,10 +319,12 @@ class BaseApp {
 			}
 			
 			//log also in a file, in case we don't have a valid connexion to DB
+			#if neko
 			Web.logMessage(e+"\n" + stack);
+			#end
 			
 			maintain = true;
-			view = new View();
+			view = BaseView.init();
 
 			//Exception can be a string, Enum, Array or tink.core.Error
 			if(Std.is(e,tink.core.Error)){
@@ -338,7 +337,7 @@ class BaseApp {
 				view.stack = stack;
 			}
 				
-			setTemplate("error.mtt");
+			setTemplate("error.twig");
 			executeTemplate(false);
 			
 		} catch( e : Dynamic ) {
@@ -364,8 +363,8 @@ class BaseApp {
 	function init() {
 		maintain = App.config.getBool("maintain");
 		if( maintain ) {
-			view = new View();
-			setTemplate("maintain.mtt");
+			view = BaseView.init();
+			setTemplate("maintain.twig");
 			executeTemplate(false);
 			return false;
 		}
@@ -388,8 +387,9 @@ class BaseApp {
 			errorHandler(e);
 			return false;
 		}
-		if( App.config.SQL_LOG )
-			cnx = new sugoi.tools.DebugConnection(cnx);
+		/*if( App.config.SQL_LOG )
+			cnx = new sugoi.tools.DebugConnection(cnx);*/
+
 		return true;
 	}
 
@@ -420,6 +420,9 @@ class BaseApp {
 	}
 
 	static function main() {
+
+		//Load PHP librairies
+		Global.require_once(Const.__DIR__ + '/../../../vendor/autoload.php');
 		
 		/**
 		 * this macro will parse the code and generate the allTexts.pot file

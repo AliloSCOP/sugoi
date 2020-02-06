@@ -163,7 +163,7 @@ class GetText {
 
 			// Ignore non-sourcecode
 			var isHaxeFile = f.substr(f.length - 3) == ".hx";
-			var isTemplateFile = f.substr(f.length - 4) == ".mtt";
+			var isTemplateFile = f.substr(f.length - 4) == ".twig";
 			
 			if( !(isHaxeFile || isTemplateFile) )
 				continue;

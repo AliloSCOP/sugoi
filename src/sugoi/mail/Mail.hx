@@ -86,10 +86,8 @@ class Mail implements IMail
 	 * @param	ctx 	Vars to send to template
 	 */
 	public function setHtmlBodyWithTemplate(tpl, ctx:Dynamic) {
-		var app = App.current;
-		var tpl = app.loadTemplate(tpl);
+		var app = App.current;		
 		if( ctx == null ) ctx = { };
-		ctx.HOST = App.config.HOST;
 		ctx.key = getKey();
 		ctx.senderName = sender.name;
 		ctx.senderEmail = sender.email;
@@ -97,7 +95,7 @@ class Mail implements IMail
 		ctx.recipientEmail = recipients[0].email;
 		ctx.recipients = recipients;
 		CSSInlining(ctx);
-		htmlBody = tpl.execute(ctx);
+		htmlBody = app.processTemplate(tpl,ctx);
 		
 	}
 	
@@ -106,15 +104,6 @@ class Mail implements IMail
 		return this;
 	}
 	
-	public function setTextBodyWithTemplate(tpl, ctx:Dynamic) {		
-		var app = App.current;
-		var tpl = app.loadTemplate(tpl);
-		if( ctx == null ) ctx = { };
-		ctx.HOST = App.config.HOST;
-		ctx.key = getKey();
-		textBody = tpl.execute(ctx);
-		return this;
-	}
 	
 
 	function CSSInlining(ctx) {
