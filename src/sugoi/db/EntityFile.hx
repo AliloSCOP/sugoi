@@ -24,9 +24,9 @@ class EntityFile extends sys.db.Object
 	**/
 	public static function getByEntity(type:String,id:Int,?documentType:String){
         if(documentType==null){
-            return manager.search($entityId==id && $entityType==type,false);
+            return Lambda.array(manager.search($entityId==id && $entityType==type,false));
         }else{
-            return manager.search($entityId==id && $entityType==type && $documentType==documentType, false);
+            return Lambda.array(manager.search($entityId==id && $entityType==type && $documentType==documentType, false));
         }
 		
 	}
