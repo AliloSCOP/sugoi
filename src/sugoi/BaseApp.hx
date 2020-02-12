@@ -61,7 +61,7 @@ class BaseApp {
 		App.config = BaseApp.config = new sugoi.Config();	
 	}
 
-	public function loadTemplateEngine():twig.TwigEnvironment {		
+	public function loadTemplateEngine():twig.TwigEnvironment {	
 		var loader = new twig.loader.Filesystem(App.config.TPL);
 		return new twig.TwigEnvironment( loader , {debug:App.config.DEBUG} );
 	}
@@ -75,7 +75,7 @@ class BaseApp {
 		if (lang == null || lang == "") lang = config.LANG;
 		
 		//Define template path
-		var path;
+		/*var path;
 		if (!App.config.DEBUG){
 			path = Web.getCwd() + "../lang/" + lang + "/";
 		}else{
@@ -83,7 +83,7 @@ class BaseApp {
 		}
 
 		App.config.TPL = path + "tpl/";
-		App.config.TPL_TMP = path + "tmp/";
+		App.config.TPL_TMP = path + "tmp/";*/
 		
 		//init system locale
 		if ( !Sys.setTimeLocale("en_US.UTF-8") ) {			
@@ -423,6 +423,8 @@ class BaseApp {
 
 		//Load PHP librairies
 		Global.require_once(Const.__DIR__ + '/../../../vendor/autoload.php');
+		Global.ini_set('display_errors', '1');
+		Global.error_reporting(Const.E_ALL);
 		
 		/**
 		 * this macro will parse the code and generate the allTexts.pot file

@@ -34,7 +34,9 @@ class Macros {
 
 								if( !found ) Context.error("File not found '"+s+"'", m.params[0].pos);*/
 								//Context.error("cwd "+, m.pos);
-								var path = Sys.getCwd()+'../lang/master/tpl/';
+
+								//var path = Sys.getCwd()+'../lang/master/tpl/';
+								var path = Sys.getCwd()+'../tpl/';
 								if( !sys.FileSystem.exists('$path$s') )
 									Context.error('File not found "$path$s"', m.params[0].pos);
 							default:

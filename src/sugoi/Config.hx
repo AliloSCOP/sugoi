@@ -4,8 +4,8 @@ import sugoi.Web;
 
 class Config {
 
-	public var PATH :String;
-	public var xml : Xml;
+	public var PATH 		:String;
+	public var xml 			:Xml;
 	public var LANG 		:String;
 	public var LANGS 		:Array<String>;
 	public var TPL 			:String;
@@ -23,8 +23,8 @@ class Config {
 		
 		LANG = get("lang");
 		LANGS = get("langs").split(";");
-		TPL = PATH + "lang/" + LANG + "/tpl/";
-		TPL_TMP = PATH + "lang/" + LANG + "/tmp/";
+		TPL = /*PATH + "lang/" + LANG + "/tpl/"*/PATH + "tpl";
+		TPL_TMP = /*PATH + "lang/" + LANG + "/tmp/"*/TPL;
 		DEBUG = get("debug","0") == "1";
 		HOST = get("host");
 		NAME = get("name");
