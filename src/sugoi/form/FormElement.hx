@@ -95,7 +95,7 @@ class FormElement<T>
 	{
 		if (!inited) init();
 
-		var n = parentForm.name + "_" + name;
+		var n = (parentForm==null?"":parentForm.name) + "_" + name;
 		var v = App.current.params.get(n);
 		value = getTypedValue(v);
 		
