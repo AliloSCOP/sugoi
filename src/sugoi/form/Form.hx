@@ -317,10 +317,11 @@ class Form
 
 			//meta of this field						
 			var meta :Dynamic = Reflect.field(metas, f.name);
-			//trace(f.name+"=>" + meta + "<br/>");
+			// if(meta==null) meta = Reflect.field(metas, StringTools.replace(f.name,"Id",""));
+			//trace(f.name + "=>" + meta + "<br/>");
 			
 			//hide this field in forms
-			if (meta!=null && Reflect.hasField(meta,'hideInForms')) {
+			if (meta!=null && Reflect.hasField(meta,'hideInForms')) {				
 				continue;
 			}
 			

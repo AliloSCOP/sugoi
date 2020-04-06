@@ -5,12 +5,12 @@ import sys.db.Types;
 /**
  * Store files in DB
  */
-
+ @:index(cdate)
 class File extends sys.db.Object {
 	
 	public var id : SId;
 	public var name : STinyText; 		 //filename
-	public var cdate : SNull<SDateTime>; //creation datetime
+	public var cdate : SDateTime; //creation datetime
 	public var data : SBinary;
 	
 	@:skip

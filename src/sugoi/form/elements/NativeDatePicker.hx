@@ -61,7 +61,7 @@ class NativeDatePicker extends FormElement<Date> {
 	}
 
   override public function getTypedValue(str:String):Date {
-		if(str=="") return null;
+		if(str=="" || str==null) return null;
 
 		switch (type){
 			case time :
