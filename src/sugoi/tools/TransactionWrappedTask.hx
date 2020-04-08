@@ -29,7 +29,11 @@ class TransactionWrappedTask{
 	}
 
 	public function warning(str:String){
-		_log.push('<span style="color:red;font-weight:bold;">$str</span>');
+		_log.push('<span style="color:#600;font-weight:bold;">$str</span>');
+	}
+
+	public function title(str:String){
+		_log.push('<h3>$str</h3>');
 	}
 
 	public function execute(?noException=false){
