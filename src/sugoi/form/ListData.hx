@@ -1,6 +1,6 @@
 package sugoi.form;
 
-typedef FormData<T> = Array<{label:String,value:T}>;
+typedef FormData<T> = Array<{label:String,value:T,?desc:String,?docLink:String}>;
 
 class ListData
 {

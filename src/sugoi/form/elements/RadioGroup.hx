@@ -1,4 +1,5 @@
 package sugoi.form.elements;
+import sugoi.form.ListData.FormData;
 import sugoi.form.Form;
 import sugoi.form.FormElement;
 
@@ -10,7 +11,7 @@ class RadioGroup extends FormElement<String>
 	public var labelRight:Bool;
 	public var vertical:Bool;
 	
-	public function new(name:String, label:String, ?data:Array<{label:String,value:String}>, ?selected:String, ?defaultValue:String, ?vertical:Bool=true, ?labelRight:Bool=true,?required=false) 
+	public function new(name:String, label:String, ?data:FormData<String>, ?selected:String, ?defaultValue:String, ?vertical:Bool=true, ?labelRight:Bool=true,?required=false) 
 	{
 		super();
 		this.name = name;

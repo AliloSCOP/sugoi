@@ -52,7 +52,7 @@ class CheckboxGroup extends FormElement<Array<String>>
 		var labelCss = getLabelClasses();
 			
 		var c = 0;
-		var datas = Lambda.array(data);
+		var datas : FormData<String> = Lambda.array(data);
 		if (datas != null)
 		{
 			var rowsPerColumn = Math.ceil(datas.length / columns);
@@ -66,9 +66,9 @@ class CheckboxGroup extends FormElement<Array<String>>
 				{
 					if (c >= datas.length) break;
 					
-					s += "<tr>";
+					s += "<tr style='vertical-align: top;'>";
 					
-					var row:Dynamic = datas[c];
+					var row = datas[c];
 					
 					var checkbox = "<input type=\"checkbox\" class=\"" + tagCss + "\" name=\""+n+"[]\" id=\""+n+c+"\" value=\"" + row.value + "\" " + (value != null ? Lambda.has(value, row.value) ? "checked":"":"") +" ></input>\n";
 					var label;
@@ -81,13 +81,15 @@ class CheckboxGroup extends FormElement<Array<String>>
 						label = "<label for=\"" + n + c + "\" class=\"" + ''/*labelCss*/+"\" >" + row.label +"</label>\n";
 					}
 					
-					if (labelRight)
-					{
-						s += "<td>" + checkbox + "</td>\n";
-						s += "<td>&nbsp;" + label + "</td>\n";
+					
+					var helpLink = row.docLink==null?"":'<a href="${row.docLink}" target="_blank" class="help" data-toggle="tooltip" title="En savoir plus"><i class="icon icon-info"></i></a>';
+					var desc = (row.desc==null?"":'<p class="desc">${row.desc} $helpLink</p>');
+					if (labelRight){
+						s += '<td>$checkbox&nbsp;</td>\n';
+						s += '<td>$label $desc</td>\n';
 					} else {
-						s += "<td>" + label + "&nbsp;</td>\n";
-						s += "<td>" + checkbox + "</td>\n";
+						s += '<td>$label $desc&nbsp;</td>\n';
+						s += '<td>$checkbox</td>\n';
 					}
 					s += "</tr>";
 					c++;
