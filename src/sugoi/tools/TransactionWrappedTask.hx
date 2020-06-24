@@ -62,7 +62,7 @@ class TransactionWrappedTask{
 
 
 		var sec = Date.now().getTime()/1000 - startTime;
-		log('<b>Task took ${Math.round(sec*100)/100} seconds</b>');
+		log('Task took ${Math.round(sec*100)/100} seconds');
 		
 
 		if(printLog){
