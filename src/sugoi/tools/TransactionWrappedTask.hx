@@ -7,7 +7,7 @@ class TransactionWrappedTask{
 
 	var func:Void->Void;
 	var name:String;
-	var printLog:Bool;
+	public var printLog:Bool;
 	var startTime:Float;
 	var _log:Array<String>;
 	/**
