@@ -32,7 +32,8 @@ class Mail implements IMail
 	public function setReplyTo(email, ?name) {
 		if(!isValid(email)) throw "invalid reply-to email : \""+email+"\"";
 		
-		setHeader("Reply-To","<"+email+">"+(name==null?"":name));
+		// setHeader("Reply-To","<"+email+">"+(name==null?"":name));
+		setHeader("Reply-To",email);
 	}
 	
 	public function setSubject(s:String) {

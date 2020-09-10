@@ -10,6 +10,7 @@ class FormElement<T>
 	public var name:String;
 	public var label:String;
 	public var description:String;
+	public var docLink:String; //documentation/help URL
 	
 	//value can be any type : Int, Float, Enum... 
 	public var value:T;		
@@ -143,10 +144,19 @@ class FormElement<T>
 	 * renders the element with label+tr+td...
 	 */
 	public function getFullRow():String {
+		
 		var s = new StringBuf();
 		if(Form.USE_TWITTER_BOOTSTRAP) s.add('<div class="form-group">\n');
+
 		s.add(getLabel());
-		s.add("<div class='col-sm-8'>" + this.render() + "</div>");
+		if(docLink==null){
+			s.add("<div class='col-sm-8'>" + this.render() + "</div>");
+		}else{
+			//we have a doc link to print
+			s.add("<div class='col-sm-7'>" + this.render() + "</div>");
+			var helpLink = docLink==null?"":'<a href="${docLink}" target="_blank" class="help" data-toggle="tooltip" title="En savoir plus"><i class="icon icon-info"></i></a>';
+			s.add("<div class='col-sm-1'>" + helpLink + "</div>");
+		}
 		if (Form.USE_TWITTER_BOOTSTRAP) s.add('</div>\n');
 		return s.toString();
 	}
