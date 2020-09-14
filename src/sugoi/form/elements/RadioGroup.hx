@@ -43,8 +43,11 @@ class RadioGroup extends FormElement<String>
 				var radio = "<input type=\"radio\" name=\""+n+"\" id=\""+n+c+"\" value=\"" + row.value + "\" " + (row.value == Std.string(value) ? "checked":"") +" />\n";
 				var label = "<label for=\"" + n+c + "\" >" + row.label  +"</label>";
 				
+				var helpLink = row.docLink==null?"":'<a href="${row.docLink}" target="_blank" class="help" data-toggle="tooltip" title="En savoir plus"><i class="icon icon-info"></i></a>';
+				var desc = (row.desc==null?"":'<p class="desc">${row.desc} $helpLink</p>');
+				
 				s += labelRight ? radio + " "+label+" ": label+" "+radio+" ";
-				s += '</div>';
+				s += desc+'</div>';
 				//if (verticle) s += "<br />";
 				c++;
 			}	
