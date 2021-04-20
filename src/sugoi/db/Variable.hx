@@ -4,8 +4,8 @@ import sys.db.Types;
 @:id(name)
 class Variable extends sys.db.Object {
 
-	public var name : SString<50>;
-	public var value : SString<50>;
+	public var name : SString<64>;
+	public var value : SText;
 
 	public static function get( name ) {
 		var v = manager.get(name,false);

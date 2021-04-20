@@ -6,7 +6,7 @@ import sugoi.form.FormElement;
 class Checkbox extends FormElement<Bool>
 {
 	
-	public function new(name:String, label:String, ?checked:Bool=false, ?required:Bool=false, ?attibutes:String="")
+	public function new(name:String, label:String, ?checked:Bool=false, ?required:Bool=false, ?attributes:String="")
 	{
 		super();
 		
@@ -14,16 +14,19 @@ class Checkbox extends FormElement<Bool>
 		this.label = label;
 		this.value = checked;
 		this.required = required;
-		this.attributes = attibutes;
+		this.attributes = attributes;
 	}
 	
 	override public function render():String
 	{
 		var n = parentForm.name + "_" +name;
-		
 		var checkedStr = value ? "checked" : "";
-		
-		return "<input type=\"checkbox\" id=\"" + n + "\" name=\"" + n + "\" class=\"" + getClasses() + "\" value=\"true\" " + checkedStr + " />";
+		var render =  "<input type=\"checkbox\" id=\"" + n + "\" name=\"" + n + "\" class=\"" + getClasses() + "\" value=\"true\" " + checkedStr + " />";
+
+		render += (description==null?"":"<p class='desc'>"+description+'</p>');
+
+		return render;
+
 	}
 	
 	
