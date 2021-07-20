@@ -117,10 +117,10 @@ class Session extends sys.db.Object {
 	 * Delete old sessions
 	 */
 	public static function clean() {
-		//older than 3 month
-		manager.delete($lastTime < DateTools.delta(Date.now(),-1000.0*60*60*24*30*3));
-		//unlogged user
-		manager.delete($lastTime < DateTools.delta(Date.now(),-1000.0*60*60*24*30) && $uid==null );
+		//logged users older than 1 month
+		manager.delete($lastTime < DateTools.delta(Date.now(),-1000.0*60*60*24*30));
+		//unlogged user older than 3 days
+		manager.delete($lastTime < DateTools.delta(Date.now(),-1000.0*60*60*24*3) && $uid==null );
 	}
 
 }

@@ -11,6 +11,12 @@ class UploadedImage
 	 * Resize an uploaded image with imagemagick then store it in db.File
 	 */
 	public static function resizeAndStore(imgData:String,fileName:String,maxWidth:Int,maxHeight:Int):sugoi.db.File {
+
+		var extension = fileName.split(".")[fileName.split(".").length-1].toLowerCase();
+		switch (extension){
+			case 'jpg','jpeg','gif','png' : //ok
+			default : throw 'Ce fichier est au format "$extension" et n\'est pas accepté';
+		}
 		
 		var name = haxe.crypto.Md5.encode(Std.string(Std.random(100000)));
 		var path = Web.getCwd() + "../tmp/" + name;

@@ -13,8 +13,7 @@ class TransactionWrappedTask{
 	/**
 		instanciate with function to execute
 	**/
-	public function new(?_name,?_func){
-		func = _func;
+	public function new(_name:String){		
 		name = _name;
 		printLog = true;
 		_log = [];
@@ -60,10 +59,8 @@ class TransactionWrappedTask{
 		}
 		sys.db.Manager.cnx.commit();
 
-
 		var sec = Date.now().getTime()/1000 - startTime;
-		log('Task took ${Math.round(sec*100)/100} seconds');
-		
+		log('Task took ${Math.round(sec*100)/100} seconds');		
 
 		if(printLog){
 			Sys.println('<div style="padding:8px;margin:8px;background-color:#DDD;font-family: monospace;">');
