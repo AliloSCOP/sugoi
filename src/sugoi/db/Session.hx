@@ -5,6 +5,7 @@ import sugoi.Web;
 
 @:id(sid)
 @:index(lastTime)
+@:index(ip)
 class Session extends sys.db.Object {
 
 	public var sid : SString<32>;
