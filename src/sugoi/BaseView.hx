@@ -112,9 +112,9 @@ class BaseView{
 	/**
 	 * Return the url of a db.File record
 	 */
-	public function file( file : sugoi.db.File):String {
-		if (file == null) return "";
-		return "/file/"+sugoi.db.File.makeSign(file.id)+"."+file.getExtension();
+	public function file(fileId:Int):String {
+		if (fileId == null) return "";
+		return "/file/"+sugoi.db.File.makeSign(fileId);
 	}
 	
 	/**

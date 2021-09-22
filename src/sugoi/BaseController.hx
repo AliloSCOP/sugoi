@@ -51,19 +51,19 @@ class BaseController {
 		//get the file from DB
  		var fid = Std.parseInt(fname); 
 		var f = File.manager.get(fid, false);
-		var ext = fname.substr( fname.lastIndexOf(".") );//.png
 		if( f == null ) {
 			Sys.print("404 - File not found '"+StringTools.htmlEscape(fname)+"' id #"+fid);
 			return;
 		}
-		if ( fname != File.makeSign(fid) + ext ){
-			Sys.print("404 - File signature do not match '"+fname+"' != '"+File.makeSign(fid)+ ext+"'");
+		var fileSign = File.makeSign(fid);
+		if ( fname != fileSign ){
+			Sys.print("404 - File signature do not match '"+fname+"' != '"+fileSign+"'");
 			return;
 		}
 		var path;
 		var ch;
 		try {
-			path = Web.getCwd()+"/file/"+File.makeSign(f.id)+ext;
+			path = Web.getCwd()+"/file/"+fileSign;
 			ch = sys.io.File.write(path,true);
 		} catch( e : Dynamic ) {
 			Sys.sleep(0.1); // wait for another process to write ?

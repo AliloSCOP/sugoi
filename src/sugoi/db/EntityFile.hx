@@ -40,5 +40,9 @@ class EntityFile extends sys.db.Object
         f.insert();
         return f;
 	}
+
+    public function getFileId(){
+        return this.fileId;
+    }
 	
 }
