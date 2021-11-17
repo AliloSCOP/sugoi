@@ -124,7 +124,7 @@ class Flags<T> extends FormElement<Int>
 			for (i in 0...columns)
 			{
 				s += "<td valign=\"top\">\n";
-				s += "<table>\n";
+				s += "<table class='table-condensed table-striped'>\n";
 				
 				for (j in 0...rowsPerColumn)
 				{

@@ -35,6 +35,7 @@ class FormElement<T>
 		filters = new List();		
 		inited = false;
 		internal = false;
+		docLink = null;
 	}
 	
 	/**

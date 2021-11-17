@@ -22,11 +22,11 @@ class Checkbox extends FormElement<Bool>
 		var n = parentForm.name + "_" +name;
 		var checkedStr = value ? "checked" : "";
 		var render =  "<input type=\"checkbox\" id=\"" + n + "\" name=\"" + n + "\" class=\"" + getClasses() + "\" value=\"true\" " + checkedStr + " />";
-
-		render += (description==null?"":"<p class='desc'>"+description+'</p>');
-
+		
+		if(description!=null){
+			render += '<p class="desc">$description</p>';
+		}
 		return render;
-
 	}
 	
 	

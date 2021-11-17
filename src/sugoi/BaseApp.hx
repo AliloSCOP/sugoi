@@ -130,8 +130,14 @@ class BaseApp {
 			if ( user == null )				
 				throw sugoi.ControllerAction.RedirectAction("/?__redirect="+Web.getURI());
 		case "admin":
-			if( user == null || !user.isAdmin() )
+			#if neko
+			//allow to call admin actions thru CLI to perform migrations
+			if (!sugoi.Web.isModNeko && !sugoi.Web.isTora) return;
+			#end
+			if( user == null || !user.isAdmin() ){				
 				throw sugoi.ControllerAction.RedirectAction("/");
+			}
+				
 		default:
 		}
 	}
@@ -217,9 +223,17 @@ class BaseApp {
 		//setup langage
 		setupLang();
 		
-		
-		if( maintain && ((user != null && user.isAdmin()) ) )
+		//bypass maintenance for admins		
+		if( maintain && (user != null && user.isAdmin()) ){
 			maintain = false;
+		}
+
+		#if neko
+		//allow to call admin actions thru CLI to perform migrations
+		if( maintain && !sugoi.Web.isModNeko && !sugoi.Web.isTora ){
+			maintain = false;
+		}
+		#end			
 		
 		setCookie(cookieSid);
 		
