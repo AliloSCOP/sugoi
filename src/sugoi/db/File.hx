@@ -26,8 +26,8 @@ class File extends sys.db.Object {
 	 * Usually files should be generated in /file/
 	 */
 	public static function makeSign( id : Int ) {
-		if( id == null )
-			return "";
+		if( id == null ) return "";
+		if(CACHE == null) CACHE = [];
 		var s = CACHE[id];
 		if( s != null ) return s;
 		s = id+"_"+haxe.crypto.Md5.encode(id + App.config.get('key'));
