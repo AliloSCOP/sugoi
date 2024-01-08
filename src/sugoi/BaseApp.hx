@@ -202,7 +202,7 @@ class BaseApp {
 
 	public function setCookie( oldCookie : String ){
 		if( session != null && session.sid != null && session.sid != oldCookie ) {
-			Web.setHeader("Set-Cookie", cookieName+"=" + session.sid + "; path=/;");
+			Web.setHeader("Set-Cookie", cookieName+"=" + session.sid + "; path=/;" + " domain=" + cookieDomain + ";");
 		}
 	}
 
