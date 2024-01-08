@@ -35,7 +35,7 @@ class BaseApp {
 		}
 		
 		cookieName = "sid";
-		cookieDomain = "." + App.config.HOST;
+		cookieDomain = App.config.get("cookie_domain") == null ? "." + App.config.HOST : App.config.get("cookie_domain");
 
 		//populate default headers
 		headers = new Map<String,String>();
