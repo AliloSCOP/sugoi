@@ -34,7 +34,7 @@ class BaseApp {
 			loadConfig();
 		}
 		
-		cookieName = "sid";
+		cookieName = "Refresh";
 		cookieDomain = App.config.get("cookie_domain") == null ? "." + App.config.HOST : App.config.get("cookie_domain");
 
 		//populate default headers
@@ -200,31 +200,29 @@ class BaseApp {
 		// does not reset session
 	}
 
-	public function setCookie( oldCookie : String ){
-		if( session != null && session.sid != null && session.sid != oldCookie ) {
-			Web.setHeader("Set-Cookie", cookieName+"=" + session.sid + "; path=/;" + " domain=" + cookieDomain + ";" + "Max-Age=2629746;");
-		}
-	}
-
 	function mainLoop() {
 		params = Web.getParams();
 		
 		//Get session
-		var sids = [];
-		var cookieSid = Web.getCookies().get(cookieName);
-		if( params.exists("sid") ) sids.push(params.get("sid"));
-		if( cookieSid != null ) sids.push(cookieSid);
-		session = sugoi.db.Session.init(sids);
+		var jwtCookie = Web.getCookies().get(cookieName);
+		var verified: String = null;
+		if( jwtCookie != null ) {
+			verified = JWT.verify(jwtCookie, App.config.get("JWT_REFRESH_TOKEN_SECRET"));
+		}
+		session = sugoi.db.Session.init(verified);
 		
 		//Check for maintenance
 		maintain = sugoi.db.Variable.getInt("maintain") != 0;
-		user = session.user;
-		
+
+		if (session != null) {
+			user = session.user;
+		}
+
 		//setup langage
 		setupLang();
 		
 		//bypass maintenance for admins		
-		if( maintain && (user != null && user.isAdmin()) ){
+		if( maintain && (session != null && session.user != null && user.isAdmin()) ){
 			maintain = false;
 		}
 
@@ -234,8 +232,6 @@ class BaseApp {
 			maintain = false;
 		}
 		#end			
-		
-		setCookie(cookieSid);
 		
 		if( maintain ) {
 			setTemplate("maintain.mtt");

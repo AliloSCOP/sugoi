@@ -8,7 +8,7 @@ import sugoi.Web;
 @:index(ip)
 class Session extends sys.db.Object {
 
-	public var sid : SString<32>;
+	public var sid : SString<170>;
 	public var ip : SString<15>;
 	public var lang : SString<2>;
 	public var messages : SData<Array<{ error : Bool, text : String }>>;
@@ -76,13 +76,15 @@ class Session extends sys.db.Object {
 	}
 
 
-	public static function init( sids : Array<String> ) {
-		for( sid in sids ) {
-			var s = get(sid);
-			if( s != null ) return s;
-		}
+	public static function init( ?sid : String ) {
+		var s = get(sid);
+		if( s != null ) return s;
+
 		var ip = Web.getClientIP();
-		var s = new Session();
+		// Try to get an existing session for this IP
+		var ss = Lambda.array(manager.search($ip == ip && $uid == null, true));
+		if( ss != null && ss.length > 0 ) return ss[0];
+		s = new Session();
 		s.ip = ip;
 		s.createTime = Date.now();
 		s.lastTime = Date.now();
