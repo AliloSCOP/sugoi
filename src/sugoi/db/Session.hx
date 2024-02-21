@@ -34,6 +34,7 @@ class Session extends sys.db.Object {
 	 * Stores a message in session
 	 */
 	public function addMessage( text : String, ?error=false ) {
+		if ( messages == null ) messages = [];
 		messages.push({ error : error, text : text });
 	}
 	
