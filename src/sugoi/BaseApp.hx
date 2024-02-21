@@ -219,7 +219,7 @@ class BaseApp {
 		setupLang();
 		
 		//bypass maintenance for admins		
-		if( maintain && (session.user != null && user.isAdmin()) ){
+		if( maintain && (user != null && user.isAdmin()) ){
 			maintain = false;
 		}
 
