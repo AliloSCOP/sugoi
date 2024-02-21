@@ -209,7 +209,21 @@ class BaseApp {
 		if( jwtCookie != null ) {
 			verified = JWT.verify(jwtCookie, App.config.get("JWT_REFRESH_TOKEN_SECRET"));
 		}
-		session = sugoi.db.Session.init(verified);
+		session = sugoi.db.Session.get(verified);
+
+		if (verified != null && session == null) {
+			// The session does noit exist, so we delete the cookie
+			var domain = App.config.HOST;
+			if (domain.lastIndexOf('my.',0) == 0) {
+				domain = domain.split('my.').join("");
+			}
+			Web.setHeader("Set-Cookie", cookieName + '=; HttpOnly; Path=/; Max-Age=0; Domain=$domain');
+		}
+		
+		if (session == null) {
+			session = sugoi.db.Session.init();
+		}
+
 		
 		//Check for maintenance
 		maintain = sugoi.db.Variable.getInt("maintain") != 0;

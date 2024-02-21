@@ -58,7 +58,7 @@ class Session extends sys.db.Object {
 		super.update();
 	}
 
-	private static function get( sid:String ):Session {
+	public static function get( sid:String ):Session {
 		if ( sid == null ) return null;
 				
 		var s = manager.get(sid,true);
