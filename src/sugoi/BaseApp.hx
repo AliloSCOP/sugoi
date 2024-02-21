@@ -213,16 +213,13 @@ class BaseApp {
 		
 		//Check for maintenance
 		maintain = sugoi.db.Variable.getInt("maintain") != 0;
-
-		if (session != null) {
-			user = session.user;
-		}
+		user = session.user;
 
 		//setup langage
 		setupLang();
 		
 		//bypass maintenance for admins		
-		if( maintain && (session != null && session.user != null && user.isAdmin()) ){
+		if( maintain && (session.user != null && user.isAdmin()) ){
 			maintain = false;
 		}
 
