@@ -12,6 +12,9 @@ typedef JWTHeader = {
   var typ:String;
 };
 
+typedef Payload = {
+  var id:Int;
+}
 class JWT {
     private function new(){}
 
@@ -37,16 +40,16 @@ class JWT {
       Verifies a JWT and returns the payload if successful
       @param jwt - the token to examine
       @param secret - the secret to compare it with
-      @return a string or null if the signature is incorrect
+      @return the decoded Payload or null if the signature is incorrect
      */
-    public static function verify(jwt:String, secret:String):String {
+    public static function verify(jwt:String, secret:String):Payload {
         var parts:Array<String> = jwt.split(".");
         if(parts.length == 3) {
           // Check that the signature matches
           var sb:Bytes = base64Decode(parts[2]);
           var testSig:Bytes = signature(parts[0] + "." + parts[1], secret);
           if(sb.compare(testSig) == 0) {
-          return parts[1];
+          return Json.parse(base64Decode(parts[1]).toString());
           }
         }
         

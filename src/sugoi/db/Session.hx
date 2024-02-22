@@ -58,7 +58,7 @@ class Session extends sys.db.Object {
 		super.update();
 	}
 
-	public static function get( sid:String ):Session {
+	private static function get( sid:String ):Session {
 		if ( sid == null ) return null;
 				
 		var s = manager.get(sid,true);
@@ -76,6 +76,13 @@ class Session extends sys.db.Object {
 		return s;
 	}
 
+	public static function getByUid( uid:Int ):Session {
+		if ( uid == null ) return null;
+		
+		var s = manager.select($uid==uid, true);
+		
+		return s;
+	}
 
 	public static function init( ?sid : String ) {
 		var s = get(sid);
